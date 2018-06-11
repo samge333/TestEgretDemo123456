@@ -1,15 +1,25 @@
 /**
  * Created by egret on 2016/1/21.
  */
+var __reflect = (this && this.__reflect) || function (p, c, t) {
+    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
+};
+var __extends = this && this.__extends || function __extends(t, e) { 
+ function r() { 
+ this.constructor = t;
+}
+for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
+r.prototype = e.prototype, t.prototype = new r();
+};
 var ProfileUI = (function (_super) {
     __extends(ProfileUI, _super);
     function ProfileUI() {
-        _super.call(this);
-        this.addEventListener(eui.UIEvent.COMPLETE, this.uiCompHandler, this);
-        this.skinName = "resource/custom_skins/profileUISkin.exml";
+        var _this = _super.call(this) || this;
+        _this.addEventListener(eui.UIEvent.COMPLETE, _this.uiCompHandler, _this);
+        _this.skinName = "resource/custom_skins/profileUISkin.exml";
+        return _this;
     }
-    var d = __define,c=ProfileUI,p=c.prototype;
-    p.uiCompHandler = function () {
+    ProfileUI.prototype.uiCompHandler = function () {
         var _this = this;
         console.log("\t\tProfileUI uiCompHandler");
         /// 返回逻辑
@@ -29,11 +39,11 @@ var ProfileUI = (function (_super) {
         this.listSkills.itemRendererSkinName = "profileSkillListIRSkin";
         this.listSkills.dataProvider = new eui.ArrayCollection(dsListSkills);
     };
-    p.createChildren = function () {
+    ProfileUI.prototype.createChildren = function () {
         _super.prototype.createChildren.call(this);
         this.scrListSkills.horizontalScrollBar = null;
     };
     return ProfileUI;
 }(eui.Component));
-egret.registerClass(ProfileUI,'ProfileUI');
+__reflect(ProfileUI.prototype, "ProfileUI");
 //# sourceMappingURL=ProfileUI.js.map

@@ -1,15 +1,25 @@
 /**
  * Created by egret on 2016/1/21.
  */
+var __reflect = (this && this.__reflect) || function (p, c, t) {
+    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
+};
+var __extends = this && this.__extends || function __extends(t, e) { 
+ function r() { 
+ this.constructor = t;
+}
+for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
+r.prototype = e.prototype, t.prototype = new r();
+};
 var HerosUI = (function (_super) {
     __extends(HerosUI, _super);
     function HerosUI() {
-        _super.call(this);
-        this.addEventListener(eui.UIEvent.COMPLETE, this.uiCompHandler, this);
-        this.skinName = "resource/custom_skins/herosUISkin.exml";
+        var _this = _super.call(this) || this;
+        _this.addEventListener(eui.UIEvent.COMPLETE, _this.uiCompHandler, _this);
+        _this.skinName = "resource/custom_skins/herosUISkin.exml";
+        return _this;
     }
-    var d = __define,c=HerosUI,p=c.prototype;
-    p.uiCompHandler = function () {
+    HerosUI.prototype.uiCompHandler = function () {
         var _this = this;
         console.log("\t\tHerosUI uiCompHandler");
         /// 返回逻辑
@@ -46,21 +56,21 @@ var HerosUI = (function (_super) {
         this.listHeros.dataProvider = new eui.ArrayCollection(dsListHeros);
         this.listHeros.itemRenderer = HerosListIRSkin;
     };
-    p.createChildren = function () {
+    HerosUI.prototype.createChildren = function () {
         _super.prototype.createChildren.call(this);
         //this.scrListHeros.horizontalScrollBar = null;
     };
     return HerosUI;
 }(eui.Component));
-egret.registerClass(HerosUI,'HerosUI');
+__reflect(HerosUI.prototype, "HerosUI");
 var HerosListIRSkin = (function (_super) {
     __extends(HerosListIRSkin, _super);
     function HerosListIRSkin() {
-        _super.call(this);
-        this.skinName = "herosListIRSkin";
+        var _this = _super.call(this) || this;
+        _this.skinName = "herosListIRSkin";
+        return _this;
     }
-    var d = __define,c=HerosListIRSkin,p=c.prototype;
-    p.createChildren = function () {
+    HerosListIRSkin.prototype.createChildren = function () {
         var _this = this;
         _super.prototype.createChildren.call(this);
         this.cb.addEventListener(egret.Event.CHANGE, function () {
@@ -70,5 +80,5 @@ var HerosListIRSkin = (function (_super) {
     };
     return HerosListIRSkin;
 }(eui.ItemRenderer));
-egret.registerClass(HerosListIRSkin,'HerosListIRSkin');
+__reflect(HerosListIRSkin.prototype, "HerosListIRSkin");
 //# sourceMappingURL=HerosUI.js.map
