@@ -1,0 +1,4 @@
+class SkillInfluence {
+	public constructor() {
+	}
+}

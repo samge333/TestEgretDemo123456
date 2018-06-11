@@ -9,9 +9,7 @@ var HLog = (function () {
         for (var _i = 1; _i < arguments.length; _i++) {
             optionalParams[_i - 1] = arguments[_i];
         }
-        egret.log(optionalParams);
-        console.log(optionalParams);
-        egret.log.apply(egret, [message].concat(optionalParams));
+        egret.log(message, optionalParams);
     };
     return HLog;
 }());

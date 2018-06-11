@@ -1,0 +1,4 @@
+class ShipMould {
+	public constructor() {
+	}
+}

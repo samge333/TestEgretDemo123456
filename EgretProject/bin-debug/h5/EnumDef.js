@@ -1,0 +1,55 @@
+var __reflect = (this && this.__reflect) || function (p, c, t) {
+    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
+};
+var EnumDef = (function () {
+    function EnumDef() {
+    }
+    return EnumDef;
+}());
+__reflect(EnumDef.prototype, "EnumDef");
+//FightModule
+var FightModuleEnum;
+(function (FightModuleEnum) {
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVE_NORMAL"] = 0] = "FIGHT_TYPE_PVE_NORMAL";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVE_ELIT"] = 1] = "FIGHT_TYPE_PVE_ELIT";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVE_MONEY_TREE"] = 2] = "FIGHT_TYPE_PVE_MONEY_TREE";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVE_TREASURE_EXPERIENCE"] = 3] = "FIGHT_TYPE_PVE_TREASURE_EXPERIENCE";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVE_PANDA_EXPERIENCE"] = 4] = "FIGHT_TYPE_PVE_PANDA_EXPERIENCE";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVE_WORLD_BOSS"] = 5] = "FIGHT_TYPE_PVE_WORLD_BOSS";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_TRANS_TOWER"] = 6] = "FIGHT_TYPE_TRANS_TOWER";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVP_COUNTERPART"] = 7] = "FIGHT_TYPE_PVP_COUNTERPART";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVP_BATTLEGROUND"] = 8] = "FIGHT_TYPE_PVP_BATTLEGROUND";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_GREAT_SOLDIER"] = 9] = "FIGHT_TYPE_GREAT_SOLDIER";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVP_GRAB"] = 10] = "FIGHT_TYPE_PVP_GRAB";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVP_ARENA"] = 11] = "FIGHT_TYPE_PVP_ARENA";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVP_DUEL"] = 12] = "FIGHT_TYPE_PVP_DUEL";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVP_UNIO"] = 13] = "FIGHT_TYPE_PVP_UNIO";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVP_RESOURCE_MINE"] = 14] = "FIGHT_TYPE_PVP_RESOURCE_MINE";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVP_SPIRITE_PALACE"] = 15] = "FIGHT_TYPE_PVP_SPIRITE_PALACE";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVP_CROSS_SERVER"] = 16] = "FIGHT_TYPE_PVP_CROSS_SERVER";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_51"] = 51] = "FIGHT_TYPE_51";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_52"] = 52] = "FIGHT_TYPE_52";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_DAILY_INSTANCE"] = 101] = "FIGHT_TYPE_DAILY_INSTANCE";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVE_THREE_KING"] = 102] = "FIGHT_TYPE_PVE_THREE_KING";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVE_MANOR"] = 103] = "FIGHT_TYPE_PVE_MANOR";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_PVE_REBELARMY"] = 104] = "FIGHT_TYPE_PVE_REBELARMY";
+    FightModuleEnum[FightModuleEnum["FIGHT_TYPE_GREAT_SOLDIER_B"] = 105] = "FIGHT_TYPE_GREAT_SOLDIER_B";
+})(FightModuleEnum || (FightModuleEnum = {}));
+//TalentConstant 天赋触发时机
+var TalentConstant_JUDGE_OPPORTUNITY;
+(function (TalentConstant_JUDGE_OPPORTUNITY) {
+    TalentConstant_JUDGE_OPPORTUNITY[TalentConstant_JUDGE_OPPORTUNITY["JUDGE_OPPORTUNITY_BY_ATTACK"] = 0] = "JUDGE_OPPORTUNITY_BY_ATTACK";
+    TalentConstant_JUDGE_OPPORTUNITY[TalentConstant_JUDGE_OPPORTUNITY["JUDGE_OPPORTUNITY_ATTACK"] = 1] = "JUDGE_OPPORTUNITY_ATTACK";
+    TalentConstant_JUDGE_OPPORTUNITY[TalentConstant_JUDGE_OPPORTUNITY["JUDGE_OPPORTUNITY_SELF_DEAD"] = 2] = "JUDGE_OPPORTUNITY_SELF_DEAD";
+    TalentConstant_JUDGE_OPPORTUNITY[TalentConstant_JUDGE_OPPORTUNITY["JUDGE_OPPORTUNITY_OPPONENT_DEAD"] = 3] = "JUDGE_OPPORTUNITY_OPPONENT_DEAD";
+    TalentConstant_JUDGE_OPPORTUNITY[TalentConstant_JUDGE_OPPORTUNITY["JUDGE_OPPORTUNITY_EMAMY_ATTACK"] = 4] = "JUDGE_OPPORTUNITY_EMAMY_ATTACK";
+    TalentConstant_JUDGE_OPPORTUNITY[TalentConstant_JUDGE_OPPORTUNITY["JUDGE_OPPORTUNITY_OWER_ATTACK"] = 5] = "JUDGE_OPPORTUNITY_OWER_ATTACK";
+    TalentConstant_JUDGE_OPPORTUNITY[TalentConstant_JUDGE_OPPORTUNITY["JUDGE_OPPORTUNITY_BATTLE_ROUND_START"] = 6] = "JUDGE_OPPORTUNITY_BATTLE_ROUND_START";
+    TalentConstant_JUDGE_OPPORTUNITY[TalentConstant_JUDGE_OPPORTUNITY["JUDGE_OPPORTUNITY_CAMP_ROLE_DEATH"] = 7] = "JUDGE_OPPORTUNITY_CAMP_ROLE_DEATH";
+    TalentConstant_JUDGE_OPPORTUNITY[TalentConstant_JUDGE_OPPORTUNITY["JUDGE_OPPORTUNITY_INIT_BATTLE_SCENE"] = 8] = "JUDGE_OPPORTUNITY_INIT_BATTLE_SCENE";
+    TalentConstant_JUDGE_OPPORTUNITY[TalentConstant_JUDGE_OPPORTUNITY["JUDGE_OPPORTUNITY_ATTACK_ROUND_START"] = 9] = "JUDGE_OPPORTUNITY_ATTACK_ROUND_START";
+    TalentConstant_JUDGE_OPPORTUNITY[TalentConstant_JUDGE_OPPORTUNITY["JUDGE_OPPORTUNITY_ATTACK_BEFORE"] = 10] = "JUDGE_OPPORTUNITY_ATTACK_BEFORE";
+    TalentConstant_JUDGE_OPPORTUNITY[TalentConstant_JUDGE_OPPORTUNITY["JUDGE_OPPORTUNITY_OPPONENT_DEAD_GLOBAL"] = 11] = "JUDGE_OPPORTUNITY_OPPONENT_DEAD_GLOBAL";
+    TalentConstant_JUDGE_OPPORTUNITY[TalentConstant_JUDGE_OPPORTUNITY["JUDGE_OPPORTUNITY_OPPONENT_FOR_ATTACK_BEFORE"] = 12] = "JUDGE_OPPORTUNITY_OPPONENT_FOR_ATTACK_BEFORE";
+})(TalentConstant_JUDGE_OPPORTUNITY || (TalentConstant_JUDGE_OPPORTUNITY = {}));
+//# sourceMappingURL=EnumDef.js.map

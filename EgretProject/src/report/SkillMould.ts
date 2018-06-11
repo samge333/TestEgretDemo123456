@@ -1,0 +1,4 @@
+class SkillMould {
+	public constructor() {
+	}
+}

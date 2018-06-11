@@ -1,23 +1,45 @@
 {
-	"groups":[
-	{
-		"keys":"bg_jpg,egret_icon_png,description_json",
-		"name":"preload"
-	}],
-	"resources":[
-	{
-		"name":"bg_jpg",
-		"type":"image",
-		"url":"assets/bg.jpg"
-	},
-	{
-		"name":"egret_icon_png",
-		"type":"image",
-		"url":"assets/egret_icon.png"
-	},
-	{
-		"name":"description_json",
-		"type":"json",
-		"url":"config/description.json"
-	}]
+	"groups": [
+		{
+			"keys": "bg_jpg,egret_icon_png,description_json,talent_mould_txt,ship_mould_txt,skill_influence_txt,skill_mould_txt",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"name": "bg_jpg",
+			"type": "image",
+			"url": "assets/bg.jpg"
+		},
+		{
+			"name": "egret_icon_png",
+			"type": "image",
+			"url": "assets/egret_icon.png"
+		},
+		{
+			"name": "description_json",
+			"type": "json",
+			"url": "config/description.json"
+		},
+		{
+			"name": "talent_mould_txt",
+			"type": "text",
+			"url": "config/talent_mould.txt"
+		},
+		{
+			"name": "ship_mould_txt",
+			"type": "text",
+			"url": "config/ship_mould.txt"
+		},
+		{
+			"name": "skill_influence_txt",
+			"type": "text",
+			"url": "config/skill_influence.txt"
+		},
+		{
+			"name": "skill_mould_txt",
+			"type": "text",
+			"url": "config/skill_mould.txt"
+		}
+	]
 }

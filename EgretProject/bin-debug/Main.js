@@ -79,21 +79,35 @@ var Main = (function (_super) {
         return _this;
     }
     Main.prototype.onAddToStage = function (event) {
-        HLog.log("onAddToStage...11", 1, 2, "ddd");
-        egret.lifecycle.addLifecycleListener(function (context) {
-            // custom lifecycle plugin
-            context.onUpdate = function () {
-            };
-        });
-        egret.lifecycle.onPause = function () {
-            egret.ticker.pause();
+        var fightModule = new FightModule;
+        fightModule.initFight(58, 1, 0);
+        var url = "resource/config/ship_mould.txt";
+        var request = new egret.HttpRequest();
+        var respHandler = function (evt) {
+            switch (evt.type) {
+                case egret.Event.COMPLETE:
+                    var request_1 = evt.currentTarget;
+                    console.log("respHandler:n", request_1.response);
+                    break;
+            }
         };
-        egret.lifecycle.onResume = function () {
-            egret.ticker.resume();
-        };
-        this.runGame().catch(function (e) {
-            console.log(e);
-        });
+        request.once(egret.Event.COMPLETE, respHandler, null);
+        request.open(url, egret.HttpMethod.GET);
+        request.send();
+        // egret.lifecycle.addLifecycleListener((context) => {
+        //     // custom lifecycle plugin
+        //     context.onUpdate = () => {
+        //     }
+        // })
+        // egret.lifecycle.onPause = () => {
+        //     egret.ticker.pause();
+        // }
+        // egret.lifecycle.onResume = () => {
+        //     egret.ticker.resume();
+        // }
+        // this.runGame().catch(e => {
+        //     // console.log(e);
+        // })
     };
     Main.prototype.runGame = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -114,7 +128,6 @@ var Main = (function (_super) {
                         return [4 /*yield*/, platform.getUserInfo()];
                     case 4:
                         userInfo = _a.sent();
-                        console.log(userInfo);
                         return [2 /*return*/];
                 }
             });

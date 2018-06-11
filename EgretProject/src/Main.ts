@@ -29,8 +29,6 @@
 
 class Main extends egret.DisplayObjectContainer {
 
-
-
     public constructor() {
         super();
         this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
@@ -38,25 +36,43 @@ class Main extends egret.DisplayObjectContainer {
 
     private onAddToStage(event: egret.Event) {
 
-        egret.lifecycle.addLifecycleListener((context) => {
-            // custom lifecycle plugin
+        let fightModule = new FightModule;
+        fightModule.initFight(58, 1, 0);
 
-            context.onUpdate = () => {
 
+        let url = "resource/config/ship_mould.txt";
+        let request: egret.HttpRequest = new egret.HttpRequest();
+        let respHandler = function(evt:egret.Event): void {
+            switch (evt.type) {
+                case egret.Event.COMPLETE:
+                    let request: egret.HttpRequest = evt.currentTarget;
+                    console.log( "respHandler:n", request.response );
+                    break;
             }
-        })
-
-        egret.lifecycle.onPause = () => {
-            egret.ticker.pause();
         }
+        request.once(egret.Event.COMPLETE, respHandler, null);
+        request.open(url, egret.HttpMethod.GET); 
+        request.send();
 
-        egret.lifecycle.onResume = () => {
-            egret.ticker.resume();
-        }
+        // egret.lifecycle.addLifecycleListener((context) => {
+        //     // custom lifecycle plugin
 
-        this.runGame().catch(e => {
-            console.log(e);
-        })
+        //     context.onUpdate = () => {
+
+        //     }
+        // })
+
+        // egret.lifecycle.onPause = () => {
+        //     egret.ticker.pause();
+        // }
+
+        // egret.lifecycle.onResume = () => {
+        //     egret.ticker.resume();
+        // }
+
+        // this.runGame().catch(e => {
+        //     // console.log(e);
+        // })
 
 
 
@@ -69,7 +85,7 @@ class Main extends egret.DisplayObjectContainer {
         this.startAnimation(result);
         await platform.login();
         const userInfo = await platform.getUserInfo();
-        console.log(userInfo);
+        // console.log(userInfo);
 
     }
 
