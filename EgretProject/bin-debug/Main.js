@@ -78,22 +78,41 @@ var Main = (function (_super) {
         _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.onAddToStage, _this);
         return _this;
     }
+    Main.prototype.onResourceLoadComplete = function (event) {
+        switch (event.groupName) {
+            case "preload":
+                // let data = RES.getRes("ship_mould_txt");
+                // HLog.log(data);
+                var a = Dms.loadTxt("ship_mould_txt");
+                var b = Dms.element(a, 1, true);
+                HLog.log(b);
+                var fightModule = new FightModule;
+                fightModule.initFight(58, 1, 0);
+                break;
+        }
+    };
+    Main.prototype.onConfigComplete = function (event) {
+        RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
+        RES.loadGroup("preload");
+    };
     Main.prototype.onAddToStage = function (event) {
         var fightModule = new FightModule;
         fightModule.initFight(58, 1, 0);
-        var url = "resource/config/ship_mould.txt";
-        var request = new egret.HttpRequest();
-        var respHandler = function (evt) {
-            switch (evt.type) {
-                case egret.Event.COMPLETE:
-                    var request_1 = evt.currentTarget;
-                    console.log("respHandler:n", request_1.response);
-                    break;
-            }
-        };
-        request.once(egret.Event.COMPLETE, respHandler, null);
-        request.open(url, egret.HttpMethod.GET);
-        request.send();
+        RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
+        RES.loadConfig("resource/default.res.json", "resource/");
+        // let url = "resource/config/ship_mould.txt";
+        // let request: egret.HttpRequest = new egret.HttpRequest();
+        // let respHandler = function(evt:egret.Event): void {
+        //     switch (evt.type) {
+        //         case egret.Event.COMPLETE:
+        //             let request: egret.HttpRequest = evt.currentTarget;
+        //             console.log( "respHandler:n", request.response );
+        //             break;
+        //     }
+        // }
+        // request.once(egret.Event.COMPLETE, respHandler, null);
+        // request.open(url, egret.HttpMethod.GET); 
+        // request.send();
         // egret.lifecycle.addLifecycleListener((context) => {
         //     // custom lifecycle plugin
         //     context.onUpdate = () => {

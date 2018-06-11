@@ -11,7 +11,7 @@
 		"libs/modules/promise/promise.js"
 	],
 	"game": [
-		"bin-debug/report/ConfigDB.js",
+		"bin-debug/report/EnvironmentFormation.js",
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Platform.js",
 		"bin-debug/h5/BattleCache.js",
@@ -21,8 +21,8 @@
 		"bin-debug/h5/FightModule.js",
 		"bin-debug/h5/HLog.js",
 		"bin-debug/network/NetworkProtocol.js",
+		"bin-debug/report/ConfigDB.js",
 		"bin-debug/Main.js",
-		"bin-debug/report/EnvironmentFormation.js",
 		"bin-debug/report/EnvironmentShip.js",
 		"bin-debug/report/EquipmentMould.js",
 		"bin-debug/report/FightObject.js",
@@ -31,6 +31,7 @@
 		"bin-debug/report/ShipMould.js",
 		"bin-debug/report/SkillInfluence.js",
 		"bin-debug/report/SkillMould.js",
-		"bin-debug/report/TalentMould.js"
+		"bin-debug/report/TalentMould.js",
+		"bin-debug/util/Dms.js"
 	]
 }

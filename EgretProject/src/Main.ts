@@ -34,25 +34,46 @@ class Main extends egret.DisplayObjectContainer {
         this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
     }
 
+    private onResourceLoadComplete(event: RES.ResourceEvent) {
+        switch (event.groupName ) {
+            case "preload":
+                // let a = Dms.loadTxt("ship_mould_txt");
+                // let b = Dms.element(a, 1, true);
+
+                let fightModule = new FightModule;
+                fightModule.initFight(58, 1, 0);
+
+                break;
+        } 
+    }
+
+    private onConfigComplete(event: RES.ResourceEvent) {
+        RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
+        RES.loadGroup("preload");
+    }
+
     private onAddToStage(event: egret.Event) {
 
         let fightModule = new FightModule;
         fightModule.initFight(58, 1, 0);
 
+        RES.addEventListener( RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this ); 
+        RES.loadConfig("resource/default.res.json","resource/");
 
-        let url = "resource/config/ship_mould.txt";
-        let request: egret.HttpRequest = new egret.HttpRequest();
-        let respHandler = function(evt:egret.Event): void {
-            switch (evt.type) {
-                case egret.Event.COMPLETE:
-                    let request: egret.HttpRequest = evt.currentTarget;
-                    console.log( "respHandler:n", request.response );
-                    break;
-            }
-        }
-        request.once(egret.Event.COMPLETE, respHandler, null);
-        request.open(url, egret.HttpMethod.GET); 
-        request.send();
+
+        // let url = "resource/config/ship_mould.txt";
+        // let request: egret.HttpRequest = new egret.HttpRequest();
+        // let respHandler = function(evt:egret.Event): void {
+        //     switch (evt.type) {
+        //         case egret.Event.COMPLETE:
+        //             let request: egret.HttpRequest = evt.currentTarget;
+        //             console.log( "respHandler:n", request.response );
+        //             break;
+        //     }
+        // }
+        // request.once(egret.Event.COMPLETE, respHandler, null);
+        // request.open(url, egret.HttpMethod.GET); 
+        // request.send();
 
         // egret.lifecycle.addLifecycleListener((context) => {
         //     // custom lifecycle plugin
