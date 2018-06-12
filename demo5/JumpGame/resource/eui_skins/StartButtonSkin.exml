@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<e:Skin class="StartButtonSkin" states="up,down,disabled" xmlns:e="http://ns.egret.com/eui">
+	<e:Image source="buttonback_up_png" x="0" y="0" scale9Grid="43,29,237,37" source.down="buttonback_down_png" x.down="-2"/>
+	<e:Label text="开始游戏" x="48" y="14" width="231" height="44" fontFamily="微软雅黑 Light" size="40" bold="true" textAlign="center" verticalAlign="middle" y.down="19" x.down="53" textColor.down="0xEEB8B8"/>
+</e:Skin>

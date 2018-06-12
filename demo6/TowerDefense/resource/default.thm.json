@@ -1,0 +1,8 @@
+{
+  "skins": {},
+  "autoGenerateExmlsList": true,
+  "exmls": [
+    "resource/eui_skins/ButtonSkin.exml",
+    "resource/eui_skins/ProgressBarSkin.exml"
+  ]
+}
