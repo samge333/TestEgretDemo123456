@@ -30,7 +30,7 @@ class Npc {
    	signMsg: any;
    	byOpenNpc: any;
 
-	public init() {
+	public init(row) {
 		this.id = 58;
 		this.npcName = "232";
 		this.headPic = "106601,106601";

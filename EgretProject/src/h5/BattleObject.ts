@@ -147,6 +147,10 @@ class BattleObject {
 	normalSkillMouldOpened = false;
 	//记录小技能使用次数
 	normalSkillUseCount = 0;
+	//是否复活
+	revived = false;
+	//是否已经出过手
+	isAction = false;
 
 	public initWithAttackObject(fightObj: FightObject) {
 		this.resetSkillAndTalentInfo();
@@ -173,13 +177,13 @@ class BattleObject {
 		//普通攻击的技能效用id数组
 		let commonSkillArray = fightObject.commonSkill.health_affect.split(",");
 
-		this.normalSkillMould = ConfigDB.loadConfig("skill_mould", fightObject.normalSkillMould);
+		this.normalSkillMould = ConfigDB.loadConfig("skill_mould_txt", fightObject.normalSkillMould);
 		//小技能效用id数组
 		let normalSkillArray = this.normalSkillMould.health_affect.split(",");
 
 		//生成普通攻击效用列表
 		for (let i = 0; i < commonSkillArray.length; i++) {
-			let skillInfluence: SkillInfluence = ConfigDB.loadConfig("skill_influence", commonSkillArray[i]);
+			let skillInfluence: SkillInfluence = ConfigDB.loadConfig("skill_influence_txt", commonSkillArray[i]);
 			let battleSkill = new BattleSkill;
 			battleSkill.attackerTag = this.battleTag;
 			battleSkill.attacterCoordinate = this.coordinate;
@@ -208,7 +212,7 @@ class BattleObject {
 
 		//生成小技能效用列表
 		for (let i = 0; i < normalSkillArray.length; i++) {
-			let skillInfluence: SkillInfluence = ConfigDB.loadConfig("skill_influence", normalSkillArray[i]);
+			let skillInfluence: SkillInfluence = ConfigDB.loadConfig("skill_influence_txt", normalSkillArray[i]);
 			let battleSkill = new BattleSkill;
 			battleSkill.attackerTag = this.battleTag;
 			battleSkill.attacterCoordinate = this.coordinate;

@@ -25,7 +25,7 @@ class Dms {
 	}
 
 	//返回数组中的一列
-	public static element(element: Array<any>, row: number, format: boolean) {
+	public static element(element: Array<any>, row: number) {
 		if (element == null || row == null) {
 			return null;
 		}
@@ -35,15 +35,12 @@ class Dms {
 			return null;
 		}
 
-		if (format == true) {
-			let data: string = element[row];
-			if (data) {
-				let array = data.split("\t");
-				return array;
-			}
+		let data: string = element[row];
+		if (data) {
+			let array = data.split("\t");
+			return array;
 		}
-
-		return element[row];
+		return null;
 	}
 
 	public static string(element: Array<any>, row: number, colum: number) {

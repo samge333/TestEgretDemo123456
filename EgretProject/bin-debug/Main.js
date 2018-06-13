@@ -81,13 +81,17 @@ var Main = (function (_super) {
     Main.prototype.onResourceLoadComplete = function (event) {
         switch (event.groupName) {
             case "preload":
-                // let data = RES.getRes("ship_mould_txt");
-                // HLog.log(data);
-                var a = Dms.loadTxt("ship_mould_txt");
-                var b = Dms.element(a, 1, true);
-                HLog.log(b);
+                // let a = Dms.loadTxt("ship_mould_txt");
+                // let b = Dms.element(a, 1, true);
+                Dms.loadTxt("npc_txt");
+                Dms.loadTxt("talent_mould_txt");
+                Dms.loadTxt("ship_mould_txt");
+                Dms.loadTxt("skill_influence_txt");
+                Dms.loadTxt("skill_mould_txt");
+                Dms.loadTxt("environment_ship_txt");
                 var fightModule = new FightModule;
                 fightModule.initFight(58, 1, 0);
+                ED.data.fightModule = fightModule;
                 break;
         }
     };
@@ -96,8 +100,6 @@ var Main = (function (_super) {
         RES.loadGroup("preload");
     };
     Main.prototype.onAddToStage = function (event) {
-        var fightModule = new FightModule;
-        fightModule.initFight(58, 1, 0);
         RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         RES.loadConfig("resource/default.res.json", "resource/");
         // let url = "resource/config/ship_mould.txt";

@@ -121,7 +121,9 @@ var BattleObject = (function () {
         this.ptvf83 = 0;
         //84小技能伤害提升% 
         this.ptvf84 = 0;
+        //阵营
         this.battleTag = 0;
+        //位置
         this.coordinate = 0;
         this.healthPoint = 0;
         this.healthMaxPoint = 0;
@@ -129,6 +131,16 @@ var BattleObject = (function () {
         //数码兽id
         this.shipMould = 0;
         this.capacity = 0;
+        //是否死亡
+        this.isDead = false;
+        //是否是否是小技能
+        this.normalSkillMouldOpened = false;
+        //记录小技能使用次数
+        this.normalSkillUseCount = 0;
+        //是否复活
+        this.revived = false;
+        //是否已经出过手
+        this.isAction = false;
     }
     BattleObject.prototype.initWithAttackObject = function (fightObj) {
         this.resetSkillAndTalentInfo();
@@ -140,8 +152,73 @@ var BattleObject = (function () {
     BattleObject.prototype.initProperty = function (fightObj) {
         this.shipMould = fightObj.shipMould;
         this.capacity = fightObj.capacity;
+        this.fightObject = fightObj;
+        this.commonSkillMould = fightObj.commonSkill;
     };
+    //初始化技能和天赋信息
     BattleObject.prototype.initSkillAndTalentInfo = function () {
+        var fightObject = this.fightObject;
+        //普通攻击的技能效用id数组
+        var commonSkillArray = fightObject.commonSkill.health_affect.split(",");
+        this.normalSkillMould = ConfigDB.loadConfig("skill_mould_txt", fightObject.normalSkillMould);
+        //小技能效用id数组
+        var normalSkillArray = this.normalSkillMould.health_affect.split(",");
+        //生成普通攻击效用列表
+        for (var i = 0; i < commonSkillArray.length; i++) {
+            var skillInfluence = ConfigDB.loadConfig("skill_influence_txt", commonSkillArray[i]);
+            var battleSkill = new BattleSkill;
+            battleSkill.attackerTag = this.battleTag;
+            battleSkill.attacterCoordinate = this.coordinate;
+            battleSkill.skillMould = fightObject.commonSkill;
+            battleSkill.skillInfluence = skillInfluence;
+            if (this.battleTag == 0) {
+                if (skillInfluence.influenceGroup == 0) {
+                    battleSkill.byAttackerTag = 0;
+                }
+                else {
+                    battleSkill.byAttackerTag = 1;
+                }
+            }
+            else {
+                if (skillInfluence.influenceGroup == 0) {
+                    battleSkill.byAttackerTag = 1;
+                }
+                else {
+                    battleSkill.byAttackerTag = 0;
+                }
+            }
+            battleSkill.effectType = skillInfluence.skillCategory;
+            battleSkill.effectRound = skillInfluence.influenceDuration;
+            this.commonBattleSkill.push(battleSkill);
+        }
+        //生成小技能效用列表
+        for (var i = 0; i < normalSkillArray.length; i++) {
+            var skillInfluence = ConfigDB.loadConfig("skill_influence_txt", normalSkillArray[i]);
+            var battleSkill = new BattleSkill;
+            battleSkill.attackerTag = this.battleTag;
+            battleSkill.attacterCoordinate = this.coordinate;
+            battleSkill.skillMould = this.normalSkillMould;
+            battleSkill.skillInfluence = skillInfluence;
+            if (this.battleTag == 0) {
+                if (skillInfluence.influenceGroup == 0) {
+                    battleSkill.byAttackerTag = 0;
+                }
+                else {
+                    battleSkill.byAttackerTag = 1;
+                }
+            }
+            else {
+                if (skillInfluence.influenceGroup == 0) {
+                    battleSkill.byAttackerTag = 1;
+                }
+                else {
+                    battleSkill.byAttackerTag = 0;
+                }
+            }
+            battleSkill.effectType = skillInfluence.skillCategory;
+            battleSkill.effectRound = skillInfluence.influenceDuration;
+            this.normalBattleSkill.push(battleSkill);
+        }
     };
     BattleObject.prototype.nextBattleInfo = function () {
     };

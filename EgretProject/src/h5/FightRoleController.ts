@@ -4,7 +4,7 @@ class FightRoleController {
 
 	byAttackTargetTag = 0;
 
-	getFightData(fightRole: FightRole, grade: number) {
+	public getFightData(fightRole: FightRole, grade: number) {
 		let attData = {};
     	let resultBuffer = {};
 
@@ -26,5 +26,18 @@ class FightRoleController {
 		else {
 
 		}
+	}
+
+	//进入下一场战斗
+	public nextBattle() {
+		
+	}
+
+	public initHero() {
+
+	}
+
+	public initMaster() {
+		
 	}
 }

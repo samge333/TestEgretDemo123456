@@ -29,9 +29,6 @@
     },
     {
       "name": "promise"
-    },
-    {
-			"name": "res"
-		}
+    }
   ]
 }

@@ -37,6 +37,12 @@ class BattleCache {
     userViceCaptainInfo: any = null;
     byUserViceCaptainInfo: any = null;
 
+    attacker_priority = 0;
+    defender_priority = 0;
 	attackerSpeedValue = 0;
+    attacker_name = "";
+    defender_name = "";
+    attacker_head_pic = 0;
+    defender_head_pic = 0;
 
 }

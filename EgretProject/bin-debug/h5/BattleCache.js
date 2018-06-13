@@ -37,7 +37,13 @@ var BattleCache = (function () {
         this.totalDamage = 0;
         this.userViceCaptainInfo = null;
         this.byUserViceCaptainInfo = null;
+        this.attacker_priority = 0;
+        this.defender_priority = 0;
         this.attackerSpeedValue = 0;
+        this.attacker_name = "";
+        this.defender_name = "";
+        this.attacker_head_pic = 0;
+        this.defender_head_pic = 0;
     }
     return BattleCache;
 }());

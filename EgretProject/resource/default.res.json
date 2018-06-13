@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,egret_icon_png,description_json,talent_mould_txt,ship_mould_txt,skill_influence_txt,skill_mould_txt",
+			"keys": "bg_jpg,egret_icon_png,description_json,talent_mould_txt,ship_mould_txt,skill_influence_txt,skill_mould_txt,environment_ship_txt,npc_txt",
 			"name": "preload"
 		}
 	],
@@ -40,6 +40,16 @@
 			"name": "skill_mould_txt",
 			"type": "text",
 			"url": "config/skill_mould.txt"
+		},
+		{
+			"name": "environment_ship_txt",
+			"type": "text",
+			"url": "config/environment_ship.txt"
+		},
+		{
+			"name": "npc_txt",
+			"type": "text",
+			"url": "assets/npc.txt"
 		}
 	]
 }

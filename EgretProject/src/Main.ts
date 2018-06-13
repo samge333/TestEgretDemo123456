@@ -40,10 +40,12 @@ class Main extends egret.DisplayObjectContainer {
                 // let a = Dms.loadTxt("ship_mould_txt");
                 // let b = Dms.element(a, 1, true);
 
+                Dms.loadTxt("npc_txt");
                 Dms.loadTxt("talent_mould_txt");
                 Dms.loadTxt("ship_mould_txt");
                 Dms.loadTxt("skill_influence_txt");
                 Dms.loadTxt("skill_mould_txt");
+                Dms.loadTxt("environment_ship_txt");
 
                 let fightModule = new FightModule;
                 fightModule.initFight(58, 1, 0);
@@ -60,10 +62,6 @@ class Main extends egret.DisplayObjectContainer {
     }
 
     private onAddToStage(event: egret.Event) {
-
-        let fightModule = new FightModule;
-        fightModule.initFight(58, 1, 0);
-
         RES.addEventListener( RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this ); 
         RES.loadConfig("resource/default.res.json","resource/");
 

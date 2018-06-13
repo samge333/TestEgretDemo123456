@@ -12,18 +12,24 @@ class FightModule {
 	byAttackTargetTag = 0;
 	//记录当前出手对象
 	currentObject: BattleObject = null;
+	//战斗类型
+	fightType = FightModuleEnum.FIGHT_TYPE_PVE_NORMAL;
 
 	public initFight(npcId: number, difficulty: number, fightType: number) {
-		let npcObj = ConfigDB.loadConfig("npc", npcId);
+		let npcObj = ConfigDB.loadConfig("npc_txt", npcId);
 
 		let resultBuffer = {};
 		this.initBattleField(npcObj, difficulty, fightType, resultBuffer);
 
+		HLog.log(resultBuffer);
 		let json = JSON.stringify(resultBuffer);
 		NetworkProtocol.parser_func(json);
 	}
 
 	public initBattleField(npc: Npc, difficulty: number, fightType: number, resultBuffer) {
+
+		this.fightType = fightType;
+		
 		let battleCache = new BattleCache;
 		battleCache.userInfo = ED.data.user_info;
 		battleCache.battleType = fightType;
@@ -33,15 +39,19 @@ class FightModule {
 
 		let attackObjects = {};
 		let fightObject = new FightObject;
+		fightObject.initWithUserData(2, ED.data.user_ship, 0, ED.data.user_info.user_id);
 		attackObjects["1"] = fightObject;
 
 		battleCache.attackerSpeedValue = 0;
 		battleCache.attackName = "";
 		battleCache.attackerObjects = attackObjects;
 
+		//3波的敌方
 		let byAttackerObjectsList: Array<any> = [];
 		let byAttackObjects = {};
-		byAttackObjects["1"] = new FightObject;
+		let fightObject2 = new FightObject;
+		fightObject2.initWithNpc(npc, 2, 59);
+		byAttackObjects["1"] = fightObject2;
 		byAttackerObjectsList.push(byAttackObjects);
 
 		battleCache.byAttackerObjectsList = byAttackerObjectsList
@@ -50,40 +60,51 @@ class FightModule {
 
 	}
 
-	public writeBattleFieldInit(battleCache, selfTag, targetTag, resultBuffer) {
-		resultBuffer.battleType = battleCache.battleType;
-		resultBuffer.byAttackerId = battleCache.byAttackerId;
-		resultBuffer.difficulty = battleCache.difficulty;
-		resultBuffer.maxBattleCount = battleCache.maxBattleCount;
+	//获取战斗角色数量
+	public getFightObjectCount(attackerObjects) {
+		let count = 0;
+		for (let k in attackerObjects) {
+			if (attackerObjects.k) {
+				count = count + 1;
+			}
+		}
+		return count;
+	}
+
+	public writeBattleFieldInit(battleCache: BattleCache, selfTag, targetTag, resultBuffer) {
+		resultBuffer.battle_init_type = battleCache.battleType;
+		resultBuffer.objId = battleCache.byAttackerId;	
+		resultBuffer.battle_level = battleCache.difficulty;
+		resultBuffer.battle_total_count = battleCache.maxBattleCount;
 		resultBuffer.attacker_priority = battleCache.attacker_priority;
 		resultBuffer.defender_priority = battleCache.defender_priority;
 		resultBuffer.attacker_name = battleCache.attacker_name;
 		resultBuffer.defender_name = battleCache.defender_name;
 		resultBuffer.attacker_head_pic = battleCache.attacker_head_pic;
 		resultBuffer.defender_head_pic = battleCache.defender_head_pic;
-		resultBuffer.attackerCount = 1;
-		resultBuffer.attackName = battleCache.attackName;
-		resultBuffer.attackCombatForce = battleCache.attackCombatForce;
-		resultBuffer.byAttackName = battleCache.byAttackName;
-		resultBuffer.byAttackComobatForce = battleCache.byAttackComobatForce;
+		resultBuffer._hero_number = this.getFightObjectCount(battleCache.attackerObjects);
 
 		//我方
-		let fightObjects = battleCache.attackerObjects
+		let fightObjects = battleCache.attackerObjects;
 		let attackerFightObjectArray = [];
 		for (let k in fightObjects) {
 			if (fightObjects[k]) {
-				let fightObjectData = {};
-				fightObjectData["id"] = fightObjects[k].id;
-				fightObjectData["picIndex"] = fightObjects[k].picIndex;
-				fightObjectData["zoarium"] = fightObjects[k].zoarium;
-				fightObjectData["quality"] = fightObjects[k].quality;
-				fightObjectData["healthPoint"] = fightObjects[k].healthPoint;
-				fightObjectData["skillPoint"] = fightObjects[k].skillPoint;
-				fightObjectData["mouldId"] = fightObjects[k].mouldId;
-				fightObjectData["amplifyPercent"] = fightObjects[k].amplifyPercent;
-				fightObjectData["fightName"] = fightObjects[k].fightName;
-				fightObjectData["evolutionLevel"] = fightObjects[k].evolutionLevel;
-				fightObjectData["wisdom"] = fightObjects[k].wisdom;
+				let fightObjectData: any = {};
+				fightObjectData._id = fightObjects[k].id;
+				fightObjectData._pos = k;
+				fightObjectData._head = fightObjects[k].picIndex;
+				fightObjectData._power_skill_id = fightObjects[k].specialSkillDecribe;
+				fightObjectData._fit_skill_id = fightObjects[k].zoarium;
+				fightObjectData._quality = fightObjects[k].quality;
+				fightObjectData._hp = fightObjects[k].healthPoint;
+				fightObjectData._sp = fightObjects[k].skillPoint;
+				fightObjectData._type = selfTag;
+				fightObjectData._mouldId = fightObjects[k].mouldId;
+				fightObjectData._scale = fightObjects[k].amplifyPercent;
+				fightObjectData._name = fightObjects[k].fightName;
+				fightObjectData._evolution_level = fightObjects[k].evolutionLevel;
+				fightObjectData._hero_speed = fightObjects[k].wisdom;
+				fightObjectData._max_hp = fightObjects[k].healthPoint;
 
 				attackerFightObjectArray.push(fightObjectData);
 			}
@@ -99,20 +120,22 @@ class FightModule {
 			let arr2 = [];
 			for (let k in objects) {
 				if (objects[k]) {
-					let fightObjectData = {};
-					fightObjectData["id"] = objects[k].id;
-					fightObjectData["picIndex"] = objects[k].picIndex;
-					fightObjectData["zoarium"] = objects[k].zoarium;
-					fightObjectData["quality"] = objects[k].quality;
-					fightObjectData["healthPoint"] = objects[k].healthPoint;
-					fightObjectData["skillPoint"] = objects[k].skillPoint;
-					fightObjectData["mouldId"] = objects[k].mouldId;
-					fightObjectData["amplifyPercent"] = objects[k].amplifyPercent;
-					fightObjectData["fightName"] = objects[k].fightName;
-					fightObjectData["evolutionLevel"] = objects[k].evolutionLevel;
-					fightObjectData["wisdom"] = objects[k].wisdom;
-					fightObjectData["specialSkillDecribe"] = objects[k].specialSkillDecribe;
-					fightObjectData["evolutionLevel"] = objects[k].evolutionLevel;
+					let fightObjectData: any = {};
+					fightObjectData._id = objects[k].id;
+					fightObjectData._pos = k;
+					fightObjectData._head = objects[k].picIndex;
+					fightObjectData._power_skill_id = objects[k].specialSkillDecribe;
+					fightObjectData._fit_skill_id = objects[k].zoarium;
+					fightObjectData._quality = objects[k].quality;
+					fightObjectData._hp = objects[k].healthPoint;
+					fightObjectData._sp = objects[k].skillPoint;
+					fightObjectData._type = targetTag;
+					fightObjectData._mouldId = objects[k].mouldId;
+					fightObjectData._scale = objects[k].amplifyPercent;
+					fightObjectData._name = objects[k].fightName;
+					fightObjectData._evolution_level = objects[k].evolutionLevel;
+					fightObjectData._hero_speed = objects[k].wisdom;
+					fightObjectData._max_hp = objects[k].specialSkillDecribe;
 
 					arr2.push(fightObjectData);
 				}
@@ -256,6 +279,12 @@ class FightModule {
 					else {
 						resultBuffer.battleTag = battleObject.battleTag;
 						resultBuffer.coordinate = battleObject.coordinate;
+						resultBuffer.linkAttackerPos = 0;
+						resultBuffer.healthPoint = battleObject.healthPoint;
+						resultBuffer.skillPoint = battleObject.skillPoint;
+						resultBuffer.hasRestrain = 0;
+						//技能数量写死为1，做测试
+						resultBuffer.battleSkillCount = 1;
 
 						let skillId = 0;
 
@@ -271,6 +300,7 @@ class FightModule {
 						else {
 							battleSkillList = battleObject.commonBattleSkill;
 							skillReleasePosion = battleObject.commonSkillMould.skill_release_position;
+							skillId = battleObject.commonSkillMould.id;
 						}
 
 						if (battleObject.battleTag == 0) {
@@ -279,6 +309,10 @@ class FightModule {
 						else {
 							resultBuffer.moveCoordinate = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, this.attackObjects);
 						}
+
+						resultBuffer.skillId = skillId;
+						//是否有buff影响，写死为0，方便测试
+						resultBuffer.attackerForepartBuffState = 0;
 					}
 				}
 
@@ -350,11 +384,18 @@ class FightModule {
 					resultBuffer.healthPoint = battleObject.healthPoint;
 					resultBuffer.skillPoint = battleObject.skillPoint;
 					resultBuffer.hasRestrain = 0;
+
+					resultBuffer.skillInfluenceCount = 1;
 					resultBuffer.tmpBattleSkillBuffer = tmpBattleSkillBuffer;
+
+					//后段技能效用数量写死为0测试
+					resultBuffer.skillAfterInfluenceCount = 0;
 
 				}
 
 			}
 		}
+
+		// HLog.log(resultBuffer);
 	}
 }

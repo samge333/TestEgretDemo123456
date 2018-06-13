@@ -4,7 +4,7 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 var Npc = (function () {
     function Npc() {
     }
-    Npc.prototype.init = function () {
+    Npc.prototype.init = function (row) {
         this.id = 58;
         this.npcName = "232";
         this.headPic = "106601,106601";

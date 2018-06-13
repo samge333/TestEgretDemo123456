@@ -19,22 +19,52 @@ var Dms = (function () {
         // HLog.log(array);
         return array;
     };
-    Dms.element = function (element, row, format) {
+    //返回数组中的一列
+    Dms.element = function (element, row) {
         if (element == null || row == null) {
             return null;
         }
-        if (element[row - 1] == null) {
+        if (element[row] == null) {
             HLog.log("索引配置文件出错");
             return null;
         }
-        if (format == true) {
-            var data = element[row - 1];
-            if (data) {
-                var array = data.split("\t");
-                return array;
-            }
+        var data = element[row];
+        if (data) {
+            var array = data.split("\t");
+            return array;
         }
-        return element[row - 1];
+        return null;
+    };
+    Dms.string = function (element, row, colum) {
+        if (element == null || row == null || colum == null) {
+            return null;
+        }
+        if (element[row] == null) {
+            HLog.log("dms.string 报错1");
+            return null;
+        }
+        if (element[row][colum] == null) {
+            element[row] = element[row].split("\t");
+        }
+        if (element[row][colum] == null) {
+            HLog.log("dms.string 报错2");
+            return null;
+        }
+        return element[row][colum];
+    };
+    Dms.float = function (element, row, colum) {
+        var value = Dms.string(element, row, colum);
+        if (value) {
+            value = value;
+            return value;
+        }
+    };
+    Dms.int = function (element, row, colum) {
+        var value = Dms.float(element, row, colum);
+        if (value) {
+            value = Math.round(value);
+            return null;
+        }
     };
     Dms.data = {};
     return Dms;
