@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<e:Skin class="ButtonSkin" states="up,down,disabled" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Image source="button_down_png" includeIn="down" x="0" y="0" width="90" height="39"/>
+	<e:Image source="button_up_png" includeIn="up" x="0" y="0" width="90" height="39"/>
+	<e:Label id="labelDisplay" text="标签" x="8" y="5" size="23" textAlign="center"/>
+</e:Skin>

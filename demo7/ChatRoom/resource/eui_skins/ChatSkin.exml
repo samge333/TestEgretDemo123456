@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<e:Skin class="ChatSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Image source="background_png" x="0" y="0"/>
+	<e:Button id="pushMsgBtn" label="按钮" x="335" y="302" skinName="PushMsgBtnSkin"/>
+	<e:Label id="msgText" x="42" y="33" width="351" height="237" textColor="0x000000" fontFamily="微软雅黑" size="18" verticalAlign="top" text="connecting..."/>
+	<e:EditableText id="msgPushText" width="268" height="33" x="35" y="302" size="18" fontFamily="微软雅黑" textColor="0x000000"/>
+</e:Skin>
