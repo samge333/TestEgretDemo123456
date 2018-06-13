@@ -6,6 +6,12 @@ class FightModule {
 	attackObjects: any = {};
 	//地方BattleObject列表
 	byAttackObjects: any = {};
+	//出手顺序列表
+	fightOrderList: Array<any>;
+	//攻击目标
+	byAttackTargetTag = 0;
+	//记录当前出手对象
+	currentObject: BattleObject = null;
 
 	public initFight(npcId: number, difficulty: number, fightType: number) {
 		let npcObj = ConfigDB.loadConfig("npc", npcId);
@@ -201,5 +207,154 @@ class FightModule {
 
 		let json = JSON.stringify(buffBuffer);
 		NetworkProtocol.parser_func(json);
+	}
+
+	//获取指定阵营和位置的BattleObject对象
+	public getAppointFightObject(battleTag: number, coordinate: number) {
+		for (let i = 0; i < this.fightOrderList.length; i++) {
+			let battleObj = (this.fightOrderList[i]) as BattleObject;
+			if (battleObj.battleTag == battleTag && battleObj.coordinate == coordinate) {
+				return battleObj;
+			}
+		}
+	}
+
+	//设置攻击目标
+	public setByAttackTargetTag(byAttackTargetTag: number) {
+		this.byAttackTargetTag = byAttackTargetTag;
+	}
+
+	//获取这个BattleObject的攻击数据，开始计算，返回resultBuffer
+	public fightObjectAttack(attackObject: BattleObject, resultBuffer) {
+		let battleObject = attackObject;
+
+		let skillPoint = battleObject.skillPoint;
+
+		if (battleObject.isDead) {
+
+		}
+		else {
+			// if(battleObject.isDizzy or battleObject.isParalysis or battleObject.isCripple or true == battleObject.revived or false == self:checkHasByAttacker(battleObject)) then
+			if (false) {
+
+			}
+			else {
+				//当前攻击技能效用BattleSkill列表
+				let battleSkillList: Array<BattleSkill>;
+				let skillReleasePosion = 0;
+				let goon = true;
+
+				// if true ~= battleObject.skipSuperSkillMould and nil ~= battleObject.specialSkillMould and ((battleObject.skillPoint >= FightModule.MAX_SP or self.canFreeSkill == true) and battleObject.isDisSp ~= true) then
+				if (false) {
+
+				}
+				else {
+					// if(battleObject.isParalysis) then
+					if (false) {
+
+					}
+					else {
+						resultBuffer.battleTag = battleObject.battleTag;
+						resultBuffer.coordinate = battleObject.coordinate;
+
+						let skillId = 0;
+
+						//当前发动的是小技能
+						if (battleObject.normalSkillMouldOpened == true) {
+							battleSkillList = battleObject.normalBattleSkill;
+							skillReleasePosion = battleObject.normalSkillMould.skill_release_position;
+							battleObject.normalSkillMouldOpened = false;
+							skillId = battleObject.normalSkillMould.id;
+							battleObject.normalSkillUseCount = battleObject.normalSkillUseCount + 1;
+						}
+						//当前发动的是普通攻击
+						else {
+							battleSkillList = battleObject.commonBattleSkill;
+							skillReleasePosion = battleObject.commonSkillMould.skill_release_position;
+						}
+
+						if (battleObject.battleTag == 0) {
+							resultBuffer.moveCoordinate = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, this.byAttackObjects);
+						}
+						else {
+							resultBuffer.moveCoordinate = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, this.attackObjects);
+						}
+					}
+				}
+
+				if (goon) {
+					//被攻击的位置列表
+					let byAttackCoordinates: Array<any>;
+					//技能效用数据
+					let tmpBattleSkillBuffer = {};
+
+					if (battleObject.isDead != true) {
+						for (let i = 0; i < battleSkillList.length; i++) {
+							let attackSkill = battleSkillList[i];
+							attackSkill.formulaInfo = attackSkill.skillInfluence.formulaInfo;
+							let battleTag = battleObject.battleTag;
+							let influenceGroup = attackSkill.skillInfluence.influenceGroup;
+
+							let needInitAttackTarget = true;
+							if (needInitAttackTarget == true) {
+								if (attackSkill.formulaInfo != FORMULA_INFO.FORMULA_INFO_FORTHWITH) {
+									if ( (battleTag == 0 && influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OPPOSITE)
+										|| (battleTag == 1 && influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OURSITE) ) {
+										byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, attackSkill.skillInfluence, battleObject, this.byAttackObjects, this.byAttackTargetTag);
+									}
+									else {
+										byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, attackSkill.skillInfluence, battleObject, this.attackObjects, this.byAttackTargetTag);
+									}
+								}
+								else {
+
+								}
+							}
+
+							if (battleObject.battleTag == 0) {
+								//作用敌方
+								if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OPPOSITE) {
+									attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this, tmpBattleSkillBuffer);
+								}	
+								//作用我方
+								else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OURSITE) {
+									attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this, tmpBattleSkillBuffer);
+								}
+								//作用自己
+								else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_CURRENT) {
+									byAttackCoordinates = [];
+									byAttackCoordinates.push(battleObject.coordinate);
+									attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this, tmpBattleSkillBuffer);
+								}
+							}
+							else {
+								//作用敌方
+								if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OPPOSITE) {
+									attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this, tmpBattleSkillBuffer)
+								}
+								//作用我方
+								else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OURSITE) {
+									attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this, tmpBattleSkillBuffer);
+								}
+								//作用自己
+								else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_CURRENT) {
+									byAttackCoordinates = [];
+									byAttackCoordinates.push(battleObject.coordinate);
+									attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this, tmpBattleSkillBuffer);
+								}
+							}
+
+						}
+					}
+
+					resultBuffer.healthPoint = battleObject.healthPoint;
+					resultBuffer.skillPoint = battleObject.skillPoint;
+					resultBuffer.hasRestrain = 0;
+					resultBuffer.tmpBattleSkillBuffer = tmpBattleSkillBuffer;
+
+				}
+
+			}
+		}
 	}
 }

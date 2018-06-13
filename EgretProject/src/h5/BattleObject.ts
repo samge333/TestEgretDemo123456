@@ -121,7 +121,9 @@ class BattleObject {
     //84小技能伤害提升% 
     ptvf84 = 0;
 
+	//阵营
 	battleTag = 0;
+	//位置
 	coordinate = 0;
 	healthPoint = 0;
 	healthMaxPoint = 0;
@@ -129,6 +131,22 @@ class BattleObject {
 	//数码兽id
 	shipMould = 0;
 	capacity = 0;
+	//是否死亡
+	isDead = false;
+	//普通攻击效用列表
+	commonBattleSkill: Array<BattleSkill>;
+	//小技能攻击效用列表
+	normalBattleSkill: Array<BattleSkill>;
+	//当前battleObject对应的fightObject
+	fightObject: FightObject;
+	//普攻
+	commonSkillMould:SkillMould;
+	//小技能
+	normalSkillMould: SkillMould;
+	//是否是否是小技能
+	normalSkillMouldOpened = false;
+	//记录小技能使用次数
+	normalSkillUseCount = 0;
 
 	public initWithAttackObject(fightObj: FightObject) {
 		this.resetSkillAndTalentInfo();
@@ -143,13 +161,79 @@ class BattleObject {
 	public initProperty(fightObj: FightObject) {
 		this.shipMould = fightObj.shipMould;
 		this.capacity = fightObj.capacity;
-
-		
+		this.fightObject = fightObj;
+		this.commonSkillMould = fightObj.commonSkill;
 	
 	}
 
+	//初始化技能和天赋信息
 	public initSkillAndTalentInfo() {
+		let fightObject = this.fightObject;
 
+		//普通攻击的技能效用id数组
+		let commonSkillArray = fightObject.commonSkill.health_affect.split(",");
+
+		this.normalSkillMould = ConfigDB.loadConfig("skill_mould", fightObject.normalSkillMould);
+		//小技能效用id数组
+		let normalSkillArray = this.normalSkillMould.health_affect.split(",");
+
+		//生成普通攻击效用列表
+		for (let i = 0; i < commonSkillArray.length; i++) {
+			let skillInfluence: SkillInfluence = ConfigDB.loadConfig("skill_influence", commonSkillArray[i]);
+			let battleSkill = new BattleSkill;
+			battleSkill.attackerTag = this.battleTag;
+			battleSkill.attacterCoordinate = this.coordinate;
+			battleSkill.skillMould = fightObject.commonSkill;
+			battleSkill.skillInfluence = skillInfluence;
+			if (this.battleTag == 0) {
+				if (skillInfluence.influenceGroup == 0) {
+					battleSkill.byAttackerTag = 0;
+				}
+				else {
+					battleSkill.byAttackerTag = 1;
+				}
+			}
+			else {
+				if (skillInfluence.influenceGroup == 0) {
+					battleSkill.byAttackerTag = 1;
+				}
+				else {
+					battleSkill.byAttackerTag = 0;
+				}
+			}
+			battleSkill.effectType = skillInfluence.skillCategory;
+			battleSkill.effectRound = skillInfluence.influenceDuration;
+			this.commonBattleSkill.push(battleSkill);
+		}
+
+		//生成小技能效用列表
+		for (let i = 0; i < normalSkillArray.length; i++) {
+			let skillInfluence: SkillInfluence = ConfigDB.loadConfig("skill_influence", normalSkillArray[i]);
+			let battleSkill = new BattleSkill;
+			battleSkill.attackerTag = this.battleTag;
+			battleSkill.attacterCoordinate = this.coordinate;
+			battleSkill.skillMould = this.normalSkillMould;
+			battleSkill.skillInfluence = skillInfluence;
+			if (this.battleTag == 0) {
+				if (skillInfluence.influenceGroup == 0) {
+					battleSkill.byAttackerTag = 0;
+				}
+				else {
+					battleSkill.byAttackerTag = 1;
+				}
+			}
+			else {
+				if (skillInfluence.influenceGroup == 0) {
+					battleSkill.byAttackerTag = 1;
+				}
+				else {
+					battleSkill.byAttackerTag = 0;
+				}
+			}
+			battleSkill.effectType = skillInfluence.skillCategory;
+			battleSkill.effectRound = skillInfluence.influenceDuration;
+			this.normalBattleSkill.push(battleSkill);
+		}
 	}
 
 	public nextBattleInfo() {

@@ -41,14 +41,9 @@ class ConfigDB {
 			obj = new Npc;
 		}
 
-		let data = ConfigDB.getDataByIndex(configName, idx);
+		let data = Dms.element(Dms.data[configName], idx, true);
 		obj.init(data);
 
 		return obj;
 	}
-
-	private static getDataByIndex(configName, idx) {
-
-	}
-
 }

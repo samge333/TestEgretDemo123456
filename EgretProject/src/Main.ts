@@ -40,8 +40,15 @@ class Main extends egret.DisplayObjectContainer {
                 // let a = Dms.loadTxt("ship_mould_txt");
                 // let b = Dms.element(a, 1, true);
 
+                Dms.loadTxt("talent_mould_txt");
+                Dms.loadTxt("ship_mould_txt");
+                Dms.loadTxt("skill_influence_txt");
+                Dms.loadTxt("skill_mould_txt");
+
                 let fightModule = new FightModule;
                 fightModule.initFight(58, 1, 0);
+
+                ED.data.fightModule = fightModule;
 
                 break;
         } 
