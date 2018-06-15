@@ -5,6 +5,9 @@ var ConfigDB = (function () {
     function ConfigDB() {
     }
     ConfigDB.loadConfig = function (configName, idx) {
+        if (idx == null) {
+            HLog.log("索引为空");
+        }
         var obj;
         if (configName == "skill_mould_txt") {
             obj = new SkillMould;

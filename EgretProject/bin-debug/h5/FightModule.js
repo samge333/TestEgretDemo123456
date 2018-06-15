@@ -5,8 +5,10 @@ var FightModule = (function () {
     function FightModule() {
         //我方BattleObject列表
         this.attackObjects = {};
-        //地方BattleObject列表
+        //敌方BattleObject列表
         this.byAttackObjects = {};
+        //出手顺序列表
+        this.fightOrderList = [];
         //攻击目标
         this.byAttackTargetTag = 0;
         //记录当前出手对象
@@ -21,9 +23,6 @@ var FightModule = (function () {
         // HLog.log(resultBuffer);
         var json = JSON.stringify(resultBuffer);
         ED.parser_func("parse_battle_field_init", json);
-        //测试攻击数据
-        var fightRoleController = new FightRoleController;
-        fightRoleController.nextBattle();
     };
     FightModule.prototype.initBattleField = function (npc, difficulty, fightType, resultBuffer) {
         this.fightType = fightType;
@@ -53,6 +52,7 @@ var FightModule = (function () {
         byAttackObjects[2] = fightObject2;
         byAttackerObjectsList.push(byAttackObjects);
         battleCache.byAttackerObjectsList = byAttackerObjectsList;
+        ED.data.user_info.battleCache = battleCache;
         this.writeBattleFieldInit(battleCache, 0, 1, resultBuffer);
     };
     //获取战斗角色数量
@@ -155,23 +155,38 @@ var FightModule = (function () {
         resultBuffer.otherAttribute = "0,0";
     };
     //初始化战斗顺序
-    FightModule.prototype.initFightOrder = function (userInfo) {
-        var tempBattleCache = userInfo.battleCache;
+    FightModule.prototype.initFightOrder = function () {
+        var tempBattleCache = ED.data.user_info.battleCache;
         var attackerCombatForce = tempBattleCache.attackCombatForce;
         var byAttackerCombatForce = tempBattleCache.byAttackComobatForce;
         this.initBattleInfo(tempBattleCache);
+        for (var i = 0; i < 6; i++) {
+            if (this.attackObjects[i]) {
+                this.attackObjects[i].isAction = false;
+                this.fightOrderList.push(this.attackObjects[i]);
+            }
+        }
+        for (var i = 0; i < 6; i++) {
+            if (this.byAttackObjects[i]) {
+                this.byAttackObjects[i].isAction = false;
+                this.fightOrderList.push(this.byAttackObjects[i]);
+            }
+        }
     };
+    //创建BattleObject
     FightModule.prototype.initBattleInfo = function (battleCache) {
         var resetAttackerInfo = true;
         if (battleCache.currentBattleCount > 0) {
             resetAttackerInfo = false;
         }
+        //我方fightObject
         var attackObjects = battleCache.attackerObjects;
-        var byAttackObjects = battleCache.byAttackerObjectsList[battleCache.currentBattleCount + 1];
+        //0就是取敌方第一波的fightObject数据
+        var byAttackObjects = battleCache.byAttackerObjectsList[battleCache.currentBattleCount];
         //创建我方BattleObject
         for (var k in attackObjects) {
             if (attackObjects[k]) {
-                //第一波
+                //我方第一波才创建battleObject
                 if (resetAttackerInfo == true) {
                     var battleObject = new BattleObject;
                     battleObject.initWithAttackObject(attackObjects[k]);
@@ -185,12 +200,12 @@ var FightModule = (function () {
         for (var k in byAttackObjects) {
             if (byAttackObjects[k]) {
                 var battleObject = new BattleObject;
-                battleObject.initWithAttackObject(attackObjects[k]);
-                this.byAttackObjects = battleObject;
+                battleObject.initWithAttackObject(byAttackObjects[k]);
+                this.byAttackObjects[k] = battleObject;
             }
         }
         for (var k in this.attackObjects) {
-            var v = attackObjects[k];
+            var v = this.attackObjects[k];
             v.nextBattleInfo();
         }
         var buffBattleSkill = { "effectAmount": 0 };
@@ -198,33 +213,9 @@ var FightModule = (function () {
         //TODO:战前天赋计算
         //...
         buffBuffer.effectAmount = buffBattleSkill.effectAmount;
-        buffBuffer.currentBattleCount = battleCache.currentBattleCount + 1;
-        var attackObjectsdata = [];
-        for (var k in attackObjects) {
-            var attackObj = attackObjects[k];
-            var table = {};
-            table.battleTag = attackObj.battleTag;
-            table.coordinate = attackObj.coordinate;
-            table.healthPoint = attackObj.healthPoint;
-            table.healthMaxPoint = attackObj.healthMaxPoint;
-            table.skillPoint = attackObj.skillPoint;
-            attackObjectsdata.push(table);
-        }
-        buffBuffer.attackObjectsdata = attackObjectsdata;
-        var byAttackObjectsdata = [];
-        for (var k in byAttackObjects) {
-            var attackObj = byAttackObjects[k];
-            var table = {};
-            table.battleTag = attackObj.battleTag;
-            table.coordinate = attackObj.coordinate;
-            table.healthPoint = attackObj.healthPoint;
-            table.healthMaxPoint = attackObj.healthMaxPoint;
-            table.skillPoint = attackObj.skillPoint;
-            byAttackObjectsdata.push(table);
-        }
-        buffBuffer.byAttackObjectsdata = byAttackObjectsdata;
+        //解析战斗开始前的效用信息
         var json = JSON.stringify(buffBuffer);
-        ED.parser_func("", json);
+        ED.parser_func("parse_environment_fight_battle_start_influence_info", json);
     };
     //获取指定阵营和位置的BattleObject对象
     FightModule.prototype.getAppointFightObject = function (battleTag, coordinate) {
@@ -234,6 +225,7 @@ var FightModule = (function () {
                 return battleObj;
             }
         }
+        return null;
     };
     //设置攻击目标
     FightModule.prototype.setByAttackTargetTag = function (byAttackTargetTag) {
@@ -301,6 +293,7 @@ var FightModule = (function () {
                     //技能效用数据
                     var tmpBattleSkillBuffer = {};
                     if (battleObject.isDead != true) {
+                        //遍历当前技能的技能效用列表，一个技能有1个或多个技能效用，见表skill_mould表第9列
                         for (var i = 0; i < battleSkillList.length; i++) {
                             var attackSkill = battleSkillList[i];
                             attackSkill.formulaInfo = attackSkill.skillInfluence.formulaInfo;
@@ -362,6 +355,10 @@ var FightModule = (function () {
         }
         // HLog.log(resultBuffer);
     };
+    FightModule.ATTACK_SP_ADD_VAULE = 200;
+    FightModule.KILL_TARGET_SP_ADD_VAULE = 200;
+    FightModule.CHANGE_NEXT_FIGHT_SP_ADD_VAULE = 150;
+    FightModule.MAX_SP = 1000;
     return FightModule;
 }());
 __reflect(FightModule.prototype, "FightModule");

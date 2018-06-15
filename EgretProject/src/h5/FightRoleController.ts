@@ -2,7 +2,7 @@ class FightRoleController {
 	public constructor() {
 	}
 
-	byAttackTargetTag = 0;
+	byAttackTargetTag = 1;
 	//我方角色列表
 	_hero_formation_ex: Array<FightRole> = [];
 	//地方角色列表
@@ -33,6 +33,8 @@ class FightRoleController {
 			ED.data.fightModule.setByAttackTargetTag(this.byAttackTargetTag);
 
 			ED.data.fightModule.fightObjectAttack(attackObj, resultBuffer);
+
+			HLog.log("获取这个BattleObject的攻击数据", resultBuffer);
 
 			let jsonStr = JSON.stringify(resultBuffer);
 			ED.parse_environment_fight_role_round_attack_data(jsonStr, attData);

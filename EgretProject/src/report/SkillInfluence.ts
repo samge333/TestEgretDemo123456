@@ -97,7 +97,7 @@ class SkillInfluence {
 	id: any;						
 	skillMould: any;		
 	influenceDescribe: any;		
-	skillCategory: any;		
+	skillCategory = 0;		
 	skillParam: any;			
 	skillEffectMinValue: any;			
 	skillEffectMaxValue: any; 
@@ -105,8 +105,8 @@ class SkillInfluence {
 	isRate: any;		
 	additionEffectProbability: any;		
 	influenceGroup = 0;			
-	influenceRange: any;
-	influenceRangeType: any;
+	influenceRange = 0;
+	influenceRangeType = 0;
 	peakLimit: any;			
 	influenceRestrict: any;		
 	influenceDuration: any;			
@@ -145,8 +145,8 @@ class SkillInfluence {
 		this.additionEffectProbability = row[9];			
 		this.influenceGroup = row[10];
 		let arrInfluenceRange = (row[11] as string).split(",");
-		this.influenceRange = arrInfluenceRange[0];
-		this.influenceRangeType = arrInfluenceRange[1];
+		this.influenceRange = Number(arrInfluenceRange[0]);
+		this.influenceRangeType = Number(arrInfluenceRange[1]);
 		this.peakLimit = row[12];			
 		this.influenceRestrict = row[13];		
 		this.influenceDuration = row[14];			

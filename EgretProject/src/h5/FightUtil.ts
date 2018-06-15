@@ -3,7 +3,7 @@ class FightUtil {
 	}
 
 	//计算移动位置
-	public static computeMoveCoordinate(currentAttackerCoordinate: number, skillReleasePosion: number, byAttackObjects: Array<BattleObject>) {
+	public static computeMoveCoordinate(currentAttackerCoordinate: number, skillReleasePosion: number, byAttackObjects: {[key: number]: BattleObject}) {
 		if (skillReleasePosion == SKILL_RELEASE_POSION.SKILL_RELEASE_POSION_SPOT) {
 			return SKILL_RELEASE_POSION.SKILL_RELEASE_POSION_SPOT;
 		}
@@ -139,14 +139,49 @@ class FightUtil {
 		return skillReleasePosion;
 	}
 
-	public static computeEffectCoordinate(currentAttackerCoordinate: number, skillInfluence: SkillInfluence, battleObject: BattleObject, byAttackObjects: BattleObject, byAttackTargetTag: number): any {
+	public static computeEffectCoordinate(currentAttackerCoordinate: number, skillInfluence: SkillInfluence, battleObject: BattleObject, byAttackObjects: {[key: number]: BattleObject}, byAttackTargetTag: number): any {
+		let influenceRange = skillInfluence.influenceRange;
+		let headCoordinate = -1;
+		let backCoordinate = -1;
 
+		//找出打单个目标的位置
+		if (byAttackObjects[1] && byAttackObjects[1].isDead == false && byAttackObjects[1].revived == false) {
+			headCoordinate = 1;
+		}
+		else if (byAttackObjects[2] && byAttackObjects[2].isDead == false && byAttackObjects[2].revived == false) {
+			headCoordinate = 2;
+		}
+		else if (byAttackObjects[3] && byAttackObjects[3].isDead == false && byAttackObjects[3].revived == false) {
+			headCoordinate = 3;
+		}
+		else if (byAttackObjects[4] && byAttackObjects[4].isDead == false && byAttackObjects[4].revived == false) {
+			headCoordinate = 4;
+		}
+		else if (byAttackObjects[5] && byAttackObjects[5].isDead == false && byAttackObjects[5].revived == false) {
+			headCoordinate = 5;
+		}
+		else if (byAttackObjects[6] && byAttackObjects[6].isDead == false && byAttackObjects[6].revived == false) {
+			headCoordinate = 6;
+		}
+
+		if (byAttackTargetTag && byAttackTargetTag > 0) {
+			if (byAttackObjects[byAttackTargetTag] && byAttackObjects[byAttackTargetTag].isDead == false && byAttackObjects[byAttackTargetTag].revived == false) {
+				headCoordinate = byAttackTargetTag;
+			}
+		}
+
+		let byEffectCoordinateList: Array<number> = [];
+		if (influenceRange == EFFECT_RANGE.EFFECT_RANGE_SINGLE) {
+			byEffectCoordinateList.push(headCoordinate);
+		}
+
+		return byEffectCoordinateList;
 	}
 
 	//计算攻击位置类型、目标位置序列
 	// _skf.attPosType = npos(list) -- 攻击位置类型
 	// _skf.attTarList = zstring.split(npos(list), ",") -- 目标位置序列
-	public static computeEndureDirection(currentAttackerCoordinate: number, skillInfluence: SkillInfluence, byAttackObjects: Array<BattleObject>) {
+	public static computeEndureDirection(currentAttackerCoordinate: number, skillInfluence: SkillInfluence, byAttackObjects: {[key: number]: BattleObject}) {
 		if (skillInfluence.influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OPPOSITE) {
 			if (skillInfluence.influenceRange == EFFECT_RANGE.EFFECT_RANGE_HORIZONAL) {
 				if ( (byAttackObjects[0] && byAttackObjects[0].revived == false)
@@ -235,18 +270,19 @@ class FightUtil {
 	}
 
 	//公式1
-	public computeCommonDamage(skillMould: SkillMould, skillInfluence: SkillInfluence, attackObject: BattleObject, byAttackObject: BattleObject, effectArray, battleSkill: BattleSkill, userInfo, fightModule: FightModule, effectBuffer) {
-		effectArray[1] = 1000;
+	public static computeCommonDamage(skillMould: SkillMould, skillInfluence: SkillInfluence, attackObject: BattleObject, byAttackObject: BattleObject, effectArray, battleSkill: BattleSkill, userInfo, fightModule: FightModule) {
+		byAttackObject.subHealthPoint(20);
+		effectArray[1] = 20;
 	}
 
-	public computeSkillEffect(battleSkill: BattleSkill, skillMould: SkillMould, skillInfluence: SkillInfluence, attackObject: BattleObject, byAttackObject: BattleObject, userInfo, fightModule: FightModule, effectBuffer) {
+	public static computeSkillEffect(battleSkill: BattleSkill, skillMould: SkillMould, skillInfluence: SkillInfluence, attackObject: BattleObject, byAttackObject: BattleObject, userInfo, fightModule: FightModule) {
 		//0不用，只是为了索引加1，1影响值，2影响回合，3承受状态，4清除buff
 		let effectArray = [-1, 0, 0, -1, 0];
 		let formulaInfo = battleSkill.formulaInfo;
 
 		//1
 		if (formulaInfo == FORMULA_INFO.FORMULA_INFO_COMMON_DAMAGE) {
-			this.computeCommonDamage(skillMould, skillInfluence, attackObject, byAttackObject, effectArray, battleSkill, userInfo, fightModule, effectBuffer);
+			FightUtil.computeCommonDamage(skillMould, skillInfluence, attackObject, byAttackObject, effectArray, battleSkill, userInfo, fightModule);
 		}
 		//2
 		else if (formulaInfo == FORMULA_INFO.FORMULA_INFO_SPECIAL_DAMAGE) {

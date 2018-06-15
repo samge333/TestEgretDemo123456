@@ -69,13 +69,15 @@ class Dms {
 			value = value as number;
 			return value;
 		}
+		return null;
 	}
 
 	public static int(element: Array<any>, row: number, colum: number) {
 		let value = Dms.float(element, row, colum);
 		if (value) {
 			value = Math.round(value);
-			return null;
+			return value;
 		}
+		return null;
 	}
 }

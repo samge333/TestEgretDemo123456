@@ -70,6 +70,7 @@ var PrivateEnvironmentData = (function () {
             user_id: "37",
             user_grade_need_experience: "15000",
             user_ship: "1",
+            battleCache: null,
         };
         this.user_ship = {
             initial_sp_increase: 0,
@@ -228,7 +229,11 @@ var ED = (function () {
         if (type == "parse_battle_field_init") {
             var data = JSON.parse(str);
             ED.data.battleData = data;
-            HLog.log("战场初始化数据:", ED.data.battleData);
+            HLog.log("战场初始化数据", ED.data.battleData);
+        }
+        else if (type == "parse_environment_fight_battle_start_influence_info") {
+            var data = JSON.parse(str);
+            HLog.log("战斗开始前的效用信息", data);
         }
     };
     ED.data = new PrivateEnvironmentData;

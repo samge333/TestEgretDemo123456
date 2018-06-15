@@ -58,13 +58,15 @@ var Dms = (function () {
             value = value;
             return value;
         }
+        return null;
     };
     Dms.int = function (element, row, colum) {
         var value = Dms.float(element, row, colum);
         if (value) {
             value = Math.round(value);
-            return null;
+            return value;
         }
+        return null;
     };
     Dms.data = {};
     return Dms;

@@ -66,6 +66,7 @@ class PrivateEnvironmentData {
 		user_id: "37",
 		user_grade_need_experience: "15000",
 		user_ship: "1",
+		battleCache: null,
 	};
 
 	fightModule: FightModule;
@@ -252,6 +253,10 @@ class ED {
 			ED.data.battleData = data;
 
 			HLog.log("战场初始化数据", ED.data.battleData);
+		}
+		else if (type == "parse_environment_fight_battle_start_influence_info") {
+			let data = JSON.parse(str);
+			HLog.log("战斗开始前的效用信息", data);
 		}
 	}
 }

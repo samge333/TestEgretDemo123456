@@ -3,6 +3,10 @@ class ConfigDB {
 	}
 
 	public static loadConfig(configName: string, idx) {
+		if (idx == null) {
+			HLog.log("索引为空");
+		}
+
 		let obj: any;
 		if (configName == "skill_mould_txt")
 		{

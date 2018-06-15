@@ -49,8 +49,13 @@ class Main extends egret.DisplayObjectContainer {
 
                 let fightModule = new FightModule;
                 fightModule.initFight(58, 1, 0);
-
                 ED.data.fightModule = fightModule;
+
+                fightModule.initFightOrder();
+
+                //测试攻击数据
+                let fightRoleController = new FightRoleController;
+                fightRoleController.nextBattle();
 
                 break;
         } 

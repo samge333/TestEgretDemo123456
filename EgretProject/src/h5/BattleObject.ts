@@ -128,15 +128,17 @@ class BattleObject {
 	healthPoint = 0;
 	healthMaxPoint = 0;
 	skillPoint = 0;
-	//数码兽id
+	//对象id
+	id = 0;
+	//模板id
 	shipMould = 0;
 	capacity = 0;
 	//是否死亡
 	isDead = false;
 	//普通攻击效用列表
-	commonBattleSkill: Array<BattleSkill>;
+	commonBattleSkill: Array<BattleSkill> = [];
 	//小技能攻击效用列表
-	normalBattleSkill: Array<BattleSkill>;
+	normalBattleSkill: Array<BattleSkill> = [];
 	//当前battleObject对应的fightObject
 	fightObject: FightObject;
 	//普攻
@@ -151,6 +153,18 @@ class BattleObject {
 	revived = false;
 	//是否已经出过手
 	isAction = false;
+	//用户信息
+	userInfo = -1;
+	//攻击时附加怒气
+	attackAdditionSpValue = 0;
+	//被击时是否增加怒气，1表示是
+	byAttackDamageAddSp = 1;
+	//是否闪避
+	isEvasion = false;
+	//是否格挡
+	isRetain = false;
+	//是否暴击
+	isCritical = false;
 
 	public initWithAttackObject(fightObj: FightObject) {
 		this.resetSkillAndTalentInfo();
@@ -163,9 +177,13 @@ class BattleObject {
 	}
 
 	public initProperty(fightObj: FightObject) {
+		this.fightObject = fightObj;
+		this.battleTag = fightObj.battleTag;
+		this.coordinate = fightObj.coordinate;
+		this.id = fightObj.id;
 		this.shipMould = fightObj.shipMould;
 		this.capacity = fightObj.capacity;
-		this.fightObject = fightObj;
+		
 		this.commonSkillMould = fightObj.commonSkill;
 	
 	}
@@ -242,5 +260,43 @@ class BattleObject {
 
 	public nextBattleInfo() {
 
+	}
+
+	//减怒气
+	public subSkillPoint(skillPoint: number) {
+		this.skillPoint = this.skillPoint - skillPoint;
+		if (this.skillPoint < 0) {
+			this.skillPoint = 0;
+		}
+	}
+
+	//加怒气
+	public addSkillPoint(skillPoint: number, needCallFormula: boolean) {
+		if (needCallFormula == true) {
+			skillPoint = skillPoint * (Math.max(0, (1 + this.ptvf61 - this.ptvf69)));
+		}
+
+		this.skillPoint = this.skillPoint + skillPoint;
+		if (this.skillPoint > FightModule.MAX_SP) {
+			this.skillPoint = FightModule.MAX_SP;
+		}
+
+		if (this.skillPoint < 0) {
+			this.skillPoint = 0;
+		}
+		return skillPoint;
+	}
+
+	//加血
+	public addHealthPoint(healthPoint: number) {
+		this.healthPoint = this.healthPoint + healthPoint;
+		if (this.healthPoint > this.healthMaxPoint) {
+			this.healthPoint = this.healthMaxPoint;
+		}
+	}
+
+	//减血
+	public subHealthPoint(healthPoint: number) {
+		this.healthPoint = this.healthPoint - healthPoint;
 	}
 }

@@ -92,6 +92,10 @@ var Main = (function (_super) {
                 var fightModule = new FightModule;
                 fightModule.initFight(58, 1, 0);
                 ED.data.fightModule = fightModule;
+                fightModule.initFightOrder();
+                //测试攻击数据
+                var fightRoleController = new FightRoleController;
+                fightRoleController.nextBattle();
                 break;
         }
     };

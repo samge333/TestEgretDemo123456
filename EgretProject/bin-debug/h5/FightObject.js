@@ -75,6 +75,9 @@ var FightObject = (function () {
         this.skillPoint = environmentShip.haveDeadly;
         this.mouldId = environmentShipId;
         this.fightName = environmentShip.shipName;
+        this.commonSkill = ConfigDB.loadConfig("skill_mould_txt", environmentShip.commonSkillMould);
+        var arrPhysicsAttackEffect = environmentShip.physicsAttackEffect.split(",");
+        this.normalSkillMould = Number(arrPhysicsAttackEffect[0]);
     };
     return FightObject;
 }());

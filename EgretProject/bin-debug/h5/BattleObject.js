@@ -128,11 +128,17 @@ var BattleObject = (function () {
         this.healthPoint = 0;
         this.healthMaxPoint = 0;
         this.skillPoint = 0;
-        //数码兽id
+        //对象id
+        this.id = 0;
+        //模板id
         this.shipMould = 0;
         this.capacity = 0;
         //是否死亡
         this.isDead = false;
+        //普通攻击效用列表
+        this.commonBattleSkill = [];
+        //小技能攻击效用列表
+        this.normalBattleSkill = [];
         //是否是否是小技能
         this.normalSkillMouldOpened = false;
         //记录小技能使用次数
@@ -141,6 +147,18 @@ var BattleObject = (function () {
         this.revived = false;
         //是否已经出过手
         this.isAction = false;
+        //用户信息
+        this.userInfo = -1;
+        //攻击时附加怒气
+        this.attackAdditionSpValue = 0;
+        //被击时是否增加怒气，1表示是
+        this.byAttackDamageAddSp = 1;
+        //是否闪避
+        this.isEvasion = false;
+        //是否格挡
+        this.isRetain = false;
+        //是否暴击
+        this.isCritical = false;
     }
     BattleObject.prototype.initWithAttackObject = function (fightObj) {
         this.resetSkillAndTalentInfo();
@@ -150,9 +168,12 @@ var BattleObject = (function () {
     BattleObject.prototype.resetSkillAndTalentInfo = function () {
     };
     BattleObject.prototype.initProperty = function (fightObj) {
+        this.fightObject = fightObj;
+        this.battleTag = fightObj.battleTag;
+        this.coordinate = fightObj.coordinate;
+        this.id = fightObj.id;
         this.shipMould = fightObj.shipMould;
         this.capacity = fightObj.capacity;
-        this.fightObject = fightObj;
         this.commonSkillMould = fightObj.commonSkill;
     };
     //初始化技能和天赋信息
@@ -221,6 +242,38 @@ var BattleObject = (function () {
         }
     };
     BattleObject.prototype.nextBattleInfo = function () {
+    };
+    //减怒气
+    BattleObject.prototype.subSkillPoint = function (skillPoint) {
+        this.skillPoint = this.skillPoint - skillPoint;
+        if (this.skillPoint < 0) {
+            this.skillPoint = 0;
+        }
+    };
+    //加怒气
+    BattleObject.prototype.addSkillPoint = function (skillPoint, needCallFormula) {
+        if (needCallFormula == true) {
+            skillPoint = skillPoint * (Math.max(0, (1 + this.ptvf61 - this.ptvf69)));
+        }
+        this.skillPoint = this.skillPoint + skillPoint;
+        if (this.skillPoint > FightModule.MAX_SP) {
+            this.skillPoint = FightModule.MAX_SP;
+        }
+        if (this.skillPoint < 0) {
+            this.skillPoint = 0;
+        }
+        return skillPoint;
+    };
+    //加血
+    BattleObject.prototype.addHealthPoint = function (healthPoint) {
+        this.healthPoint = this.healthPoint + healthPoint;
+        if (this.healthPoint > this.healthMaxPoint) {
+            this.healthPoint = this.healthMaxPoint;
+        }
+    };
+    //减血
+    BattleObject.prototype.subHealthPoint = function (healthPoint) {
+        this.healthPoint = this.healthPoint - healthPoint;
     };
     return BattleObject;
 }());

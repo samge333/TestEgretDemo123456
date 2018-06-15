@@ -127,7 +127,7 @@ class EnvironmentShip {
 	growNimable: any;			
 	picIndex: any;				
 	bustIndex: any;			
-	physicsAttackEffect: any;	
+	physicsAttackEffect: string;	
 	screenAttackEffect: any;		
 	physicsAttackMode: any;		
 	skillAttackMode: any;			

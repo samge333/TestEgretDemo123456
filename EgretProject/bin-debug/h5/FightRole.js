@@ -3,11 +3,13 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 };
 var FightRole = (function () {
     function FightRole() {
-        this._info = { _pos: 0 };
+        this._info = {};
         this._roleCamp = 0;
     }
-    FightRole.prototype.init = function (data) {
-        HLog.log("创建角色" + data._type, data);
+    FightRole.prototype.init = function (data, roleCamp) {
+        HLog.log("创建角色" + roleCamp, data);
+        this._info = data;
+        this._roleCamp = roleCamp;
     };
     return FightRole;
 }());

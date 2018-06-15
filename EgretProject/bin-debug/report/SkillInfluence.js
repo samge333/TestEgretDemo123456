@@ -92,7 +92,10 @@ var EnumSkillInfluence;
 })(EnumSkillInfluence || (EnumSkillInfluence = {}));
 var SkillInfluence = (function () {
     function SkillInfluence() {
+        this.skillCategory = 0;
         this.influenceGroup = 0;
+        this.influenceRange = 0;
+        this.influenceRangeType = 0;
     }
     SkillInfluence.prototype.init = function (row) {
         this.id = row[0];
@@ -107,8 +110,8 @@ var SkillInfluence = (function () {
         this.additionEffectProbability = row[9];
         this.influenceGroup = row[10];
         var arrInfluenceRange = row[11].split(",");
-        this.influenceRange = arrInfluenceRange[0];
-        this.influenceRangeType = arrInfluenceRange[1];
+        this.influenceRange = Number(arrInfluenceRange[0]);
+        this.influenceRangeType = Number(arrInfluenceRange[1]);
         this.peakLimit = row[12];
         this.influenceRestrict = row[13];
         this.influenceDuration = row[14];

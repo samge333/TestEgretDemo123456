@@ -3,17 +3,22 @@ class FightModule {
 	}
 
 	//我方BattleObject列表
-	attackObjects: any = {};
-	//地方BattleObject列表
-	byAttackObjects: any = {};
+	attackObjects: {[key: number]: BattleObject} = {};
+	//敌方BattleObject列表
+	byAttackObjects: {[key: number]: BattleObject} = {};
 	//出手顺序列表
-	fightOrderList: Array<any>;
+	fightOrderList: Array<BattleObject> = [];
 	//攻击目标
 	byAttackTargetTag = 0;
 	//记录当前出手对象
 	currentObject: BattleObject = null;
 	//战斗类型
 	fightType = FightModuleEnum.FIGHT_TYPE_PVE_NORMAL;
+
+	static ATTACK_SP_ADD_VAULE = 200;
+	static KILL_TARGET_SP_ADD_VAULE = 200;
+	static CHANGE_NEXT_FIGHT_SP_ADD_VAULE = 150;
+	static MAX_SP = 1000;
 
 	public initFight(npcId: number, difficulty: number, fightType: number) {
 		let npcObj = ConfigDB.loadConfig("npc_txt", npcId);
@@ -25,10 +30,7 @@ class FightModule {
 		let json = JSON.stringify(resultBuffer);
 		ED.parser_func("parse_battle_field_init", json);
 
-		//测试攻击数据
-		let fightRoleController = new FightRoleController;
-		fightRoleController.nextBattle();
-
+	
 	}
 
 	public initBattleField(npc: Npc, difficulty: number, fightType: number, resultBuffer) {
@@ -64,6 +66,8 @@ class FightModule {
 		byAttackObjects[2] = fightObject2;
 		byAttackerObjectsList.push(byAttackObjects);
 		battleCache.byAttackerObjectsList = byAttackerObjectsList
+
+		ED.data.user_info.battleCache = battleCache;
 
 		this.writeBattleFieldInit(battleCache,  0,  1, resultBuffer)
 
@@ -181,27 +185,44 @@ class FightModule {
 	}
 
 	//初始化战斗顺序
-	public initFightOrder(userInfo) {
-		let tempBattleCache = userInfo.battleCache as BattleCache;
+	public initFightOrder() {
+		let tempBattleCache = ED.data.user_info.battleCache;
 		let attackerCombatForce = tempBattleCache.attackCombatForce;
 		let byAttackerCombatForce = tempBattleCache.byAttackComobatForce;
 
 		this.initBattleInfo(tempBattleCache);
+
+		for (let i = 0; i < 6; i++) {
+			if (this.attackObjects[i]) {
+				this.attackObjects[i].isAction = false;
+				this.fightOrderList.push(this.attackObjects[i]);
+			}
+		}
+
+		for (let i = 0; i < 6; i++) {
+			if (this.byAttackObjects[i]) {
+				this.byAttackObjects[i].isAction = false;
+				this.fightOrderList.push(this.byAttackObjects[i]);
+			}
+		}
 	}
 
+	//创建BattleObject
 	public initBattleInfo(battleCache: BattleCache) {
 		let resetAttackerInfo = true
 		if (battleCache.currentBattleCount > 0) {
 			resetAttackerInfo = false;
 		}
 
+		//我方fightObject
 		let attackObjects = battleCache.attackerObjects;
-		let byAttackObjects = battleCache.byAttackerObjectsList[battleCache.currentBattleCount + 1];
+		//0就是取敌方第一波的fightObject数据
+		let byAttackObjects = battleCache.byAttackerObjectsList[battleCache.currentBattleCount];
 
 		//创建我方BattleObject
 		for (let k in attackObjects) {
 			if (attackObjects[k]) {
-				//第一波
+				//我方第一波才创建battleObject
 				if (resetAttackerInfo == true) {
 					let battleObject = new BattleObject;
 					battleObject.initWithAttackObject(attackObjects[k]);
@@ -217,13 +238,13 @@ class FightModule {
 		for (let k in byAttackObjects) {
 			if (byAttackObjects[k]) {
 				let battleObject = new BattleObject;
-				battleObject.initWithAttackObject(attackObjects[k]);
-				this.byAttackObjects = battleObject;
+				battleObject.initWithAttackObject(byAttackObjects[k]);
+				this.byAttackObjects[k] = battleObject;
 			}
 		}
 
 		for (let k in this.attackObjects) {
-			let v = attackObjects[k];
+			let v = this.attackObjects[k];
 			v.nextBattleInfo();
 		}
 
@@ -233,46 +254,21 @@ class FightModule {
 		//...
 
 		buffBuffer.effectAmount = buffBattleSkill.effectAmount;
-		buffBuffer.currentBattleCount = battleCache.currentBattleCount + 1;
 
-		let attackObjectsdata = [];
-		for (let k in attackObjects) {
-			let attackObj = attackObjects[k];
-			let table: any = {};
-			table.battleTag = attackObj.battleTag;
-			table.coordinate = attackObj.coordinate;
-			table.healthPoint = attackObj.healthPoint;
-			table.healthMaxPoint = attackObj.healthMaxPoint;
-			table.skillPoint = attackObj.skillPoint;
-			attackObjectsdata.push(table);
-		}
-		buffBuffer.attackObjectsdata = attackObjectsdata;
-
-		let byAttackObjectsdata = [];
-		for (let k in byAttackObjects) {
-			let attackObj = byAttackObjects[k];
-			let table: any = {};
-			table.battleTag = attackObj.battleTag;
-			table.coordinate = attackObj.coordinate;
-			table.healthPoint = attackObj.healthPoint;
-			table.healthMaxPoint = attackObj.healthMaxPoint;
-			table.skillPoint = attackObj.skillPoint;
-			byAttackObjectsdata.push(table);
-		}
-		buffBuffer.byAttackObjectsdata = byAttackObjectsdata;
-
+		//解析战斗开始前的效用信息
 		let json = JSON.stringify(buffBuffer);
-		ED.parser_func("", json);
+		ED.parser_func("parse_environment_fight_battle_start_influence_info", json);
 	}
 
 	//获取指定阵营和位置的BattleObject对象
 	public getAppointFightObject(battleTag: number, coordinate: number) {
 		for (let i = 0; i < this.fightOrderList.length; i++) {
-			let battleObj = (this.fightOrderList[i]) as BattleObject;
+			let battleObj = (this.fightOrderList[i]);
 			if (battleObj.battleTag == battleTag && battleObj.coordinate == coordinate) {
 				return battleObj;
 			}
 		}
+		return null;
 	}
 
 	//设置攻击目标
@@ -337,10 +333,10 @@ class FightModule {
 						}
 
 						if (battleObject.battleTag == 0) {
-							resultBuffer.moveCoordinate = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, this.byAttackObjects);
+							resultBuffer.attackMovePos = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, this.byAttackObjects);
 						}
 						else {
-							resultBuffer.moveCoordinate = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, this.attackObjects);
+							resultBuffer.attackMovePos = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, this.attackObjects);
 						}
 
 						resultBuffer.skillId = skillId;
@@ -356,6 +352,7 @@ class FightModule {
 					let tmpBattleSkillBuffer = {};
 
 					if (battleObject.isDead != true) {
+						//遍历当前技能的技能效用列表，一个技能有1个或多个技能效用，见表skill_mould表第9列
 						for (let i = 0; i < battleSkillList.length; i++) {
 							let attackSkill = battleSkillList[i];
 							attackSkill.formulaInfo = attackSkill.skillInfluence.formulaInfo;
