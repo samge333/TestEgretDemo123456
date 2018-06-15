@@ -2,8 +2,8 @@ class HLog {
 	public constructor() {
 	}
 
-	public static log(message?: any, ...optionalParams: any[]) {
-		egret.log(message, optionalParams);
+	public static log(message?: any, ...optionalParams: any[]): void {
+		egret.log(message, ...optionalParams);
 	}
-	
+
 }

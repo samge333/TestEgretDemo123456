@@ -3,8 +3,6 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 };
 var BattleCache = (function () {
     function BattleCache() {
-        //用户信息
-        this.userInfo = null;
         //攻击方名称
         this.attackName = "";
         //被攻击方名称
@@ -16,7 +14,7 @@ var BattleCache = (function () {
         //被攻击方战力
         this.byAttackComobatForce = 0;
         //被攻击者Id
-        this.byAttackerId = null;
+        this.byAttackerId = 0;
         //当前战斗场次
         this.currentBattleCount = 0;
         //最大战斗场次
@@ -24,9 +22,9 @@ var BattleCache = (function () {
         //难度
         this.difficulty = 1;
         //阵型战斗对象
-        this.attackerObjects = null;
+        this.attackerObjects = {};
         //被攻击者战斗对象队列
-        this.byAttackerObjectsList = null;
+        this.byAttackerObjectsList = [];
         //战斗中奖励卡牌
         this.battleReward = null;
         //战斗中奖励道具
@@ -40,8 +38,6 @@ var BattleCache = (function () {
         this.attacker_priority = 0;
         this.defender_priority = 0;
         this.attackerSpeedValue = 0;
-        this.attacker_name = "";
-        this.defender_name = "";
         this.attacker_head_pic = 0;
         this.defender_head_pic = 0;
     }

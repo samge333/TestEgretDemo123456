@@ -24,7 +24,11 @@ class FightObject {
 	coordinate = 0;
 	//阵营类型
 	roleType = 0;
+	//速度
+	attackSpeed = 0;
 
+	battleTag = 0;
+	healthMaxPoint = 0;
 
 	// fightObjectData._id = fightObjects[k].id;
 	// fightObjectData._pos = k;
@@ -58,6 +62,7 @@ class FightObject {
 
 		this.userInfo = Number(userId);
 		this.picIndex = shipMould.bustIndex;
+		this.attackSpeed = ship.ship_wisdom;
 		this.quality = shipMould.shipType;
 		this.healthPoint = ship.ship_health;
 		this.skillPoint =  0;

@@ -43,7 +43,7 @@ class ConfigDB {
 
 		let element = Dms.data[configName];
 		let data = Dms.element(element, idx - 1);
-		HLog.log("打印" + configName + "表的第" + idx + "列: " + data.toString());
+		// HLog.log("打印" + configName + "表的第" + idx + "列: " + data.toString());
 		obj.init(data);
 
 		return obj;

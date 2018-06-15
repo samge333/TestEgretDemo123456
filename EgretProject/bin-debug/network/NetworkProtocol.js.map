@@ -1,1 +1,1 @@
-{"version":3,"file":"NetworkProtocol.js","sourceRoot":"","sources":["../../src/network/NetworkProtocol.ts"],"names":[],"mappings":";;;AAAA;IACC;IACA,CAAC;IAEa,2BAAW,GAAzB,UAA0B,KAAa;IAEvC,CAAC;IACF,sBAAC;AAAD,CAAC,AAPD,IAOC;AAPK,UAAA,eAAe,8BAOpB,CAAA"}
+{"version":3,"file":"NetworkProtocol.js","sourceRoot":"","sources":["../../src/network/NetworkProtocol.ts"],"names":[],"mappings":";;;AAAA;IACC;IACA,CAAC;IAKF,sBAAC;AAAD,CAAC,AAPD,IAOC;AAPK,UAAA,eAAe,8BAOpB,CAAA"}

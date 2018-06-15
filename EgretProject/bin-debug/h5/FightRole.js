@@ -6,6 +6,9 @@ var FightRole = (function () {
         this._info = { _pos: 0 };
         this._roleCamp = 0;
     }
+    FightRole.prototype.init = function (data) {
+        HLog.log("创建角色" + data._type, data);
+    };
     return FightRole;
 }());
 __reflect(FightRole.prototype, "FightRole");

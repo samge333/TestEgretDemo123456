@@ -36,7 +36,7 @@ class PrivateEnvironmentData {
 		tiger_shaped: "0",
 		user_food: "1160",
 		friend_active: "0",
-		fight_capacity: "1377",
+		fight_capacity: 1377,
 		key_user_id: "||37",
 		vip_level: "18",
 		family_name: "",
@@ -66,7 +66,7 @@ class PrivateEnvironmentData {
 		user_id: "37",
 		user_grade_need_experience: "15000",
 		user_ship: "1",
-	}
+	};
 
 	fightModule: FightModule;
 
@@ -212,8 +212,29 @@ class PrivateEnvironmentData {
 		ship_type: "0",
 		ship_template_id: "56",
 		hero_fight: "1377"
-	}
+	};
 
+	// _heros:{[pos: number]: {[key: string]: any}} = {
+	// 	2: {
+	// 	  _hp: 9642,
+	// 	  _max_hp: 9642,
+	// 	  _mouldId: 56,
+	// 	  _id: 390,
+	// 	  _hero_speed: 26,
+	// 	  _head: 105201,
+	// 	  _fit_skill_id: 0,
+	// 	  _evolution_level: 1,
+	// 	  _quality: 0,
+	// 	  _pos: 2,
+	// 	  _name: "",
+	// 	  _sp: 0,
+	// 	  _scale: 1,
+	// 	  _type: 0,
+	// 	  _power_skill_id: 0,
+	// 	}
+	// };
+
+	battleData: any;
 }
 
 class ED {
@@ -223,6 +244,15 @@ class ED {
 
 	static parse_environment_fight_role_round_attack_data(str: string, attData) {
 		
+	}
+
+	static parser_func(type: string, str: string) {
+		if (type == "parse_battle_field_init") {
+			let data = JSON.parse(str);
+			ED.data.battleData = data;
+
+			HLog.log("战场初始化数据", ED.data.battleData);
+		}
 	}
 }
 

@@ -40,7 +40,7 @@ var PrivateEnvironmentData = (function () {
             tiger_shaped: "0",
             user_food: "1160",
             friend_active: "0",
-            fight_capacity: "1377",
+            fight_capacity: 1377,
             key_user_id: "||37",
             vip_level: "18",
             family_name: "",
@@ -223,6 +223,13 @@ var ED = (function () {
     function ED() {
     }
     ED.parse_environment_fight_role_round_attack_data = function (str, attData) {
+    };
+    ED.parser_func = function (type, str) {
+        if (type == "parse_battle_field_init") {
+            var data = JSON.parse(str);
+            ED.data.battleData = data;
+            HLog.log("战场初始化数据:", ED.data.battleData);
+        }
     };
     ED.data = new PrivateEnvironmentData;
     return ED;

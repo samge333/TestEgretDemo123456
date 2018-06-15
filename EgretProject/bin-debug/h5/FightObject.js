@@ -24,6 +24,10 @@ var FightObject = (function () {
         this.coordinate = 0;
         //阵营类型
         this.roleType = 0;
+        //速度
+        this.attackSpeed = 0;
+        this.battleTag = 0;
+        this.healthMaxPoint = 0;
     }
     // fightObjectData._id = fightObjects[k].id;
     // fightObjectData._pos = k;
@@ -53,6 +57,7 @@ var FightObject = (function () {
         this.shipMould = shipMould.baseMould;
         this.userInfo = Number(userId);
         this.picIndex = shipMould.bustIndex;
+        this.attackSpeed = ship.ship_wisdom;
         this.quality = shipMould.shipType;
         this.healthPoint = ship.ship_health;
         this.skillPoint = 0;

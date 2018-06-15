@@ -3,7 +3,7 @@ class BattleCache {
 	}
 
 	//用户信息
-	userInfo: any = null;
+	userInfo: any;
     //攻击方名称
     attackName =  "";
     //被攻击方名称
@@ -15,7 +15,7 @@ class BattleCache {
     //被攻击方战力
     byAttackComobatForce = 0;
     //被攻击者Id
-    byAttackerId: any = null;
+    byAttackerId = 0;
     //当前战斗场次
     currentBattleCount = 0;
     //最大战斗场次
@@ -23,9 +23,9 @@ class BattleCache {
     //难度
     difficulty = 1;
     //阵型战斗对象
-    attackerObjects: any = null;
+    attackerObjects: {[pos: number]: FightObject} = {};
     //被攻击者战斗对象队列
-	byAttackerObjectsList: any = null;
+    byAttackerObjectsList: Array<{[pos: number]: FightObject}> = [];
     //战斗中奖励卡牌
     battleReward: any = null;
     //战斗中奖励道具
@@ -40,8 +40,6 @@ class BattleCache {
     attacker_priority = 0;
     defender_priority = 0;
 	attackerSpeedValue = 0;
-    attacker_name = "";
-    defender_name = "";
     attacker_head_pic = 0;
     defender_head_pic = 0;
 

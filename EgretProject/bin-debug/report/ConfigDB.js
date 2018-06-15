@@ -32,7 +32,7 @@ var ConfigDB = (function () {
         }
         var element = Dms.data[configName];
         var data = Dms.element(element, idx - 1);
-        HLog.log("打印" + configName + "表的第" + idx + "列\n" + data.toString());
+        // HLog.log("打印" + configName + "表的第" + idx + "列: " + data.toString());
         obj.init(data);
         return obj;
     };
