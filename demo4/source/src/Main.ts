@@ -32,7 +32,7 @@ class Main extends eui.UILayer {
      * 加载进度界面
      * loading process interface
      */
-    private loadingView: LoadingUI;
+    // private loadingView: LoadingUI;
     protected createChildren(): void {
         super.createChildren();
         
@@ -40,11 +40,11 @@ class Main extends eui.UILayer {
         //注入自定义的素材解析器
         var assetAdapter = new AssetAdapter();
         this.stage.registerImplementation("eui.IAssetAdapter",assetAdapter);
-        this.stage.registerImplementation("eui.IThemeAdapter",new ThemeAdapter());
+        // this.stage.registerImplementation("eui.IThemeAdapter",new ThemeAdapter());
         //Config loading process interface
         //设置加载进度界面
-        this.loadingView = new LoadingUI();
-        this.stage.addChild(this.loadingView);
+        // this.loadingView = new LoadingUI();
+        // this.stage.addChild(this.loadingView);
         // initialize the Resource loading library
         //初始化Resource资源加载库
         RES.addEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
@@ -58,8 +58,10 @@ class Main extends eui.UILayer {
         RES.removeEventListener(RES.ResourceEvent.CONFIG_COMPLETE, this.onConfigComplete, this);
         // load skin theme configuration file, you can manually modify the file. And replace the default skin.
         //加载皮肤主题配置文件,可以手动修改这个文件。替换默认皮肤。
-        var theme = new eui.Theme("resource/default.thm.json", this.stage);
-        theme.addEventListener(eui.UIEvent.COMPLETE, this.onThemeLoadComplete, this);
+        // var theme = new eui.Theme("resource/default.thm.json", this.stage);
+        // theme.addEventListener(eui.UIEvent.COMPLETE, this.onThemeLoadComplete, this);
+
+        this.isThemeLoadEnd = true;
 
         RES.addEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
         RES.addEventListener(RES.ResourceEvent.GROUP_LOAD_ERROR, this.onResourceLoadError, this);
@@ -86,9 +88,9 @@ class Main extends eui.UILayer {
         switch (event.groupName ) {
             case "loading":
                 console.log( "loading ok:", egret.getTimer() );
-                if( this.loadingView.parent ){
-                    this.loadingView.parent.removeChild( this.loadingView );
-                }
+                // if( this.loadingView.parent ){
+                //     this.loadingView.parent.removeChild( this.loadingView );
+                // }
 
                 Toast.init( this, RES.getRes( "toast-bg_png" ) ); 
     
@@ -150,7 +152,7 @@ class Main extends eui.UILayer {
     private onResourceProgress(event:RES.ResourceEvent):void {
         switch (event.groupName) {
             case "loading":
-                this.loadingView.setProgress(event.itemsLoaded, event.itemsTotal);
+                // this.loadingView.setProgress(event.itemsLoaded, event.itemsTotal);
                 break;
             
             //case "home":
