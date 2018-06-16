@@ -264,8 +264,8 @@ var FightUtil = (function () {
     };
     //公式1
     FightUtil.computeCommonDamage = function (skillMould, skillInfluence, attackObject, byAttackObject, effectArray, battleSkill, userInfo, fightModule) {
-        byAttackObject.subHealthPoint(20);
-        effectArray[1] = 20;
+        byAttackObject.subHealthPoint(689.00689);
+        effectArray[1] = 689.00689;
     };
     FightUtil.computeSkillEffect = function (battleSkill, skillMould, skillInfluence, attackObject, byAttackObject, userInfo, fightModule) {
         //0不用，只是为了索引加1，1影响值，2影响回合，3承受状态，4清除buff

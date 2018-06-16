@@ -8,6 +8,7 @@ var FightObject = (function () {
         this.specialSkillDecribe = 0;
         this.zoarium = 0;
         this.quality = 0;
+        //注意FightObject里的healthPoint指的最大血量
         this.healthPoint = 0;
         this.skillPoint = 0;
         this.mouldId = 0;
@@ -26,25 +27,9 @@ var FightObject = (function () {
         this.roleType = 0;
         //速度
         this.attackSpeed = 0;
-        this.battleTag = 0;
         this.healthMaxPoint = 0;
     }
-    // fightObjectData._id = fightObjects[k].id;
-    // fightObjectData._pos = k;
-    // fightObjectData._head = fightObjects[k].picIndex;
-    // fightObjectData._power_skill_id = fightObjects[k].specialSkillDecribe;
-    // fightObjectData._fit_skill_id = fightObjects[k].zoarium;
-    // fightObjectData._quality = fightObjects[k].quality;
-    // fightObjectData._hp = fightObjects[k].healthPoint;
-    // fightObjectData._sp = fightObjects[k].skillPoint;
-    // fightObjectData._type = selfTag;
-    // fightObjectData._mouldId = fightObjects[k].mouldId;
-    // fightObjectData._scale = fightObjects[k].amplifyPercent;
-    // fightObjectData._name = fightObjects[k].fightName;
-    // fightObjectData._evolution_level = fightObjects[k].evolutionLevel;
-    // fightObjectData._hero_speed = fightObjects[k].wisdom;
-    // fightObjectData._max_hp = fightObjects[k].healthPoint;
-    FightObject.prototype.initWithUserData = function (coordinate, ship, battleTag, userId) {
+    FightObject.prototype.initWithUserData = function (coordinate, ship, userId) {
         //普通攻击SkillMould对象
         this.commonSkill = ConfigDB.loadConfig("skill_mould_txt", 661);
         //小技能技能id

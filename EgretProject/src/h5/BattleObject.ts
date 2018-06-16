@@ -178,13 +178,20 @@ class BattleObject {
 
 	public initProperty(fightObj: FightObject) {
 		this.fightObject = fightObj;
-		this.battleTag = fightObj.battleTag;
+		this.battleTag = fightObj.roleType;
 		this.coordinate = fightObj.coordinate;
 		this.id = fightObj.id;
 		this.shipMould = fightObj.shipMould;
 		this.capacity = fightObj.capacity;
 		
 		this.commonSkillMould = fightObj.commonSkill;
+
+		this.setSkillPoint(fightObj.skillPoint);
+
+		//如果是主线关卡，血量等于最大血量
+		this.setHealthPoint(fightObj.healthPoint);
+		
+		this.healthMaxPoint = fightObj.healthPoint;
 	
 	}
 
@@ -262,6 +269,11 @@ class BattleObject {
 
 	}
 
+	//设置怒气
+	public setSkillPoint(skillPoint: number) {
+		this.skillPoint = skillPoint;
+	}
+
 	//减怒气
 	public subSkillPoint(skillPoint: number) {
 		this.skillPoint = this.skillPoint - skillPoint;
@@ -285,6 +297,11 @@ class BattleObject {
 			this.skillPoint = 0;
 		}
 		return skillPoint;
+	}
+
+	//设置血量
+	public setHealthPoint(healthPoint: number) {
+		this.healthPoint = healthPoint;
 	}
 
 	//加血

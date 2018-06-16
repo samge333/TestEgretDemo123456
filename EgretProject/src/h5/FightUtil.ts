@@ -3,7 +3,7 @@ class FightUtil {
 	}
 
 	//计算移动位置
-	public static computeMoveCoordinate(currentAttackerCoordinate: number, skillReleasePosion: number, byAttackObjects: {[key: number]: BattleObject}) {
+	public static computeMoveCoordinate(currentAttackerCoordinate: number, skillReleasePosion: number, byAttackObjects: {[key: number]: BattleObject}): number {
 		if (skillReleasePosion == SKILL_RELEASE_POSION.SKILL_RELEASE_POSION_SPOT) {
 			return SKILL_RELEASE_POSION.SKILL_RELEASE_POSION_SPOT;
 		}
@@ -181,7 +181,7 @@ class FightUtil {
 	//计算攻击位置类型、目标位置序列
 	// _skf.attPosType = npos(list) -- 攻击位置类型
 	// _skf.attTarList = zstring.split(npos(list), ",") -- 目标位置序列
-	public static computeEndureDirection(currentAttackerCoordinate: number, skillInfluence: SkillInfluence, byAttackObjects: {[key: number]: BattleObject}) {
+	 public static computeEndureDirection(currentAttackerCoordinate: number, skillInfluence: SkillInfluence, byAttackObjects: {[key: number]: BattleObject}) {
 		if (skillInfluence.influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OPPOSITE) {
 			if (skillInfluence.influenceRange == EFFECT_RANGE.EFFECT_RANGE_HORIZONAL) {
 				if ( (byAttackObjects[0] && byAttackObjects[0].revived == false)
@@ -271,8 +271,8 @@ class FightUtil {
 
 	//公式1
 	public static computeCommonDamage(skillMould: SkillMould, skillInfluence: SkillInfluence, attackObject: BattleObject, byAttackObject: BattleObject, effectArray, battleSkill: BattleSkill, userInfo, fightModule: FightModule) {
-		byAttackObject.subHealthPoint(20);
-		effectArray[1] = 20;
+		byAttackObject.subHealthPoint(689.00689);
+		effectArray[1] = 689.00689;
 	}
 
 	public static computeSkillEffect(battleSkill: BattleSkill, skillMould: SkillMould, skillInfluence: SkillInfluence, attackObject: BattleObject, byAttackObject: BattleObject, userInfo, fightModule: FightModule) {

@@ -72,21 +72,21 @@ class SkillMould {
 	attack_move_mode: any;
 
 	public init(row: Array<any>) {
-		this.id = row[0];
-		this.skill_name = row[1];
-		this.skill_describe = row[2];
-		this.skill_quality = row[3];
-		this.skill_pic = row[4];
-		this.skill_property = row[5];
-		this.skill_release_position = row[6];
-		this.after_remove = row[7];
+		this.id = Number(row[0]);
+		this.skill_name = Number(row[1]);
+		this.skill_describe = Number(row[2]);
+		this.skill_quality = Number(row[3]);
+		this.skill_pic = Number(row[4]);
+		this.skill_property = Number(row[5]);
+		this.skill_release_position = Number(row[6]);
+		this.after_remove = Number(row[7]);
 		this.health_affect = row[8];
-		this.buff_affect = row[9];
-		this.base_mould = row[10];
-		this.next_level_skill = row[11];
-		this.release_mould = row[12];
-		this.releas_skill = row[13];
-		this.seriatim = row[14];
-		this.attack_move_mode = row[15];
+		this.buff_affect = Number(row[9]);
+		this.base_mould = Number(row[10]);
+		this.next_level_skill = Number(row[11]);
+		this.release_mould = Number(row[12]);
+		this.releas_skill = Number(row[13]);
+		this.seriatim = Number(row[14]);
+		this.attack_move_mode = Number(row[15]);
 	}
 }

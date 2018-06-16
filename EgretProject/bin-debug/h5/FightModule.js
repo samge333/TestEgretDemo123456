@@ -35,7 +35,7 @@ var FightModule = (function () {
         //我方
         var attackObjects = {};
         var fightObject = new FightObject;
-        fightObject.initWithUserData(2, ED.data.user_ship, 0, ED.data.user_info.user_id);
+        fightObject.initWithUserData(2, ED.data.user_ship, ED.data.user_info.user_id);
         attackObjects[2] = fightObject;
         battleCache.attackerSpeedValue = 0;
         battleCache.attackName = ED.data.user_info.user_name;
@@ -254,14 +254,9 @@ var FightModule = (function () {
                     if (false) {
                     }
                     else {
-                        resultBuffer.battleTag = battleObject.battleTag;
-                        resultBuffer.coordinate = battleObject.coordinate;
+                        resultBuffer.attacker = battleObject.battleTag;
+                        resultBuffer.attackerPos = battleObject.coordinate;
                         resultBuffer.linkAttackerPos = 0;
-                        resultBuffer.healthPoint = battleObject.healthPoint;
-                        resultBuffer.skillPoint = battleObject.skillPoint;
-                        resultBuffer.hasRestrain = 0;
-                        //技能数量写死为1，做测试
-                        resultBuffer.battleSkillCount = 1;
                         var skillId = 0;
                         //当前发动的是小技能
                         if (battleObject.normalSkillMouldOpened == true) {
@@ -277,14 +272,17 @@ var FightModule = (function () {
                             skillId = battleObject.commonSkillMould.id;
                         }
                         if (battleObject.battleTag == 0) {
-                            resultBuffer.moveCoordinate = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, this.byAttackObjects);
+                            resultBuffer.attackMovePos = Number(FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, this.byAttackObjects));
                         }
                         else {
-                            resultBuffer.moveCoordinate = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, this.attackObjects);
+                            resultBuffer.attackMovePos = Number(FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, this.attackObjects));
                         }
-                        resultBuffer.skillId = skillId;
+                        resultBuffer.skillMouldId = skillId;
                         //是否有buff影响，写死为0，方便测试
                         resultBuffer.attackerForepartBuffState = 0;
+                        resultBuffer.attackerForepartBuffValue = {};
+                        //技能数量写死为1，做测试
+                        resultBuffer.skillInfluenceCount = 1;
                     }
                 }
                 if (goon) {
@@ -343,13 +341,21 @@ var FightModule = (function () {
                             }
                         }
                     }
-                    resultBuffer.healthPoint = battleObject.healthPoint;
-                    resultBuffer.skillPoint = battleObject.skillPoint;
-                    resultBuffer.hasRestrain = 0;
+                    resultBuffer.attackerHp = battleObject.healthPoint;
+                    resultBuffer.attackerSp = battleObject.skillPoint;
+                    resultBuffer.restrainState = 0;
                     resultBuffer.skillInfluenceCount = 1;
                     resultBuffer.tmpBattleSkillBuffer = tmpBattleSkillBuffer;
                     //后段技能效用数量写死为0测试
                     resultBuffer.skillAfterInfluenceCount = 0;
+                    resultBuffer.skillAfterInfluences = {};
+                    //出手方是否有buff影响
+                    resultBuffer.attackerBuffState = 0;
+                    resultBuffer.attackerBuffType = {};
+                    resultBuffer.attackerBuffValue = {};
+                    //攻击结束后触发的技能效用
+                    resultBuffer.attackerAfterTalentCount = 0;
+                    resultBuffer.attackerAfterTalent = {};
                 }
             }
         }

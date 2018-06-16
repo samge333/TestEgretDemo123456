@@ -62,7 +62,7 @@ class BattleSkill {
 			effectBuffer.push(buffer);
 		}
 
-		//敌方的效用承受情况
+		//承受方的效用承受情况，包含我方和地方
 		for (let i = 0; i < byAttackCoordinates.length; i++) {
 			let byAttackObject = byAttackObjects[byAttackCoordinates[i]];
 			if (byAttackObject && byAttackObject.isDead == false && byAttackObject.revived == false) {
@@ -122,22 +122,6 @@ class BattleSkill {
 					dspValue = (currentHp - byAttackObject.healthPoint) / byAttackObject.healthMaxPoint * FightModule.MAX_SP;
 				}
 
-				// if byAttackObject.skillPoint <= FightModule.MAX_SP then
-				// 	if dspValue > 0 then
-				// 		local bs = BattleSkill:new()
-				// 		bs.byAttackerTag = byAttackObject.battleTag
-				// 		bs.byAttackerCoordinate = byAttackObject.coordinate
-				// 		bs.isDisplay = 0
-				// 		bs.effectType = BattleSkill.SKILL_INFLUENCE_ADDSP
-				// 		bs.effectValue = dspValue
-				// 		bs.effectValue = byAttackObject:addSkillPoint(dspValue, true)
-				// 		debug.print_r(effectBuffer, "BattleSkill:processAttack 3-11---- start")
-				// 		bs:writeSkillAttack(userInfo, attackObject, byAttackObject, fightModule, effectBuffer)
-				// 		debug.print_r(effectBuffer, "BattleSkill:processAttack 3-11 ---- end")
-				// 		self.effectAmount = self.effectAmount + 1
-				// 	end
-				// end
-
 				//敌方加怒
 				if (byAttackObject.skillPoint <= FightModule.MAX_SP) {
 					if (dspValue > 0) {
@@ -146,7 +130,7 @@ class BattleSkill {
 						bs.byAttackerCoordinate = byAttackObject.coordinate;
 						bs.effectType = SKILL_INFUENCE_RESULT.SKILL_INFLUENCE_ADDSP;
 						bs.effectValue = byAttackObject.addSkillPoint(dspValue, true);
-						let buffer = this.writeSkillAttack(userInfo, attackObject, byAttackObject, fightModule);
+						let buffer = bs.writeSkillAttack(userInfo, attackObject, byAttackObject, fightModule);
 						effectBuffer.push(buffer);
 					}
 				}
@@ -163,11 +147,11 @@ class BattleSkill {
 
 		this.effectAmount = effectBuffer.length;
 		if (this.effectAmount > 0) {
-			resultBuffer.skillInfluenceid = this.skillInfluence.id;
+			resultBuffer.skillInfluenceId = this.skillInfluence.id;
 			resultBuffer.influenceType = 0;
-			resultBuffer.battleTag = attackObject.battleTag;
-			resultBuffer.coordinate = attackObject.coordinate;
-			resultBuffer.effectAmount = this.effectAmount;
+			resultBuffer.attackerType = attackObject.battleTag;
+			resultBuffer.attackerPos = attackObject.coordinate;
+			resultBuffer.defenderCount = this.effectAmount;
 			let endureDirection = FightUtil.computeEndureDirection(attackObject.coordinate, this.skillInfluence, byAttackObjects);
 			resultBuffer.attPosType = endureDirection[0];
 			resultBuffer.attTarList = endureDirection[1];
@@ -179,17 +163,17 @@ class BattleSkill {
 	//写效用数据
 	public writeSkillAttack(userInfo, attackObject: BattleObject, byAttackObject: BattleObject, fightModule: FightModule) {
 		let resultBuffer: any = {};
-		resultBuffer.byAttackerTag = this.byAttackerTag;
-		resultBuffer.byAttackerCoordinate = this.byAttackerCoordinate;
-		resultBuffer.restrain = this.restrain;
-		resultBuffer.effectType = this.effectType;
-		resultBuffer.effectValue = this.effectValue;
-		resultBuffer.isDisplay = this.isDisplay;
-		resultBuffer.effectRound = this.effectRound;
-		resultBuffer.bearState = this.bearState;
-		resultBuffer.aliveState = this.aliveState;
-		resultBuffer.healthPoint = byAttackObject.healthPoint;
-		resultBuffer.skillPoint = byAttackObject.skillPoint;
+		resultBuffer.defender = this.byAttackerTag;
+		resultBuffer.defenderPos = this.byAttackerCoordinate;
+		resultBuffer.restrainState = this.restrain;
+		resultBuffer.defenderST = this.effectType;
+		resultBuffer.stValue = this.effectValue;
+		resultBuffer.stVisible = this.isDisplay;
+		resultBuffer.stRound = this.effectRound;
+		resultBuffer.defState = this.bearState;
+		resultBuffer.defAState = this.aliveState;
+		resultBuffer.aliveHP = byAttackObject.healthPoint;
+		resultBuffer.aliveSP = byAttackObject.skillPoint;
 		return resultBuffer;
 	}
 }

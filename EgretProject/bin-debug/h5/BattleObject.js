@@ -169,12 +169,16 @@ var BattleObject = (function () {
     };
     BattleObject.prototype.initProperty = function (fightObj) {
         this.fightObject = fightObj;
-        this.battleTag = fightObj.battleTag;
+        this.battleTag = fightObj.roleType;
         this.coordinate = fightObj.coordinate;
         this.id = fightObj.id;
         this.shipMould = fightObj.shipMould;
         this.capacity = fightObj.capacity;
         this.commonSkillMould = fightObj.commonSkill;
+        this.setSkillPoint(fightObj.skillPoint);
+        //如果是主线关卡，血量等于最大血量
+        this.setHealthPoint(fightObj.healthPoint);
+        this.healthMaxPoint = fightObj.healthPoint;
     };
     //初始化技能和天赋信息
     BattleObject.prototype.initSkillAndTalentInfo = function () {
@@ -243,6 +247,10 @@ var BattleObject = (function () {
     };
     BattleObject.prototype.nextBattleInfo = function () {
     };
+    //设置怒气
+    BattleObject.prototype.setSkillPoint = function (skillPoint) {
+        this.skillPoint = skillPoint;
+    };
     //减怒气
     BattleObject.prototype.subSkillPoint = function (skillPoint) {
         this.skillPoint = this.skillPoint - skillPoint;
@@ -263,6 +271,10 @@ var BattleObject = (function () {
             this.skillPoint = 0;
         }
         return skillPoint;
+    };
+    //设置血量
+    BattleObject.prototype.setHealthPoint = function (healthPoint) {
+        this.healthPoint = healthPoint;
     };
     //加血
     BattleObject.prototype.addHealthPoint = function (healthPoint) {

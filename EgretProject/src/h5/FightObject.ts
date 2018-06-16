@@ -7,6 +7,8 @@ class FightObject {
 	specialSkillDecribe = 0;
 	zoarium = 0;
 	quality = 0;
+
+	//注意FightObject里的healthPoint指的最大血量
 	healthPoint = 0;
 	skillPoint = 0;
 	mouldId = 0;
@@ -27,26 +29,9 @@ class FightObject {
 	//速度
 	attackSpeed = 0;
 
-	battleTag = 0;
 	healthMaxPoint = 0;
 
-	// fightObjectData._id = fightObjects[k].id;
-	// fightObjectData._pos = k;
-	// fightObjectData._head = fightObjects[k].picIndex;
-	// fightObjectData._power_skill_id = fightObjects[k].specialSkillDecribe;
-	// fightObjectData._fit_skill_id = fightObjects[k].zoarium;
-	// fightObjectData._quality = fightObjects[k].quality;
-	// fightObjectData._hp = fightObjects[k].healthPoint;
-	// fightObjectData._sp = fightObjects[k].skillPoint;
-	// fightObjectData._type = selfTag;
-	// fightObjectData._mouldId = fightObjects[k].mouldId;
-	// fightObjectData._scale = fightObjects[k].amplifyPercent;
-	// fightObjectData._name = fightObjects[k].fightName;
-	// fightObjectData._evolution_level = fightObjects[k].evolutionLevel;
-	// fightObjectData._hero_speed = fightObjects[k].wisdom;
-	// fightObjectData._max_hp = fightObjects[k].healthPoint;
-
-	public initWithUserData(coordinate: number, ship: any, battleTag: number, userId: string) {
+	public initWithUserData(coordinate: number, ship: any, userId: string) {
 		//普通攻击SkillMould对象
 		this.commonSkill = ConfigDB.loadConfig("skill_mould_txt", 661);
 		//小技能技能id
