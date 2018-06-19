@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "bg_jpg,egret_icon_png,description_json,about-bg_png,about_png,close_png,bgListPage_jpg,btnOK_png,checked_png,checkNo_png,goods01_png,goods02_png,goods03_png,goods04_png,goods05_png,goods06_png,goods07_png,goodsTitle_png,heros01_png,heros02_png,heros03_png,heros04_png,heros05_png,heros06_png,heros07_png,herosTitle_png,hScrollBar01_png,hScrollBar02_png,listItemBkgd_png,commonBg_jpg,homeBg_jpg,loading_jpg,loading2_png,toast-bg_png,btnEquip_png,btnReturn_png,btnStrengthen_png,mbtnAbout_png,mbtnGoods_png,mbtnHero_png,mbtnPlayer_png,mbtn_Bg_png,mbtn_BgFc_png,profileContent_png,profileTitle_png,skillBg_png,skillIcon01_png,skillIcon02_png,skillIcon03_png,skillIcon04_png,skillIcon05_png,skillIcon06_png,skillIcon07_png,skillItemFrame_png",
+			"keys": "bg_jpg,egret_icon_png,description_json,about-bg_png,about_png,close_png,bgListPage_jpg,btnOK_png,checked_png,checkNo_png,goods01_png,goods02_png,goods03_png,goods04_png,goods05_png,goods06_png,goods07_png,goodsTitle_png,heros01_png,heros02_png,heros03_png,heros04_png,heros05_png,heros06_png,heros07_png,herosTitle_png,hScrollBar01_png,hScrollBar02_png,listItemBkgd_png,commonBg_jpg,homeBg_jpg,loading_jpg,loading2_png,toast-bg_png,btnEquip_png,btnReturn_png,btnStrengthen_png,mbtnAbout_png,mbtnGoods_png,mbtnHero_png,mbtnPlayer_png,mbtn_Bg_png,mbtn_BgFc_png,profileContent_png,profileTitle_png,skillBg_png,skillIcon01_png,skillIcon02_png,skillIcon03_png,skillIcon04_png,skillIcon05_png,skillIcon06_png,skillIcon07_png,skillItemFrame_png,gameEui_json",
 			"name": "preload"
 		}
 	],
@@ -275,6 +275,11 @@
 			"name": "skillItemFrame_png",
 			"type": "image",
 			"url": "profile/skillItemFrame.png"
+		},
+		{
+			"name": "gameEui_json",
+			"type": "json",
+			"url": "gameEui.json"
 		}
 	]
 }

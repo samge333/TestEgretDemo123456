@@ -1,0 +1,4 @@
+class EnvironmentFormation {
+	public constructor() {
+	}
+}

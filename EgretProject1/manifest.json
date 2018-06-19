@@ -1,0 +1,43 @@
+{
+	"initial": [
+		"libs/modules/egret/egret.js",
+		"libs/modules/egret/egret.web.js",
+		"libs/modules/eui/eui.js",
+		"libs/modules/assetsmanager/assetsmanager.js",
+		"libs/modules/tween/tween.js",
+		"libs/modules/game/game.js",
+		"libs/modules/dragonBones/dragonBones.js",
+		"libs/modules/socket/socket.js",
+		"libs/modules/promise/promise.js"
+	],
+	"game": [
+		"bin-debug/AssetAdapter.js",
+		"bin-debug/LoadingUI.js",
+		"bin-debug/Main.js",
+		"bin-debug/Platform.js",
+		"bin-debug/ThemeAdapter.js",
+		"bin-debug/h5/BattleCache.js",
+		"bin-debug/h5/BattleObject.js",
+		"bin-debug/h5/BattleSkill.js",
+		"bin-debug/h5/ED.js",
+		"bin-debug/h5/EnumDef.js",
+		"bin-debug/h5/FightModule.js",
+		"bin-debug/h5/FightObject.js",
+		"bin-debug/h5/FightRole.js",
+		"bin-debug/h5/FightRoleController.js",
+		"bin-debug/h5/FightUtil.js",
+		"bin-debug/h5/HLog.js",
+		"bin-debug/network/NetworkProtocol.js",
+		"bin-debug/report/ConfigDB.js",
+		"bin-debug/report/EnvironmentFormation.js",
+		"bin-debug/report/EnvironmentShip.js",
+		"bin-debug/report/EquipmentMould.js",
+		"bin-debug/report/Npc.js",
+		"bin-debug/report/RestrainMould.js",
+		"bin-debug/report/ShipMould.js",
+		"bin-debug/report/SkillInfluence.js",
+		"bin-debug/report/SkillMould.js",
+		"bin-debug/report/TalentMould.js",
+		"bin-debug/util/Dms.js"
+	]
+}
