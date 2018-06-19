@@ -77,7 +77,8 @@ class Main extends eui.UILayer {
     }
 
     public sceneTest() {
-        
+        let test = new TestScene;
+        this.addChild(test);
     }
 
     private async runGame() {

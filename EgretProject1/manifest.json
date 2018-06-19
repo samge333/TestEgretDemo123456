@@ -11,8 +11,8 @@
 		"libs/modules/promise/promise.js"
 	],
 	"game": [
+		"bin-debug/h5/FightUtil.js",
 		"bin-debug/AssetAdapter.js",
-		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
 		"bin-debug/Platform.js",
 		"bin-debug/ThemeAdapter.js",
@@ -25,7 +25,7 @@
 		"bin-debug/h5/FightObject.js",
 		"bin-debug/h5/FightRole.js",
 		"bin-debug/h5/FightRoleController.js",
-		"bin-debug/h5/FightUtil.js",
+		"bin-debug/LoadingUI.js",
 		"bin-debug/h5/HLog.js",
 		"bin-debug/network/NetworkProtocol.js",
 		"bin-debug/report/ConfigDB.js",
@@ -38,6 +38,7 @@
 		"bin-debug/report/SkillInfluence.js",
 		"bin-debug/report/SkillMould.js",
 		"bin-debug/report/TalentMould.js",
+		"bin-debug/scene/TestScene.js",
 		"bin-debug/util/Dms.js"
 	]
 }

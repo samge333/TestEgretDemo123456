@@ -112,6 +112,8 @@ var Main = (function (_super) {
         fightRoleController.nextBattle();
     };
     Main.prototype.sceneTest = function () {
+        var test = new TestScene;
+        this.addChild(test);
     };
     Main.prototype.runGame = function () {
         return __awaiter(this, void 0, void 0, function () {
