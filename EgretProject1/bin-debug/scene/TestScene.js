@@ -18,31 +18,26 @@ var TestScene = (function (_super) {
         return _this;
     }
     TestScene.prototype.initHero = function () {
-        var dbData = RES.getRes("spirte_105201_ske_json");
-        var textureData = RES.getRes("spirte_105201_tex_json");
-        var texture = RES.getRes("spirte_105201_tex_png");
-        var egretFactoryA = new dragonBones.EgretFactory();
-        egretFactoryA.parseDragonBonesData(dbData);
-        egretFactoryA.parseTextureAtlasData(textureData, texture);
-        var armatureDisplay = egretFactoryA.buildArmatureDisplay("armatureName");
-        armatureDisplay.scaleX = -1;
+        var armatureDisplay = Display.newDragonByNumber(105201);
         this.addChild(armatureDisplay);
         armatureDisplay.x = this.width / 2 - 300;
         armatureDisplay.y = this.height / 2;
-        armatureDisplay.animation.play("13_jueji", 0);
+        armatureDisplay.animation.play("13_jueji");
+        var sa = armatureDisplay.animation.animationNames;
+        armatureDisplay.addEventListener(dragonBones.EventObject.COMPLETE, this.animationEventHandler, this);
+        armatureDisplay.addEventListener(dragonBones.EventObject.FRAME_EVENT, this.animationEventHandler, this);
+    };
+    TestScene.prototype.animationEventHandler = function (event) {
+        var eventObject = event.eventObject;
+        console.log("animationEventHandler112233");
+        console.log(eventObject.animationState.name, event.type, eventObject.name ? eventObject.name : "");
     };
     TestScene.prototype.initMaster = function () {
-        var dbData = RES.getRes("spirte_106601_ske_json");
-        var textureData = RES.getRes("spirte_106601_tex_json");
-        var texture = RES.getRes("spirte_106601_tex_png");
-        var egretFactoryB = new dragonBones.EgretFactory();
-        egretFactoryB.parseDragonBonesData(dbData);
-        egretFactoryB.parseTextureAtlasData(textureData, texture);
-        var armatureDisplay = egretFactoryB.buildArmatureDisplay("armatureName");
+        var armatureDisplay = Display.newDragonByNumber(106601);
         this.addChild(armatureDisplay);
         armatureDisplay.x = this.width / 2 + 300;
         armatureDisplay.y = this.height / 2;
-        armatureDisplay.animation.play("01_qianchong", 0);
+        armatureDisplay.animation.play("01_qianchong");
     };
     return TestScene;
 }(eui.Component));

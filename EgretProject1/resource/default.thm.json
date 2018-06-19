@@ -16,7 +16,6 @@
 	},
 	"autoGenerateExmlsList": true,
 	"exmls": [
-		"resource/exml/test.exml",
 		"resource/eui_skins/ButtonSkin.exml",
 		"resource/eui_skins/CheckBoxSkin.exml",
 		"resource/eui_skins/HScrollBarSkin.exml",
@@ -29,7 +28,8 @@
 		"resource/eui_skins/TextInputSkin.exml",
 		"resource/eui_skins/ToggleSwitchSkin.exml",
 		"resource/eui_skins/VScrollBarSkin.exml",
-		"resource/eui_skins/VSliderSkin.exml"
+		"resource/eui_skins/VSliderSkin.exml",
+		"resource/exml/test.exml"
 	],
 	"path": "resource/default.thm.json"
 }
