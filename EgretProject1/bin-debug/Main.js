@@ -115,6 +115,8 @@ var Main = (function (_super) {
         var fightRoleController = new FightRoleController;
         test.addChild(fightRoleController);
         fightRoleController.nextBattle();
+        var fightQteController = new FightQTEController;
+        test.addChild(fightQteController);
     };
     Main.prototype.runGame = function () {
         return __awaiter(this, void 0, void 0, function () {

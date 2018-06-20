@@ -223,7 +223,7 @@ __reflect(PrivateEnvironmentData.prototype, "PrivateEnvironmentData");
 var ED = (function () {
     function ED() {
     }
-    ED.parse_environment_fight_role_round_attack_data = function (str, attData) {
+    ED.parse_environment_fight_role_round_attack_data = function (str) {
     };
     ED.parser_func = function (type, str) {
         if (type == "parse_battle_field_init") {

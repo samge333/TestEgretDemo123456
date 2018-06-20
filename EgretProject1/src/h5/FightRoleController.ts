@@ -2,10 +2,8 @@ class FightRoleController extends eui.Component {
 	public constructor() {
 		super();
 		this.skinName = "resource/exml/test1.exml";
-		this.addEventListener(eui.UIEvent.CREATION_COMPLETE, this.onCreationComplete, this);
-
 		
-
+		this.eventListen();
 		this.init();
 	}
 
@@ -21,7 +19,7 @@ class FightRoleController extends eui.Component {
 	hero_slots: {[key: number]: eui.Rect} = {};
 	master_slots: {[key: number]: eui.Rect} = {};
 
-	//eui
+	//exml
 	pos01: eui.Rect = null;
 	pos02: eui.Rect = null;
 	pos03: eui.Rect = null;
@@ -38,7 +36,11 @@ class FightRoleController extends eui.Component {
 	public onCreationComplete() {
 		this.width = this.parent.width;
 		this.height = this.parent.height;
+	}
 
+	public eventListen() {
+		this.addEventListener(eui.UIEvent.CREATION_COMPLETE, this.onCreationComplete, this);
+		// HEvent.listener(EvtName.RoleCtrlNextAttackRole, this.onRoleCtrlNextAttackRole);
 		
 	}
 
@@ -73,7 +75,6 @@ class FightRoleController extends eui.Component {
 	}
 
 	public getFightData(fightRole: FightRole, grade: number) {
-		let attData = {};
     	let resultBuffer = {};
 
 		//我方
@@ -90,20 +91,20 @@ class FightRoleController extends eui.Component {
 			HLog.log("获取这个BattleObject的攻击数据", resultBuffer);
 
 			let jsonStr = JSON.stringify(resultBuffer);
-			ED.parse_environment_fight_role_round_attack_data(jsonStr, attData);
+			ED.parse_environment_fight_role_round_attack_data(jsonStr);
 		}
 		//敌方
 		else {
 
 		}
+
+		return resultBuffer;
 	}
 
 	//进入下一场战斗
 	public nextBattle() {
 		HLog.log("进入下一场");
-		HLog.log(this.width);
-		HLog.log(this.height);
-		
+
 		this.initHero();
 		this.initMaster();
 		this.moveToScene();
@@ -111,6 +112,7 @@ class FightRoleController extends eui.Component {
 		this.changeToNextAttackRole();
 	}
 
+	//生成我方FightRole
 	public initHero() {
 		for (let k in this.hero_slots) {
 			let v = this.hero_slots[k];
@@ -124,6 +126,7 @@ class FightRoleController extends eui.Component {
 		}
 	}
 
+	//生成敌方FightRole
 	public initMaster() {
 		for (let k in this.master_slots) {
 			let v = this.master_slots[k];
@@ -137,7 +140,7 @@ class FightRoleController extends eui.Component {
 		}
 	}
 
-	//走进场景
+	//入场
 	public moveToScene() {
 		let offsetInfo = [
 			[0, 200, 0, 0, 0, 0],
@@ -154,7 +157,9 @@ class FightRoleController extends eui.Component {
 				egret.Tween.get(role).to({x: 0}, 1500).call(function() {
 					let actionIndex = DRAGON_ANIMAE_INDEX.animation_standby;
 					Display.animationChangeToAction(role.dragonNode, actionIndex, actionIndex);
-				});;
+
+					this.nextRoundFight();
+				}, this);
 			}
 		}
 
@@ -172,4 +177,18 @@ class FightRoleController extends eui.Component {
 			}		
 		}
 	} 
+
+	//开始一下波战斗
+	public nextRoundFight() {
+		// HEvent.dispatch(EvtName.QteCtrlNextAttackRole);
+
+		//自动战斗的情况下
+		let role = this._hero_formation_ex[0];
+		this.qteAddAttackRole(role);
+	}
+
+	// public onRoleCtrlNextAttackRole(param) {
+	// 	this.qteAddAttackRole();
+	// }
+
 }

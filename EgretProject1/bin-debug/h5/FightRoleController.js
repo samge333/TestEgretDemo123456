@@ -22,7 +22,7 @@ var FightRoleController = (function (_super) {
         //位置节点列表
         _this.hero_slots = {};
         _this.master_slots = {};
-        //eui
+        //exml
         _this.pos01 = null;
         _this.pos02 = null;
         _this.pos03 = null;
@@ -36,13 +36,17 @@ var FightRoleController = (function (_super) {
         _this.pos15 = null;
         _this.pos16 = null;
         _this.skinName = "resource/exml/test1.exml";
-        _this.addEventListener(eui.UIEvent.CREATION_COMPLETE, _this.onCreationComplete, _this);
+        _this.eventListen();
         _this.init();
         return _this;
     }
     FightRoleController.prototype.onCreationComplete = function () {
         this.width = this.parent.width;
         this.height = this.parent.height;
+    };
+    FightRoleController.prototype.eventListen = function () {
+        this.addEventListener(eui.UIEvent.CREATION_COMPLETE, this.onCreationComplete, this);
+        // HEvent.listener(EvtName.RoleCtrlNextAttackRole, this.onRoleCtrlNextAttackRole);
     };
     FightRoleController.prototype.init = function () {
         //获取位置节点
@@ -69,7 +73,6 @@ var FightRoleController = (function (_super) {
         var data = this.getFightData(selectRole, 1);
     };
     FightRoleController.prototype.getFightData = function (fightRole, grade) {
-        var attData = {};
         var resultBuffer = {};
         //我方
         if (fightRole) {
@@ -81,21 +84,21 @@ var FightRoleController = (function (_super) {
             ED.data.fightModule.fightObjectAttack(attackObj, resultBuffer);
             HLog.log("获取这个BattleObject的攻击数据", resultBuffer);
             var jsonStr = JSON.stringify(resultBuffer);
-            ED.parse_environment_fight_role_round_attack_data(jsonStr, attData);
+            ED.parse_environment_fight_role_round_attack_data(jsonStr);
         }
         else {
         }
+        return resultBuffer;
     };
     //进入下一场战斗
     FightRoleController.prototype.nextBattle = function () {
         HLog.log("进入下一场");
-        HLog.log(this.width);
-        HLog.log(this.height);
         this.initHero();
         this.initMaster();
         this.moveToScene();
         this.changeToNextAttackRole();
     };
+    //生成我方FightRole
     FightRoleController.prototype.initHero = function () {
         for (var k in this.hero_slots) {
             var v = this.hero_slots[k];
@@ -108,6 +111,7 @@ var FightRoleController = (function (_super) {
             }
         }
     };
+    //生成敌方FightRole
     FightRoleController.prototype.initMaster = function () {
         for (var k in this.master_slots) {
             var v = this.master_slots[k];
@@ -120,7 +124,7 @@ var FightRoleController = (function (_super) {
             }
         }
     };
-    //走进场景
+    //入场
     FightRoleController.prototype.moveToScene = function () {
         var offsetInfo = [
             [0, 200, 0, 0, 0, 0],
@@ -136,8 +140,8 @@ var FightRoleController = (function (_super) {
                 egret.Tween.get(role).to({ x: 0 }, 1500).call(function () {
                     var actionIndex = DRAGON_ANIMAE_INDEX.animation_standby;
                     Display.animationChangeToAction(role.dragonNode, actionIndex, actionIndex);
-                });
-                ;
+                    this.nextRoundFight();
+                }, this_1);
             }
         };
         var this_1 = this;
@@ -162,6 +166,13 @@ var FightRoleController = (function (_super) {
         for (var i = 0; i < this._master_formation_ex.length; i++) {
             _loop_2(i);
         }
+    };
+    //开始一下波战斗
+    FightRoleController.prototype.nextRoundFight = function () {
+        // HEvent.dispatch(EvtName.QteCtrlNextAttackRole);
+        //自动战斗的情况下
+        var role = this._hero_formation_ex[0];
+        this.qteAddAttackRole(role);
     };
     return FightRoleController;
 }(eui.Component));

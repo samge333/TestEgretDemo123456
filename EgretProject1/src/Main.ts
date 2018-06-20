@@ -81,6 +81,9 @@ class Main extends eui.UILayer {
         let fightRoleController = new FightRoleController;
         test.addChild(fightRoleController);
         fightRoleController.nextBattle();
+
+        let fightQteController = new FightQTEController;
+        test.addChild(fightQteController);
     }
 
     private async runGame() {
