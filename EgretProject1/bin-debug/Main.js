@@ -103,17 +103,18 @@ var Main = (function (_super) {
         Dms.loadTxt("skill_influence_txt");
         Dms.loadTxt("skill_mould_txt");
         Dms.loadTxt("environment_ship_txt");
+    };
+    Main.prototype.sceneTest = function () {
+        var test = new TestScene;
+        this.addChild(test);
         var fightModule = new FightModule;
         fightModule.initFight(58, 1, 0);
         ED.data.fightModule = fightModule;
         fightModule.initFightOrder();
         //测试攻击数据
         var fightRoleController = new FightRoleController;
+        test.addChild(fightRoleController);
         fightRoleController.nextBattle();
-    };
-    Main.prototype.sceneTest = function () {
-        var test = new TestScene;
-        this.addChild(test);
     };
     Main.prototype.runGame = function () {
         return __awaiter(this, void 0, void 0, function () {

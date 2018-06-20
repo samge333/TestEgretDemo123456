@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="test" width="960" height="640" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect id="pos02" width="80" height="80" x="200" y="362" fillColor="0xffffff" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
+	<e:Rect id="pos12" width="80" height="80" x="680" y="362" fillColor="0xffffff" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
+</e:Skin>

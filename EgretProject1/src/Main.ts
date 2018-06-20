@@ -65,6 +65,12 @@ class Main extends eui.UILayer {
         Dms.loadTxt("skill_mould_txt");
         Dms.loadTxt("environment_ship_txt");
 
+    }
+
+    public sceneTest() {
+        let test = new TestScene;
+        this.addChild(test);
+
         let fightModule = new FightModule;
         fightModule.initFight(58, 1, 0);
         ED.data.fightModule = fightModule;
@@ -73,12 +79,8 @@ class Main extends eui.UILayer {
 
         //测试攻击数据
         let fightRoleController = new FightRoleController;
+        test.addChild(fightRoleController);
         fightRoleController.nextBattle();
-    }
-
-    public sceneTest() {
-        let test = new TestScene;
-        this.addChild(test);
     }
 
     private async runGame() {

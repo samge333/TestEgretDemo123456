@@ -2,7 +2,8 @@ class Display {
 	public constructor() {
 	}
 
-	DragonAnimationNames = [
+	//骨骼动画名称
+	public static DragonAnimationNames = [
 		"00_daiji",			//0
 		"01_qianchong",		//1
 		"02_huichong",		//2
@@ -45,7 +46,7 @@ class Display {
 		"29_daodi",			//39
 	]
 
-	public static newDragonByNumber(imgId: number, armatureName: string = "armatureName", scale: number = 1): dragonBones.EgretArmatureDisplay | null {
+	public static newDragonById(imgId: number, armatureName: string = "armatureName", scale: number = 1): dragonBones.EgretArmatureDisplay | null {
 		if (imgId == null) {
 			return null;
 		}
@@ -75,9 +76,69 @@ class Display {
 		return armatureDisplay;
 	}
 
-	public static initArmature(dragonNode, index) {
-		dragonNode.playWithIndex = function() {
-			// (dragonNode as dragonBones.EgretArmatureDisplay).animation.animationNames;
+	public static initArmature(dragonNode) {
+		//为dragonNode增加功能
+		dragonNode.mydata = {};
+		dragonNode.mydata._actionIndex = 0;
+		dragonNode.mydata._nextAction = 0;
+
+		//播放指定index的动作
+		dragonNode.mydata.playWithIndex = function(actionIndex: number, loopTimes: number = 0) {
+			let animName = Display.DragonAnimationNames[actionIndex];
+			if (animName) {
+				HLog.log("执行动作", animName);
+				(dragonNode as dragonBones.EgretArmatureDisplay).animation.play(animName, loopTimes);
+			}
 		};
+
+		//动作回调
+		dragonNode.mydata.setMovementEventCallFunc = function(func) {
+			dragonNode.mydata.changeActionCallfunc = func;
+			(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.COMPLETE, function(event: dragonBones.EgretEvent) {
+				dragonNode.mydata.changeActionCallfunc(event, dragonNode);
+			}, this);
+		};
+
+		//事件回调
+		dragonNode.mydata.setFrameEventCallFunc = function(func) {
+			dragonNode.mydata.frameCallFunc = func;
+			(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.FRAME_EVENT, function(event: dragonBones.EgretEvent) {
+				dragonNode.mydata.frameCallFunc(event);
+			}, this);
+		};
+	}
+
+	//当前动作完成后的回调
+	public static changeAction_animationEventCallFunc(event, dragonNode) {
+		// if (dragonNode.mydata._changing == null) {
+			dragonNode.mydata._changing = true;
+
+			if (dragonNode.mydata._nextAction && dragonNode.mydata._actionIndex != dragonNode.mydata._nextAction) {
+				dragonNode.mydata._actionIndex = dragonNode.mydata._nextAction;
+				dragonNode.mydata.playWithIndex(dragonNode.mydata._actionIndex);
+			}
+
+			// dragonNode.mydata._changing = null;
+
+			if (dragonNode.mydata._invoke) {
+				dragonNode.mydata._invoke(dragonNode);
+			}
+		// }
+	}
+
+	//立即切换到指定动作
+	public static animationChangeToAction(dragonNode, changeToAction: number, nextAction: number, callInvoke: boolean = false) {
+		if (dragonNode == null || changeToAction == null || nextAction == null) {
+			return;
+		}
+
+		// dragonNode.mydata._changing = true;
+		dragonNode.mydata.playWithIndex(changeToAction);
+		dragonNode.mydata._actionIndex = changeToAction;
+		dragonNode.mydata._nextAction = nextAction;
+		
+		if (callInvoke == true && dragonNode.mydata._invoke) {
+			dragonNode.mydata._invoke(dragonNode);
+		}
 	}
 }
