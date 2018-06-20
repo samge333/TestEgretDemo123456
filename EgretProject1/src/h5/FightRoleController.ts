@@ -72,6 +72,19 @@ class FightRoleController extends eui.Component {
 
 	public qteAddAttackRole(selectRole: FightRole) {
 		let data = this.getFightData(selectRole, 1);
+		if (data) {
+			this.executeCurrentSelectRoleFightData(data);
+		}
+	}
+
+	//执行指定对象战斗数据attData，然后给到指定的角色fightRole的fight_cacher_pool
+	public executeCurrentSelectRoleFightData(data) {
+		let fightRole = null;
+		if (data.attacker == 0) {
+			fightRole = this._hero_formation_ex[data.attackerPos - 1];
+		} else {
+			fightRole = this._master_formation_ex[data.attackerPos - 1];
+		}
 	}
 
 	public getFightData(fightRole: FightRole, grade: number) {
