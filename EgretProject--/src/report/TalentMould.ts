@@ -1,4 +1,0 @@
-class TalentMould {
-	public constructor() {
-	}
-}

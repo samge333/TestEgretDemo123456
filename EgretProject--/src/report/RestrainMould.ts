@@ -1,4 +1,0 @@
-class RestrainMould {
-	public constructor() {
-	}
-}

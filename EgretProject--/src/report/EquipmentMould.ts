@@ -1,4 +1,0 @@
-class EquipmentMould {
-	public constructor() {
-	}
-}
