@@ -9,9 +9,13 @@ class FightRoleController extends eui.Component {
 
 	byAttackTargetTag = 1;
 	//我方角色列表
-	_hero_formation_ex: Array<FightRole> = [];
-	//地方角色列表
-	_master_formation_ex: Array<FightRole> = [];
+	_hero_formation_arr: Array<FightRole> = [];
+	//我方带位置表
+	_hero_formation_pos: {[key: number]: FightRole} = {};
+	//敌方角色列表
+	_master_formation_arr: Array<FightRole> = [];
+	//敌方带位置表
+	_master_formation_pos: {[key: number]: FightRole} = {};
 	//第几波
 	fightIndex = 0;
 
@@ -66,7 +70,7 @@ class FightRoleController extends eui.Component {
 	}
 
 	public changeToNextAttackRole() {
-		let role = this._hero_formation_ex[0];
+		let role = this._hero_formation_arr[0];
 		this.qteAddAttackRole(role);
 	}
 
@@ -79,12 +83,14 @@ class FightRoleController extends eui.Component {
 
 	//执行指定对象战斗数据attData，然后给到指定的角色fightRole的fight_cacher_pool
 	public executeCurrentSelectRoleFightData(data) {
-		let fightRole = null;
+		let fightRole: FightRole = null;
 		if (data.attacker == 0) {
-			fightRole = this._hero_formation_ex[data.attackerPos - 1];
+			fightRole = this._hero_formation_pos[data.attackerPos];
 		} else {
-			fightRole = this._master_formation_ex[data.attackerPos - 1];
+			fightRole = this._hero_formation_pos[data.attackerPos];
 		}
+
+		fightRole.attackListener();
 	}
 
 	public getFightData(fightRole: FightRole, grade: number) {
@@ -122,7 +128,7 @@ class FightRoleController extends eui.Component {
 		this.initMaster();
 		this.moveToScene();
 
-		this.changeToNextAttackRole();
+		// this.changeToNextAttackRole();
 	}
 
 	//生成我方FightRole
@@ -134,7 +140,8 @@ class FightRoleController extends eui.Component {
 				let role = new FightRole;
 				role.init(heroData, 0, v);
 				v.addChild(role);
-				this._hero_formation_ex.push(role);
+				this._hero_formation_arr.push(role);
+				this._hero_formation_pos[k] = role;
 			}
 		}
 	}
@@ -148,7 +155,8 @@ class FightRoleController extends eui.Component {
 				let role = new FightRole;
 				role.init(masterData, 1, v);
 				v.addChild(role);
-				this._master_formation_ex.push(role);
+				this._master_formation_arr.push(role);
+				this._master_formation_pos[k] = role;
 			}
 		}
 	}
@@ -160,8 +168,8 @@ class FightRoleController extends eui.Component {
 			[0, 300, 0, 0, 0, 0],
 		];
 
-		for (let i = 0; i < this._hero_formation_ex.length; i++) {
-			let role = this._hero_formation_ex[i];
+		for (let i = 0; i < this._hero_formation_arr.length; i++) {
+			let role = this._hero_formation_arr[i];
 			if (role) {
 				let offsetX = offsetInfo[0][role._info._pos - 1];
 				role.x = 0 - offsetX;
@@ -176,19 +184,19 @@ class FightRoleController extends eui.Component {
 			}
 		}
 
-		for (let i = 0; i < this._master_formation_ex.length; i++) {
-			let role = this._master_formation_ex[i];
-			if (role) {
-				let offsetX = offsetInfo[1][role._info._pos - 1];
-				role.x = 0 + offsetX;
-				let actionIndex = DRAGON_ANIMAE_INDEX.animation_move;
-				Display.animationChangeToAction(role.dragonNode, actionIndex, actionIndex);
-				egret.Tween.get(role).to({x: 0}, 1500).call(function() {
-					let actionIndex = DRAGON_ANIMAE_INDEX.animation_standby;
-					Display.animationChangeToAction(role.dragonNode, actionIndex, actionIndex);
-				});;
-			}		
-		}
+		// for (let i = 0; i < this._master_formation_arr.length; i++) {
+		// 	let role = this._master_formation_arr[i];
+		// 	if (role) {
+		// 		let offsetX = offsetInfo[1][role._info._pos - 1];
+		// 		role.x = 0 + offsetX;
+		// 		let actionIndex = DRAGON_ANIMAE_INDEX.animation_move;
+		// 		Display.animationChangeToAction(role.dragonNode, actionIndex, actionIndex);
+		// 		egret.Tween.get(role).to({x: 0}, 1500).call(function() {
+		// 			let actionIndex = DRAGON_ANIMAE_INDEX.animation_standby;
+		// 			Display.animationChangeToAction(role.dragonNode, actionIndex, actionIndex);
+		// 		}, this);
+		// 	}		
+		// }
 	} 
 
 	//开始一下波战斗
@@ -196,7 +204,7 @@ class FightRoleController extends eui.Component {
 		// HEvent.dispatch(EvtName.QteCtrlNextAttackRole);
 
 		//自动战斗的情况下
-		let role = this._hero_formation_ex[0];
+		let role = this._hero_formation_arr[0];
 		this.qteAddAttackRole(role);
 	}
 

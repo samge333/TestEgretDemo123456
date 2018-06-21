@@ -17,29 +17,6 @@ var TestScene = (function (_super) {
         // this.initHero();
         // this.initMaster();
     }
-    TestScene.prototype.initHero = function () {
-        var armatureDisplay = Display.newDragonById(105201);
-        Display.initArmature(armatureDisplay);
-        armatureDisplay.mydata._actionIndex = DRAGON_ANIMAE_INDEX.animation_standby;
-        armatureDisplay.mydata._nextAction = DRAGON_ANIMAE_INDEX.animation_new_skill_13_jueji;
-        armatureDisplay.mydata.setMovementEventCallFunc(Display.changeAction_animationEventCallFunc);
-        this.addChild(armatureDisplay);
-        armatureDisplay.x = this.width / 2 - 300;
-        armatureDisplay.y = this.height / 2;
-        armatureDisplay.mydata.playWithIndex(DRAGON_ANIMAE_INDEX.animation_standby, 1);
-    };
-    TestScene.prototype.animationEventHandler = function (event) {
-        var eventObject = event.eventObject;
-        console.log("animationEventHandler112233");
-        console.log(eventObject.animationState.name, event.type, eventObject.name ? eventObject.name : "");
-    };
-    TestScene.prototype.initMaster = function () {
-        var armatureDisplay = Display.newDragonById(106601);
-        this.addChild(armatureDisplay);
-        armatureDisplay.x = this.width / 2 + 300;
-        armatureDisplay.y = this.height / 2;
-        armatureDisplay.animation.play("01_qianchong");
-    };
     return TestScene;
 }(eui.Component));
 __reflect(TestScene.prototype, "TestScene");

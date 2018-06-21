@@ -14,9 +14,13 @@ var FightRoleController = (function (_super) {
         var _this = _super.call(this) || this;
         _this.byAttackTargetTag = 1;
         //我方角色列表
-        _this._hero_formation_ex = [];
-        //地方角色列表
-        _this._master_formation_ex = [];
+        _this._hero_formation_arr = [];
+        //我方带位置表
+        _this._hero_formation_pos = {};
+        //敌方角色列表
+        _this._master_formation_arr = [];
+        //敌方带位置表
+        _this._master_formation_pos = {};
         //第几波
         _this.fightIndex = 0;
         //位置节点列表
@@ -66,11 +70,25 @@ var FightRoleController = (function (_super) {
         }
     };
     FightRoleController.prototype.changeToNextAttackRole = function () {
-        var role = this._hero_formation_ex[0];
+        var role = this._hero_formation_arr[0];
         this.qteAddAttackRole(role);
     };
     FightRoleController.prototype.qteAddAttackRole = function (selectRole) {
         var data = this.getFightData(selectRole, 1);
+        if (data) {
+            this.executeCurrentSelectRoleFightData(data);
+        }
+    };
+    //执行指定对象战斗数据attData，然后给到指定的角色fightRole的fight_cacher_pool
+    FightRoleController.prototype.executeCurrentSelectRoleFightData = function (data) {
+        var fightRole = null;
+        if (data.attacker == 0) {
+            fightRole = this._hero_formation_pos[data.attackerPos];
+        }
+        else {
+            fightRole = this._hero_formation_pos[data.attackerPos];
+        }
+        fightRole.attackListener();
     };
     FightRoleController.prototype.getFightData = function (fightRole, grade) {
         var resultBuffer = {};
@@ -96,7 +114,7 @@ var FightRoleController = (function (_super) {
         this.initHero();
         this.initMaster();
         this.moveToScene();
-        this.changeToNextAttackRole();
+        // this.changeToNextAttackRole();
     };
     //生成我方FightRole
     FightRoleController.prototype.initHero = function () {
@@ -107,7 +125,8 @@ var FightRoleController = (function (_super) {
                 var role = new FightRole;
                 role.init(heroData, 0, v);
                 v.addChild(role);
-                this._hero_formation_ex.push(role);
+                this._hero_formation_arr.push(role);
+                this._hero_formation_pos[k] = role;
             }
         }
     };
@@ -120,7 +139,8 @@ var FightRoleController = (function (_super) {
                 var role = new FightRole;
                 role.init(masterData, 1, v);
                 v.addChild(role);
-                this._master_formation_ex.push(role);
+                this._master_formation_arr.push(role);
+                this._master_formation_pos[k] = role;
             }
         }
     };
@@ -131,7 +151,7 @@ var FightRoleController = (function (_super) {
             [0, 300, 0, 0, 0, 0],
         ];
         var _loop_1 = function (i) {
-            var role = this_1._hero_formation_ex[i];
+            var role = this_1._hero_formation_arr[i];
             if (role) {
                 var offsetX = offsetInfo[0][role._info._pos - 1];
                 role.x = 0 - offsetX;
@@ -145,33 +165,28 @@ var FightRoleController = (function (_super) {
             }
         };
         var this_1 = this;
-        for (var i = 0; i < this._hero_formation_ex.length; i++) {
+        for (var i = 0; i < this._hero_formation_arr.length; i++) {
             _loop_1(i);
         }
-        var _loop_2 = function (i) {
-            var role = this_2._master_formation_ex[i];
-            if (role) {
-                var offsetX = offsetInfo[1][role._info._pos - 1];
-                role.x = 0 + offsetX;
-                var actionIndex = DRAGON_ANIMAE_INDEX.animation_move;
-                Display.animationChangeToAction(role.dragonNode, actionIndex, actionIndex);
-                egret.Tween.get(role).to({ x: 0 }, 1500).call(function () {
-                    var actionIndex = DRAGON_ANIMAE_INDEX.animation_standby;
-                    Display.animationChangeToAction(role.dragonNode, actionIndex, actionIndex);
-                });
-                ;
-            }
-        };
-        var this_2 = this;
-        for (var i = 0; i < this._master_formation_ex.length; i++) {
-            _loop_2(i);
-        }
+        // for (let i = 0; i < this._master_formation_arr.length; i++) {
+        // 	let role = this._master_formation_arr[i];
+        // 	if (role) {
+        // 		let offsetX = offsetInfo[1][role._info._pos - 1];
+        // 		role.x = 0 + offsetX;
+        // 		let actionIndex = DRAGON_ANIMAE_INDEX.animation_move;
+        // 		Display.animationChangeToAction(role.dragonNode, actionIndex, actionIndex);
+        // 		egret.Tween.get(role).to({x: 0}, 1500).call(function() {
+        // 			let actionIndex = DRAGON_ANIMAE_INDEX.animation_standby;
+        // 			Display.animationChangeToAction(role.dragonNode, actionIndex, actionIndex);
+        // 		}, this);
+        // 	}		
+        // }
     };
     //开始一下波战斗
     FightRoleController.prototype.nextRoundFight = function () {
         // HEvent.dispatch(EvtName.QteCtrlNextAttackRole);
         //自动战斗的情况下
-        var role = this._hero_formation_ex[0];
+        var role = this._hero_formation_arr[0];
         this.qteAddAttackRole(role);
     };
     return FightRoleController;

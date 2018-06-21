@@ -46,6 +46,7 @@ class Display {
 		"29_daodi",			//39
 	]
 
+	//创建一个角色骨骼
 	public static newDragonById(imgId: number, armatureName: string = "armatureName", scale: number = 1): dragonBones.EgretArmatureDisplay | null {
 		if (imgId == null) {
 			return null;
@@ -53,6 +54,18 @@ class Display {
 		let skeFile = "spirte_" + imgId + "_ske_json";
 		let texFile = "spirte_" + imgId + "_tex_json";
 		let texPng = "spirte_" + imgId + "_tex_png";
+		return Display.newDragon(skeFile, texFile, texPng, armatureName, scale);
+	}
+
+	//创建一个光效骨骼
+	public static newEffectById(nameIndex: number, armatureName: string = "armatureName", scale: number = 1): dragonBones.EgretArmatureDisplay | null {
+		if (nameIndex == null) {
+			return null;
+		}
+		// effice_105211_tex_json
+		let skeFile = "effice_" + nameIndex + "_ske_json";
+		let texFile = "effice_" + nameIndex + "_tex_json";
+		let texPng = "effice_" + nameIndex + "_tex_png";
 		return Display.newDragon(skeFile, texFile, texPng, armatureName, scale);
 	}
 
@@ -76,8 +89,9 @@ class Display {
 		return armatureDisplay;
 	}
 
-	public static initArmature(dragonNode) {
-		//为dragonNode增加功能
+	//为dragonNode增加功能
+	public static initArmature(dragonNode, thisObj) {
+		
 		dragonNode.mydata = {};
 		dragonNode.mydata._actionIndex = 0;
 		dragonNode.mydata._nextAction = 0;
@@ -86,59 +100,87 @@ class Display {
 		dragonNode.mydata.playWithIndex = function(actionIndex: number, loopTimes: number = 0) {
 			let animName = Display.DragonAnimationNames[actionIndex];
 			if (animName) {
-				HLog.log("执行动作", animName);
+				// HLog.log("执行动作", animName);
 				(dragonNode as dragonBones.EgretArmatureDisplay).animation.play(animName, loopTimes);
 			}
 		};
 
-		//动作回调
-		dragonNode.mydata.setMovementEventCallFunc = function(func) {
-			dragonNode.mydata.changeActionCallfunc = func;
-			(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.COMPLETE, function(event: dragonBones.EgretEvent) {
-				dragonNode.mydata.changeActionCallfunc(event, dragonNode);
-			}, this);
-		};
+		// //动作回调
+		// dragonNode.mydata.setMovementEventCallFunc = function(func) {
+		// 	dragonNode.mydata.changeActionCallfunc = func;
+		// 	(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.START, function(event: dragonBones.EgretEvent) {
+		// 		dragonNode.mydata.changeActionCallfunc(event, dragonNode);
+		// 	}, this);
+		// };
+
+		//动作完成回调
+		(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.LOOP_COMPLETE, function(event: dragonBones.EgretEvent) {
+			if (dragonNode.mydata._actionIndex != dragonNode.mydata._nextAction) {
+				dragonNode.mydata._actionIndex = dragonNode.mydata._nextAction;
+				dragonNode.mydata.playWithIndex(dragonNode.mydata._nextAction);
+			}
+		}, this);
+
+		//动作开始回调
+		(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.START, function(event: dragonBones.EgretEvent) {
+			if (dragonNode.mydata._invoke) {
+				dragonNode.mydata._invoke(thisObj, dragonNode, event.animationState.name);
+			}
+		}, this);
 
 		//事件回调
-		dragonNode.mydata.setFrameEventCallFunc = function(func) {
-			dragonNode.mydata.frameCallFunc = func;
-			(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.FRAME_EVENT, function(event: dragonBones.EgretEvent) {
-				dragonNode.mydata.frameCallFunc(event);
-			}, this);
-		};
+		(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.FRAME_EVENT, function(event: dragonBones.EgretEvent) {
+			dragonNode.mydata.frameCallFunc(event);
+			if (dragonNode.mydata._eventCallback) {
+				dragonNode.mydata._eventCallback(thisObj, dragonNode, event.animationState.name);
+			}
+		}, this);
+
+		// dragonNode.mydata.setFrameEventCallFunc = function(func) {
+		// 	dragonNode.mydata.frameCallFunc = func;
+		// 	(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.FRAME_EVENT, function(event: dragonBones.EgretEvent) {
+		// 		dragonNode.mydata.frameCallFunc(event);
+		// 	}, this);
+		// };
+
 	}
 
-	//当前动作完成后的回调
-	public static changeAction_animationEventCallFunc(event, dragonNode) {
-		// if (dragonNode.mydata._changing == null) {
-			dragonNode.mydata._changing = true;
+	// //当前动作完成后的回调
+	// public static changeAction_animationEventCallFunc(event: dragonBones.EgretEvent, dragonNode, loopTimes: number = 0) {
+	// 	// if (dragonNode.mydata._changing == null) {
 
-			if (dragonNode.mydata._nextAction && dragonNode.mydata._actionIndex != dragonNode.mydata._nextAction) {
-				dragonNode.mydata._actionIndex = dragonNode.mydata._nextAction;
-				dragonNode.mydata.playWithIndex(dragonNode.mydata._actionIndex);
-			}
+	// 		dragonNode.mydata._changing = true;
 
-			// dragonNode.mydata._changing = null;
+	// 		if (dragonNode.mydata._actionIndex != dragonNode.mydata._nextAction) {
+	// 			dragonNode.mydata.playWithIndex(dragonNode.mydata._nextAction, loopTimes);
+	// 			dragonNode.mydata._actionIndex = dragonNode.mydata._nextAction;
 
-			if (dragonNode.mydata._invoke) {
-				dragonNode.mydata._invoke(dragonNode);
-			}
-		// }
-	}
+	// 			// if (dragonNode.mydata._invoke) {
+	// 			// 	dragonNode.mydata._invoke(dragonNode);
+	// 			// }
+	// 		}
+
+	// 		// dragonNode.mydata._changing = null;
+
+	// 		if (dragonNode.mydata._invoke) {
+	// 			dragonNode.mydata._invoke(dragonNode);
+	// 		}
+	// 	// }
+	// }
 
 	//立即切换到指定动作
-	public static animationChangeToAction(dragonNode, changeToAction: number, nextAction: number, callInvoke: boolean = false) {
+	public static animationChangeToAction(dragonNode, changeToAction: number, nextAction: number) {
 		if (dragonNode == null || changeToAction == null || nextAction == null) {
 			return;
 		}
 
-		// dragonNode.mydata._changing = true;
-		dragonNode.mydata.playWithIndex(changeToAction);
 		dragonNode.mydata._actionIndex = changeToAction;
 		dragonNode.mydata._nextAction = nextAction;
+
+		dragonNode.mydata.playWithIndex(changeToAction);
 		
-		if (callInvoke == true && dragonNode.mydata._invoke) {
-			dragonNode.mydata._invoke(dragonNode);
-		}
 	}
+
+
+
 }
