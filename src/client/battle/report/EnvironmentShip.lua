@@ -4,6 +4,8 @@
 EnvironmentShip = class("EnvironmentShip")
 
 function EnvironmentShip:ctor()
+    print("创建环境战船")
+    -- print(debug.traceback())
     self.captainType =  0
 
     --向性
@@ -286,6 +288,8 @@ function EnvironmentShip:calculateShipPropertyByTalent()
 	self.talentMouldList = {}
 	----_crint ("self.talentMould = " .. self.talentMould)
 	if( self.talentMould ~= "" and self.talentMould ~= "-1") then		
+        print("计算天赋影响船只能力")
+        print(debug.traceback())
 		local talentIdArray = zstring.split(self.talentMould, ",")
 		--for (int i = 0; i < talentIdArray.length; i++) then
 		for _, talentId in pairs(talentIdArray) do	

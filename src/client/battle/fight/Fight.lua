@@ -419,11 +419,13 @@ function Fight:ctor()
             _state = 0,
             _invoke = function(terminal, instance, params)
                 if true then
-                    --> print("准备请求战斗")
+                    print("准备请求战斗 1")
                     if true ~= _ED._battle_wait_change_scene and missionIsOver() == false then
+                        print("准备请求战斗 2")
                         --> print("有剧情事件，进入事件的执行逻辑。")
                         executeNextEvent(nil, false)
                     else
+                        print("准备请求战斗 3")
 						if self._fight_type == _enum_fight_type._fight_type_101 then
 							if __lua_project_id ~= __lua_project_gragon_tiger_gate
                                 and __lua_project_id ~= __lua_project_l_digital
@@ -434,6 +436,9 @@ function Fight:ctor()
 								return true
 							end
 						end
+
+                        print("准备请求战斗 4")
+
                         if self._fight_type == _enum_fight_type._fight_type_10
                             or self._fight_type == _enum_fight_type._fight_type_11
                             or self._fight_type == _enum_fight_type._fight_type_13
@@ -444,13 +449,19 @@ function Fight:ctor()
                             or self._fight_type == _enum_fight_type._fight_type_213
                             or _ED.init_environment_fight_complete == true
                             then
+
+                            print("准备请求战斗 5")
+
                                 -- 已经提前请求过战斗数据,直接打吧
                             _ED.init_environment_fight_complete = false 
                             state_machine.excute("fight_start_fight", 0, 0)
                         else 
+                            print("准备请求战斗 6")
+
                             --> print("普通PVE战斗，开始向服务器请求战斗数据。")
                             local function responseEnvironmentFightCallback(response)
                                 if response.RESPONSE_SUCCESS and response.PROTOCOL_STATUS >= 0 then
+                                    print("准备请求战斗 14")
                                     --> print("战斗请求成功。", response.node._currentBattleIndex)
                                     --response.node:startFight()
                                     state_machine.excute("fight_start_fight", 0, 0)
@@ -466,6 +477,9 @@ function Fight:ctor()
 							else
                                 if __lua_project_id == __lua_project_gragon_tiger_gate or __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon or __lua_project_id == __lua_project_l_naruto  
                                     or __lua_project_id == __lua_project_red_alert then
+
+                                    print("准备请求战斗 7")
+
                                     if self._fight_type ~= _enum_fight_type._fight_type_8 and
                                         self._fight_type ~= _enum_fight_type._fight_type_10 and
                                         self._fight_type ~= _enum_fight_type._fight_type_11 and 
@@ -477,14 +491,20 @@ function Fight:ctor()
                                         and self._fight_type ~= _enum_fight_type._fight_type_211
                                         and self._fight_type ~= _enum_fight_type._fight_type_213
                                         then
+
+                                        print("准备请求战斗 8")
+
                                         if self._fight_type == _enum_fight_type._fight_type_101 then
+                                            print("准备请求战斗 9")
                                             responseEnvironmentFightCallback({RESPONSE_SUCCESS = true, PROTOCOL_STATUS = 0})
                                             return true
                                         end
                                         local function responseBattleStartCallback( response )
                                             if response.RESPONSE_SUCCESS and response.PROTOCOL_STATUS >= 0 then
+                                                print("准备请求战斗 10")
                                                 app.load("client.battle.report.BattleReport")
                                                 if _ED._fightModule == nil then
+                                                    print("准备请求战斗 11")
                                                     _ED._fightModule = FightModule:new()
                                                 end
                                                 _ED.attackData = {
@@ -492,10 +512,12 @@ function Fight:ctor()
                                                     roundData = {}
                                                 }
                                                 if self._fight_type == _enum_fight_type._fight_type_101 then
+                                                    print("准备请求战斗 12")
                                                     local resultBuffer = {}
                                                     _ED._fightModule:initFight(_ED._scene_npc_id, _ED._npc_difficulty_index, 0, resultBuffer)
                                                     local orderList = {}
                                                 end
+                                                print("准备请求战斗 13")
                                                 _ED.attackData.isWin = _ED._fightModule.result
                                                 local orderList = {}
                                                 _ED._fightModule:initFightOrder(_ED.user_info, orderList)
@@ -512,6 +534,7 @@ function Fight:ctor()
                                             end
                                         end
                                     else
+                                        print("准备请求战斗 9")
                                         if self._fight_type == _enum_fight_type._fight_type_8 or
                                             self._fight_type ~= _enum_fight_type._fight_type_107 then
                                             responseEnvironmentFightCallback({RESPONSE_SUCCESS = true, PROTOCOL_STATUS = 0})
@@ -545,7 +568,7 @@ function Fight:ctor()
             _instance = self,
             _state = 0,
             _invoke = function(terminal, instance, params)
-                --> print(" === 开始战斗 === ")
+                print(" === 开始战斗 === ")
                 instance:loadAttackEffects()
                 -- instance:startFight()
                 return true
@@ -642,6 +665,7 @@ function Fight:ctor()
             _instance = self,
             _state = 0,
             _invoke = function(terminal, instance, params)
+                print("日志 Fight 战斗回合正式开始")
                 __fight_recorder_action_time_speed_index = __fight_recorder_action_time_speed_index or 1
                 fwin._close_touch_end_event = false
                 -- FightRoleController.__lock_battle = false
@@ -1729,7 +1753,8 @@ function Fight:playAnimationByHeroIntoNextFight()
 end
 
 function Fight:startFight()
-    -- --> print("战斗回合开始", self._currentFightIndex, _ED.battleData.battle_total_count)
+    --> print("战斗回合开始", self._currentFightIndex, _ED.battleData.battle_total_count)
+    print("日志 Fight:startFight, 1")
     self._totalFightCount = _ED.battleData.battle_total_count
 
     -- 如果 战斗回合只有 1/1 则不显示当前的战斗回合数 07/11策划优化需求
@@ -1746,6 +1771,7 @@ function Fight:startFight()
                 fwin:open(FightRound:new():init(self._currentFightIndex, self._totalFightCount), fwin._window)
             end
         else
+            print("日志 Fight:startFight, 2")
             fwin:open(FightRound:new():init(self._currentFightIndex, self._totalFightCount), fwin._window)
         end
     else
@@ -2645,6 +2671,7 @@ function Fight:getFightZoariumSkillMovers( ... )
 end
 
 function Fight:drawFightUI()
+    print("日志 Fight 绘制FightUI")
     if self._currentFightIndex == 1 then
         --> print("绘制战斗主UI")
         if __lua_project_id == __lua_project_gragon_tiger_gate or __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon or __lua_project_id == __lua_project_l_naruto  

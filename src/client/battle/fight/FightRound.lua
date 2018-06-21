@@ -124,7 +124,7 @@ function FightRound:onEnterTransitionFinish()
                 -- else
                     -- state_machine.excute("fight_attack_round_start", 0, "")
                     if state_machine.excute("fight_attack_check_boss_instro",0,0) == false then
-                        print("回合开始 FightRound")
+                        print("日志 FightRound 回合开始")
                         state_machine.excute("fight_attack_round_start", 0, "")
                     end
                 -- end

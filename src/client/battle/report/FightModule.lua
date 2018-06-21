@@ -451,6 +451,8 @@ else
 end
 
 function FightModule:ctor()
+	print("创建FightModule")
+	print(debug.traceback())
 
     --战斗中的攻击者对象数组
 	self.attackObjects = {}
@@ -594,6 +596,7 @@ function FightModule:setFake(isFake)
 end
 
 function FightModule:initNewBattleField(npcId,fightType)
+	print("FightModule日志 initNewBattleField")
 	--清空战斗缓存
 	_ED.user_info.battleCache = nil
 
@@ -724,6 +727,7 @@ function FightModule:initNewBattleField(npcId,fightType)
 end
 
 function FightModule:initNewBattleInfo()
+	print("FightModule日志 initNewBattleInfo")
 	local battleCache = _ED.user_info.battleCache
 	if battleCache == nil then
 		return
@@ -774,6 +778,7 @@ end
 
 --指定A角色攻击B角色
 function FightModule:fightByAttackObject(battleObject,byBattleObject)
+	print("FightModule日志 fightByAttackObject")
 	--只要有一个人死亡就不处理攻击逻辑
 	if battleObject.isDead == true or byBattleObject.isDead == true then
 		return
@@ -815,6 +820,7 @@ end
 ]]---
 
 function FightModule:initBattleField(npc, difficulty, fightType, resultBuffer,eveNpc, write)
+	print("FightModule日志 initBattleField")
 	if __lua_project_id == __lua_project_l_digital 
         or __lua_project_id == __lua_project_l_pokemon or __lua_project_id == __lua_project_l_naruto 
         then
@@ -865,11 +871,17 @@ function FightModule:initBattleField(npc, difficulty, fightType, resultBuffer,ev
 		--seatArray = new Integer[]{formation.seatOne, formation.seatTwo, formation.seatThree, formation.seatFour, formation.seatFive, formation.seatSix}
 		seatArray = {}
 		battleCache.attackerSpeedValue = 0
+
+
+
 		for idx = 1, 6 do
 			seatArray[idx] = self.fightType == 15 and _ED.em_user_ship[idx] or _ED.formetion[idx + 1]
 			--_crint ("idx .. ": " .. seatArray[idx])
+			print("idx .. " .. seatArray[idx])
 			if (tonumber(seatArray[idx]) > 0) then
+				print("aaaa1 " .. idx)
 				if( _ED.user_ship[ seatArray[idx] ] ~= nil) then
+					print("aaaa2 " .. idx)
 					local fightObject = FightObject:new()
 					fightObject:initWithUserData(idx, _ED.user_ship[seatArray[idx]], 0, _ED.user_info.user_id)
 					fightObject.attack = fightObject.attack * (1 + self.union_pve_attribute_bonus)
@@ -879,16 +891,22 @@ function FightModule:initBattleField(npc, difficulty, fightType, resultBuffer,ev
 					
 					battleCache.attackerSpeedValue = battleCache.attackerSpeedValue + fightObject.attackSpeed
 				else
+					print("aaaa3 " .. idx)
 					attackObjects[idx] = nil
 					--_crint ("Ship not found in user_ship: " .. seatArray[idx])
 				end
 				--local fightObject = FightObject:new()
 				--attackObjects[idx] = fightObject:initWithUserData(_ED)
 			else
+				print("aaaa4 " .. idx)
 				--_crint("Set to nil: " .. tonumber(seatArray[idx]))
 				attackObjects[idx] = nil
 			end
 		end
+
+		debug.print_r(_ED.formetion, "出站阵容")
+		debug.print_r(seatArray, "出站阵容") 
+
 		
 		battleCache.attackCombatForce = _ED.user_info.fight_capacity
 		if fightType == _enum_fight_type._fight_type_211 then
@@ -942,9 +960,12 @@ function FightModule:initBattleField(npc, difficulty, fightType, resultBuffer,ev
 		
 		local amplifyPercentString = dms.string(dms["environment_formation"], formationId, environment_formation.amplify_percentage)
 		local amplifyPercentArray = zstring.split(amplifyPercentString, IniUtil.comma)
+
+		debug.print_r(seatArray, "seatArray123345")
 		 
 		for j, val in pairs(seatArray) do
 			if(nil ~= val and 0 ~= tonumber(val)) then
+				print("seatArray123345 xx: " .. j)
 				local fightObject = FightObject:new() --(npc, difficulty, j + 1, seatArray[j], fakeLevel, isFake)
 				--_crint("Calling: ", j, seatArray[j], self.fakeLevel, self.isFake)
 				fightObject:initWithNpc(npc, difficulty, j, seatArray[j], self.fakeLevel, self.isFake)
@@ -975,7 +996,7 @@ function FightModule:initBattleField(npc, difficulty, fightType, resultBuffer,ev
 	end
 	
 	
-	
+	print("npc.npcName: " .. npc.npcName)
 	battleCache.byAttackName = npc.npcName
 	-- if (true) then
 	-- _crint ("战场初始化：",#byAttackerObjectsList)
@@ -986,13 +1007,15 @@ function FightModule:initBattleField(npc, difficulty, fightType, resultBuffer,ev
 	
 	----_crint("Dump battleCache info")
 
+	print("battleCache.attackerSpeedValue: " .. battleCache.attackerSpeedValue)
 	battleCache.attacker_priority = battleCache.attackerSpeedValue
 	battleCache.defender_priority = 0
 	battleCache.attacker_name = _ED.user_info.user_name
 	battleCache.defender_name = battleCache.byAttackName
 	battleCache.attacker_head_pic = 0
 	battleCache.defender_head_pic = 0
-	
+
+
 	if false ~= write then
 		self:writeBattleFieldInit(battleCache,  0,  1, resultBuffer)
 	end
@@ -1013,6 +1036,7 @@ end
 
 --数码净化
 function FightModule:initPurifyBattleField(npc, difficulty, fightType, resultBuffer,eveNpc, write)
+	print("FightModule日志 initPurifyBattleField")
 	self.fightType = fightType
 	local battleCache = BattleCache:new()
 	battleCache.userInfo =  _ED.user_info
@@ -1250,6 +1274,7 @@ end
 -- end
 
 function FightModule:initBattleInfo(battleCache)
+	print("FightModule日志 initBattleInfo")
 	self.fightResult = 0
 	self.hasNextRound = true
 	self.npcMaxHealth = 0
@@ -1270,6 +1295,10 @@ function FightModule:initBattleInfo(battleCache)
 
 	local byAttackObjects = battleCache.byAttackerObjectsList[battleCache.currentBattleCount + 1]
 	--for (local i = 0; i < attackObjects.length; i++) {
+
+	-- debug.print_r(attackObjects, "我方数码兽数据")
+	-- debug.print_r(byAttackObjects, "敌方数码兽数据")
+
 	for i, atkObj in pairs(attackObjects) do
 		if(nil ~= attackObjects[i]) then
 			if true == resetAttackerInfo then
@@ -1366,6 +1395,7 @@ function FightModule:initBattleInfo(battleCache)
 		for k, v in pairs(dest) do
 			if (nil ~= v) then
 				if (v.battleTag == 0 ) then
+					print("战斗开始前写入的天赋判定数据1: " .. k)
 					TalentJudge:judge(TalentConstant.JUDGE_OPPORTUNITY_BATTLE_ROUND_START, v, nil, nil, self)
 					v:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_BATTLE_ROUND_START, self, userInfo, v, nil, nil, self.attackObjects, self.byAttackObjects, buffBattleSkill, buffBuffer )
 					
@@ -1377,6 +1407,7 @@ function FightModule:initBattleInfo(battleCache)
 						v:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_INIT_BATTLE_SCENE, self, userInfo, v, nil, nil, self.attackObjects, self.byAttackObjects, buffBattleSkill, buffBuffer )
 					end
 				else
+					print("战斗开始前写入的天赋判定数据2: " .. k)
 					TalentJudge:judge(TalentConstant.JUDGE_OPPORTUNITY_BATTLE_ROUND_START, v, nil, nil, self)
 					v:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_BATTLE_ROUND_START, self, userInfo, v, nil, nil, self.byAttackObjects, self.attackObjects, buffBattleSkill, buffBuffer )
 					
@@ -1391,6 +1422,9 @@ function FightModule:initBattleInfo(battleCache)
 				v:clearTalentJudgeResultList()
 			end
 		end
+
+		-- debug.print_r(buffBuffer, "战斗开始前写入的天赋判定数据")
+		debug.print_r(buffBattleSkill, "buffBattleSkill1223")
 
 		table.insert(buffBuffer, 1, NetworkProtocol.sequence)			-- seq
 		table.insert(buffBuffer, 2, IniUtil.enter)
@@ -1437,6 +1471,7 @@ function FightModule:initBattleInfo(battleCache)
 end
 
 function FightModule:calculateTalentAuraInfluence(battleObjects)
+	print("FightModule日志 calculateTalentAuraInfluence")
 	local tmpBattleObjects = battleObjects
 	for idx, tmpBattleObject in  ipairs(tmpBattleObjects) do
 		if(nil ~= tmpBattleObject) then				
@@ -1474,6 +1509,7 @@ end
 
 
 function FightModule:calculateTalentUnite(attackObjects, byAttackObjects)
+	print("FightModule日志 calculateTalentUnite")
 	local tmpBattleObjects = attackObjects
 	for _, tmpBattleObject in pairs(tmpBattleObjects)  do
 		if(nil == tmpBattleObject)then
@@ -1511,6 +1547,7 @@ end
 
 
 function FightModule:calculateTalentAuraInfluence(talentMould, battleObject)
+	print("FightModule日志 calculateTalentAuraInfluence")
 	local effectCount = -1
 	local isActivate = false
 	if (talentMould.influencePriorType == TalentConstant.INFLUENCE_PRIOR_TYPE_MALE ) then
@@ -1539,6 +1576,7 @@ function FightModule:calculateTalentAuraInfluence(talentMould, battleObject)
 		local effectValue = tonumber(zstring.split(talentMould.influencePriorValue, IniUtil.comma)[2])
 		if(effectType == TalentConstant.INFLUENCE_PRIOR_VALUE_LIFE_ADDITIONAL_PERCENT) then
 			battleObject.healthMaxPoint = math.floor(battleObject.healthMaxPoint * (1.0 + effectValue / 100.0))
+			print("最大血量67: " .. self.healthMaxPoint)
 			-- battleObject.healthPoint    = math.floor(battleObject.healthPoint * (1.0 + effectValue / 100.0))
 			battleObject:setHealthPoint(math.floor(battleObject.healthPoint * (1.0 + effectValue / 100.0)))
 		else				
@@ -1553,6 +1591,7 @@ end
 
 
 function FightModule:calculateTalentUnite(talentMould, battleObject, extuteObject)
+	print("FightModule日志 calculateTalentUnite")
 	local effectCount = -1
 	local isActivate = false
 	if (talentMould.influencePriorType == TalentConstant.INFLUENCE_PRIOR_TYPE_EM_WEI ) then
@@ -1610,6 +1649,7 @@ function FightModule:calculateTalentUnite(talentMould, battleObject, extuteObjec
 			local effectValue = tonumber(zstring.split(talentMould.influencePriorValue, IniUtil.comma)[2])
 			if(effectType == TalentConstant.INFLUENCE_PRIOR_VALUE_LIFE_ADDITIONAL_PERCENT) then
 				battleObject.healthMaxPoint = math.floor( (battleObject.healthMaxPoint * (1.0 + effectValue / 100.0)))
+				print("最大血量66: " .. self.healthMaxPoint)
 				-- battleObject.healthPoint    = math.floor( (battleObject.healthPoint * (1.0 + effectValue / 100.0)))
 				battleObject:setHealthPoint(math.floor( (battleObject.healthPoint * (1.0 + effectValue / 100.0))))
 			elseif(effectCount == -1) then			
@@ -1633,6 +1673,7 @@ end
 --	k 当前出手序列号
 --	从k往后开始循环寻找存活战斗对象.不包含k,如果k后面没有,从头开始找下一个出手的人
 function FightModule:getNextFightObject(k,fightOrderList)
+	print("FightModule日志 getNextFightObject")
 	local isFind = false
 	local nextObject = nil
 	for s, battleObject in pairs(fightOrderList) do
@@ -1659,6 +1700,7 @@ end
 
 --	重置全部的出手状态
 function FightModule:resetActionStatus(resetAll)
+	print("FightModule日志 resetActionStatus")
 	if self.byAttackerAttacking then
 		return
 	end
@@ -1675,6 +1717,7 @@ end
 
 -- 重置全部的出手状态的技能状态
 function FightModule:resetAllRoleSkillStatus()
+	print("FightModule日志 resetAllRoleSkillStatus")
 	for s, battleObject in pairs(self.fightOrderList) do
 		-- _crint("====================================================")
 		if nil ~= battleObject.normalSkillMould then
@@ -1751,6 +1794,7 @@ function FightModule:getAppointFightObject(battleTag,coordinate)
 end
 
 function FightModule:findAppointFightObject(battleTag,coordinate)
+	print("FightModule日志 findAppointFightObject")
 	--_crint("获取出手方人员数量：",#self.fightOrderList)
 	for s, battleObject in pairs(self.fightOrderList) do
 		if tonumber(battleObject.battleTag) == tonumber(battleTag) then			--指定攻击方
@@ -1763,6 +1807,7 @@ function FightModule:findAppointFightObject(battleTag,coordinate)
 end
 
 function FightModule:killAppointFightObject(battleTag,coordinate)
+	print("FightModule日志 killAppointFightObject")
 	--_crint("获取出手方人员数量：",#self.fightOrderList)
 	for s, battleObject in pairs(self.fightOrderList) do
 		if tonumber(battleObject.battleTag) == tonumber(battleTag) then			--指定攻击方
@@ -1778,6 +1823,7 @@ function FightModule:killAppointFightObject(battleTag,coordinate)
 end
 
 function FightModule:addPowerValueFightObject(battleTag, coordinate, value)
+	print("FightModule日志 addPowerValueFightObject")
 	--_crint("获取出手方人员数量：",#self.fightOrderList)
 	for s, battleObject in pairs(self.fightOrderList) do
 		if tonumber(battleObject.battleTag) == tonumber(battleTag) then			--指定攻击方
@@ -1796,6 +1842,7 @@ function FightModule:addPowerValueFightObject(battleTag, coordinate, value)
 end
 
 function FightModule:setFightObjectSkillAttack(battleTag, coordinate, value)
+	print("FightModule日志 setFightObjectSkillAttack")
 	--_crint("获取出手方人员数量：",#self.fightOrderList)
 	for s, battleObject in pairs(self.fightOrderList) do
 		if tonumber(battleObject.battleTag) == tonumber(battleTag) then			--指定攻击方
@@ -1810,6 +1857,7 @@ end
 
 -- 设置绝技攻击
 function FightModule:setPowerSkillState(battleTag, coordinate)
+	print("FightModule日志 setPowerSkillState")
 	--_crint("获取出手方人员数量：",#self.fightOrderList)
 	for s, battleObject in pairs(self.fightOrderList) do
 		if tonumber(battleObject.battleTag) == tonumber(battleTag) then			--指定攻击方
@@ -1824,6 +1872,7 @@ function FightModule:setPowerSkillState(battleTag, coordinate)
 end
 
 function FightModule:setActionStatus(battleTag,coordinate, attackState)
+	print("FightModule日志 setActionStatus")
 	if type(attackState) ~= "boolean" then
 		return
 	end
@@ -1842,6 +1891,7 @@ end
 
 -- 清除绝技攻击
 function FightModule:clearPowerSkillState(battleTag)
+	print("FightModule日志 clearPowerSkillState")
 	--_crint("获取出手方人员数量：",#self.fightOrderList)
 	for s, battleObject in pairs(self.fightOrderList) do
 		if tonumber(battleObject.battleTag) == tonumber(battleTag) then			--指定攻击方
@@ -1853,6 +1903,7 @@ end
 
 -- 切换战斗对象的数据
 function FightModule:changeBattleRoleInfo( battleTag, coordinate, environmentShipId )
+	print("FightModule日志 changeBattleRoleInfo")
 	local info
 	for s, battleObject in pairs(self.fightOrderList) do
 		if tonumber(battleObject.battleTag) == tonumber(battleTag) then			--指定攻击方
@@ -1876,6 +1927,7 @@ end
 
 --初始化出手顺序
 function FightModule:initFightOrder(userInfo, resultBuffer)
+	print("FightModule日志 initFightOrder")
 	if self.waitAttack == true then
 		return
 	end
@@ -1943,6 +1995,7 @@ end
 --	获取下一个出手对象
 --	从k往后开始循环寻找存活战斗对象.如果k后面没有,表示回合结束
 function FightModule:getNextRoundFightObject(battleObject)
+	print("FightModule日志 getNextRoundFightObject")
 	local nextObject = nil
 	local k  = 0
 	for s, tempObject in pairs(self.fightOrderList) do
@@ -1970,6 +2023,7 @@ end
 
 --	获取出手对象位置
 function FightModule:getBattleObjectSite()
+	print("FightModule日志 getBattleObjectSite")
 	local k  = 1
 	for s, tempObject in pairs(self.fightOrderList) do
 		if(tempObject.isDead) or tempObject == nil then
@@ -1987,6 +2041,7 @@ end
 
 --	检测我方是否除自身以外其他人都出手过了
 function FightModule:findIsAllAttack(battleObject)
+	print("FightModule日志 findIsAllAttack")
 	for s, tempObject in pairs(self.attackObjects) do
 		if(tempObject.isDead) or tempObject == nil then
 		else
@@ -2001,6 +2056,7 @@ end
 
 --	检测我方是否只剩眩晕的人未出手
 function FightModule:checkLessIsDizzy()
+	print("FightModule日志 checkLessIsDizzy")
 	for s, tempObject in pairs(self.attackObjects) do
 		if tempObject ~= nil and tempObject.isDead ~= true and tempObject.isAction ~= true then
 			if tempObject.isDizzy ~= true then
@@ -2189,6 +2245,7 @@ function FightModule:checkChangeBattleTag()
 end
 
 function FightModule:roundCountChange()
+	print("FightModule日志 roundCountChange")
 	if(self.roundCount >= self.totalRound) then
 		self.roundCount = self.totalRound
 		if(self.roundCount == self.totalRound) then
@@ -2244,6 +2301,7 @@ end
 
 -- 校验回合的变更
 function FightModule:checkRoundCountChange()
+	print("FightModule日志 checkRoundCountChange")
 	-- if self.battleTag == 0 then
 	-- 	self.battleTag = 1
 	-- 	self:checkChangeBattleTag()
@@ -2264,6 +2322,7 @@ end
 
 -- 校验承受方是否有角色可以进行攻击
 function FightModule:checkHasByAttacker(attackObject)
+	print("FightModule日志 checkHasByAttacker")
 	local defenderTeam = nil
 	if (attackObject.battleTag == 1) then
 		defenderTeam = self.attackObjects
@@ -2361,6 +2420,7 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 	self.battleTag = 0
 
 	if(battleObject.isDead ) then
+		print("fightObjectAttack 2")
 		if(battleObject.battleTag == 0) then
 			self.attackObjects[battleObject.coordinate ] = nil
 		else
@@ -2368,7 +2428,9 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 		end
 		self.fightOrderList[k] = nil
 	else
+		print("fightObjectAttack 3")
 		if(battleObject.isDizzy or battleObject.isParalysis or battleObject.isCripple or true == battleObject.revived or false == self:checkHasByAttacker(battleObject)) then
+			print("fightObjectAttack 4")
 			if (attackOver ~= 0) then
 				--_crint("1回合：" .. roundCount)
 				table.insert(resultBuffer, "0")
@@ -2405,12 +2467,13 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 
 			battleObject.isAction = true
 		else
-			
+			print("fightObjectAttack 5")
 			local battleSkillList = nil
 			local skillReleasePosion = 0
 			local goon = true
 			-- 处理怒气攻击, 包括buff 和攻击技能
 			if true ~= battleObject.skipSuperSkillMould and nil ~= battleObject.specialSkillMould and ((battleObject.skillPoint >= FightModule.MAX_SP or self.canFreeSkill == true) and battleObject.isDisSp ~= true) then
+				print("fightObjectAttack 6")
 				local  realSkillMould = battleObject.specialSkillMould.id
 				-- print("我方释放必杀技：", battleObject.coordinate, "技能ID:", realSkillMould)
 				if (attackOver ~= 0)then
@@ -2469,9 +2532,11 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 				___writeDebugInfo("\t当前发动绝技攻击\r\n")
 				--]]
 			else
+				print("fightObjectAttack 7")
 				battleObject._isAction = nil
 				-- 处理普通攻击, 包括buff 和攻击技能
 				if(battleObject.isParalysis) then
+					print("fightObjectAttack 8")
 					if (attackOver ~= 0) then
 						table.insert(resultBuffer, "0")
 						table.insert(resultBuffer, IniUtil.compart)
@@ -2505,7 +2570,7 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 					--continue
 					battleObject.normalSkillMouldOpened = false
 				else
-					
+					print("fightObjectAttack 9")
 					if (attackOver ~= 0) then
 						table.insert(resultBuffer, "0")
 						table.insert(resultBuffer, IniUtil.compart)
@@ -2521,6 +2586,7 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 					
 					local skillId = 0
 					if true == battleObject.normalSkillMouldOpened then
+						print("fightObjectAttack 10")
 						battleSkillList = battleObject.normalBattleSkill
 						skillReleasePosion = battleObject.normalSkillMould.skillReleasePosition
 						battleObject.normalSkillMouldOpened = false
@@ -2531,6 +2597,7 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 						___writeDebugInfo("\t当前发动小技能攻击\r\n")
 						--]]
 					else
+						print("fightObjectAttack 11")
 						battleSkillList = battleObject.commonBattleSkill
 						skillReleasePosion = battleObject.commonSkillMould.skillReleasePosition
 						skillId = battleObject.commonSkillMould.id
@@ -2553,8 +2620,14 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 					battleObject:processUserBuffEffect(userInfo, self, self.bodyBuffer)
 				end
 			end
+
+			print("fightObjectAttack 12")
+
 			if (goon) then -- 麻痹后不走这里
 				--  处理普通或者怒气攻击 技能效用
+
+				print("fightObjectAttack 13")
+
 				local tmpBattleSkillBuffer = {}
 				local hasRestrain = 0
 				local byAttackCoordinates = {}
@@ -2562,7 +2635,9 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 				battleObject.byEffectCoordinateList = nil
 				local attackTargetIndex = 0
 				if(battleObject.isDead ~= true) then
+					print("fightObjectAttack 13-1")
 					if __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon or __lua_project_id == __lua_project_l_naruto then
+						print("fightObjectAttack 13-2")
 						-- 触发攻击前的天赋
 						local attackObjects = nil
 						local byAttackObjects = nil
@@ -2579,8 +2654,11 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 						battleObject:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_OPPONENT_FOR_ATTACK_BEFORE, self, userInfo, battleObject, nil, nil, attackObjects, byAttackObjects, buffBattleSkill, buffBuffer )
 						battleObject:clearTalentJudgeResultList()
 					end
+					print("fightObjectAttack 13-3")
+					-- debug.print_r(battleSkillList, "battleSkillList121313")
+
 					local lastBattleSkill = nil
-					for _, battleSkill in pairs(battleSkillList) do
+					for kk, battleSkill in pairs(battleSkillList) do
 						-- if (battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_DAMAGEHP or 
 						-- 	battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_ADDHP)then
 						-- 	byAttackCoordinates = {}
@@ -2594,6 +2672,7 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 						local skillInfluence =  attackSkill.skillInfluence
 
 						local needInitAttackTarget = true
+						--黄蜂兽特殊处理？
 						if skillInfluence.influenceRange == 24 then
 							if nil ~= tempByAttackCoordinates then
 								needInitAttackTarget = false
@@ -2601,7 +2680,9 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 						end
 
 						if true == needInitAttackTarget then
+							print("fightObjectAttack 13-4: " .. kk)
 							if (formulaInfo ~= FightUtil.FORMULA_INFO_FORTHWITH) then
+								print("fightObjectAttack 13-5: " .. kk)
 								byAttackCoordinates= {}
 								if((battleTag == 0 and influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE)
 									or (battleTag == 1 and influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE))then
@@ -2610,6 +2691,7 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 									byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.attackObjects, self.byAttackTargetTag)
 								end
 							else
+								print("fightObjectAttack 13-6: " .. kk)
 								local tempList = {}
 								if((battleTag == 0 and influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE)
 									or (battleTag == 1 and influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE))then
@@ -2618,8 +2700,10 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 									tempList = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.attackObjects, self.byAttackTargetTag)
 								end
 								if (#byAttackCoordinates == 0)then
+									print("fightObjectAttack 13-7: " .. kk)
 									byAttackCoordinates = tempList
 								else
+									print("fightObjectAttack 13-8: " .. kk)
 									local realCoordinates = {}
 									for i,v in pairs(byAttackCoordinates) do
 										for z,k in pairs(tempList) do
@@ -2635,6 +2719,7 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 						end
 
 						if skillInfluence.influenceRange == 24 then
+							print("fightObjectAttack 13-9: " .. kk)
 							attackTargetIndex = attackTargetIndex + 1
 
 							if nil == tempByAttackCoordinates then
@@ -2645,15 +2730,22 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 						end
 
 						if (0 == battleObject.battleTag) then
+							print("fightObjectAttack 13-10: " .. kk)
 							if(influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE) then
 								if(hasRestrain == 0) then
 									hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
 								end
+
+								print("userInfouserInfouserInfo111xxx")
+
 								attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
 							elseif(influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE)then
 								if(hasRestrain == 0)then
 									hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.attackObjects)
 								end
+
+								print("userInfouserInfouserInfo111")
+
 								attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
 							elseif(influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT) then
 								byAttackCoordinates = {}
@@ -2664,13 +2756,16 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 								attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
 							end
 						else
+							print("fightObjectAttack 13-14: " .. kk)
 							if(influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE)then
 								if(hasRestrain == 0)then
+									print("fightObjectAttack 13-15: " .. kk)
 									hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.attackObjects)
 								end
 								attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
 							elseif(influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE) then
 								if(hasRestrain == 0)then
+									print("fightObjectAttack 13-16: " .. kk)
 									hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
 								end
 								attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
@@ -2678,6 +2773,7 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 								byAttackCoordinates = {}
 								table.insert(byAttackCoordinates, battleObject.coordinate)
 								if(hasRestrain == 0) then
+									print("fightObjectAttack 13-17: " .. kk)
 									hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
 								end
 								attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
@@ -2686,6 +2782,8 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 						lastBattleSkill = attackSkill
 					end
 				end
+
+
 				IniUtil.concatTable(resultBuffer, self.headBuffer)
 				
 				table.insert(resultBuffer, battleObject.healthPoint)
@@ -2693,15 +2791,20 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 				table.insert(resultBuffer, battleObject.skillPoint)
 				table.insert(resultBuffer, IniUtil.compart)
 
+				print("hasRestrain:" .. hasRestrain)
+				-- debug.print_r(tmpBattleSkillBuffer, "tmpBattleSkillBuffer1234")
+
 				table.insert(resultBuffer, hasRestrain)
 				table.insert(resultBuffer, IniUtil.compart)
 				IniUtil.concatTable(resultBuffer, self.bodyBuffer)
 				table.insert(resultBuffer, self.battleSkillCount)
 				table.insert(resultBuffer, IniUtil.compart)
-				IniUtil.concatTable(resultBuffer, tmpBattleSkillBuffer)
+				IniUtil.concatTable(resultBuffer, tmpBattleSkillBuffer) 
 				
-				
+				print("fightObjectAttack 14-1")
+
 				if(hasZoumarSkill == true and self.canFreeSkill == true) then
+					print("fightObjectAttack 14-2")
 					----_crint("合击数量 " + battleObject.fitBattleObjects.size())
 					table.insert(resultBuffer, tonumber(#battleObject.fitBattleObjects))
 					
@@ -2712,24 +2815,31 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 					end
 					self.canFreeSkill = false
 				end
-				
+
+
 				IniUtil.concatTable(resultBuffer, self.battleSkillBuffer)
 				if(nil ~= self.counterBuffer)then
+					print("fightObjectAttack 14-3")
 					IniUtil.concatTable(resultBuffer, self.counterBuffer)
 					self.counterBuffer = nil
 				else
+					print("fightObjectAttack 14-4")
 					table.insert(resultBuffer, 0)
 					table.insert(resultBuffer, IniUtil.compart)
 				end
+
 				self.battleSkillCount = 0
 				table.insert(resultBuffer, 0)
 				table.insert(resultBuffer, IniUtil.compart)
 				if battleObject.isDead == true then
+					print("fightObjectAttack 14-5")
 					table.insert(resultBuffer, 0)
 					table.insert(resultBuffer, IniUtil.compart)
 				end
+
 				self:talentSelfTailFight(userInfo,battleObject,resultBuffer)
 				if true == battleObject._isAction then
+					print("fightObjectAttack 14-6")
 					battleObject.isAction = false
 					battleObject._isAction = nil
 					-- if battleObject.skillPoint >= FightModule.MAX_SP then
@@ -2747,7 +2857,11 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 	-- table.insert(resultBuffer, "1")
 	-- self:checkFightResult()
 	-- self:checkHasNextRound()
+
+	print("fightObjectAttack 14")
+
 	if(self:checkLessIsDizzy()) then 
+		print("fightObjectAttack 15")
 		for s, tempObject in pairs(self.attackObjects) do
 			if(tempObject ~= nil) then
 				if tempObject.isAction ~= true then
@@ -2806,8 +2920,11 @@ function FightModule:fightObjectAttack(attackObject,resultBuffer)
 	___writeDebugInfo("行动结束->" .. "攻击方：" .. battleObject.battleTag .. "\t攻击者站位：" .. battleObject.coordinate .. "\r\n\r\n")
 	--]]
 
+	print("fightObjectAttack 16")
+
 	local isAttackState = _ED._fightModule:checkAttackSell(true)
 	if isAttackState ~= true then
+		print("fightObjectAttack 17")
 		self.lastBattleTag = 1
 		self:checkChangeBattleTag()
 		if self.attackerSpeedValue < self.byAttackerSpeedValue then
@@ -3723,6 +3840,7 @@ end
 
 
 function FightModule:fight(userInfo, resultBuffer)
+	print("FightModule日志 fight")
 	self.fightOrderList = {}
 	self.attackCount = 0
 	self.byAttackCount = 0
@@ -4206,6 +4324,7 @@ end
 
 
 function FightModule:talentSelfTailFight(userInfo, selfObject, resultBuffer)
+	print("FightModule日志 攻击结束后触发的技能效用")
 	local talentMouldList = selfObject.talentMouldList
 	local talentCount = 0
 	local skillBuffer = {}
@@ -4258,9 +4377,12 @@ function FightModule:talentSelfTailFight(userInfo, selfObject, resultBuffer)
 	table.insert(resultBuffer,talentCount)
 	table.insert(resultBuffer,IniUtil.compart)
 	IniUtil.concatTable(resultBuffer, skillBuffer)
-
+	print("talentCount: " .. talentCount)
+	debug.print_r(skillBuffer, "talentCount123456")
 end
+
 function FightModule:fitFight(selfObject, list, userInfo)
+	print("FightModule日志 fitFight")
 	self.fitBuffer = {}
 	self.fitSelfBuffer = {}
 	table.insert(self.fitSelfBuffer, selfObject.battleTag)
@@ -4436,6 +4558,7 @@ end
 
 
 function FightModule:getBattleObjectHeathPoint(battleObjects)
+	print("FightModule日志 getBattleObjectHeathPoint")
 	local lessAttackHp = 0
 	for _, battleObject in pairs(battleObjects) do
 		--BattleObject battleObject = battleObjects[i]
@@ -4451,6 +4574,7 @@ function FightModule:getBattleObjectHeathPoint(battleObjects)
 end
 
 function FightModule:getFightObjectCount(attackerObjects)
+	print("FightModule日志 getFightObjectCount")
 	local count = 0
 	for _, attackObj in pairs(attackerObjects) do
 		if (attackObj ~= nil) then
@@ -4461,6 +4585,7 @@ function FightModule:getFightObjectCount(attackerObjects)
 end
 
 function FightModule:writeBattleFieldInit(battleCache, selfTag, targetTag, resultBuffer)
+	print("FightModule日志 writeBattleFieldInit")
 	table.insert(resultBuffer, 182)
 	table.insert(resultBuffer, IniUtil.enter)
 	table.insert(resultBuffer, battleCache.battleType)
@@ -4610,6 +4735,7 @@ end
 --检查是否有下一回合
 --重置评分伤害加成倍率
 function FightModule:checkHasNextRound()
+	print("FightModule日志 checkHasNextRound")
 	if(self.hasNextRound == true) then	
 		self.attackCount = 0
 		self.byAttackCount = 0
@@ -4697,6 +4823,7 @@ function FightModule:checkHasNextRound()
 end
 
 function FightModule:checkFightResult()
+	print("FightModule日志 checkFightResult")
 	local nowHeal = 0
 	local liveCount = 0
 	for _, battleObject in pairs(self.attackObjects) do
@@ -4770,6 +4897,7 @@ function FightModule:setFreeSkillTrue()
 end
 
 function FightModule:resetAction(camp)
+	print("FightModule日志 resetAction")
 	if 0 == camp then
 		for _, battleObject in pairs(self.attackObjects) do
 			if (battleObject ~= nil) then
@@ -4832,6 +4960,7 @@ end
 
 -- 复活
 function FightModule:executeRevived(camp)
+	print("FightModule日志 executeRevived")
 	if 0 == camp then
 		for _, battleObject in pairs(self.attackObjects) do
 			if (battleObject ~= nil) then
@@ -4872,6 +5001,7 @@ end
 
 --检查我方是否还有人能出手
 function FightModule:checkAttackSell(checkAllState)
+	print("FightModule日志 checkAttackSell")
 	-- if self.byAttackerAttacking then
 	-- 	return false
 	-- end
@@ -4912,6 +5042,7 @@ function FightModule:checkAttackSell(checkAllState)
 end
 --检查敌方是否还有人能出手
 function FightModule:checkByAttackSell()
+	print("FightModule日志 checkByAttackSell")
 	local selfAction = false
 	for _, battleObject in pairs(self.byAttackObjects) do
 		if(battleObject~=nil and battleObject.isDead ~= true
@@ -4939,6 +5070,7 @@ end
 --传递我方当前状态
 --0:无人,1:正常普通技能,2:死亡,3:眩晕 4:怒气技能 5:合体技能 6:合体怒气并存
 function FightModule:checkSelfAttackStatus()
+	print("FightModule日志 checkSelfAttackStatus")
 	local selfAttackObjects = {}
 	for i, battleObject in pairs(self.attackObjects) do
 		if(battleObject~=nil) then
@@ -4990,6 +5122,7 @@ function FightModule:checkSelfAttackStatus()
 end
 
 function FightModule:getSelfAttackStatus(coordinate)
+	print("FightModule日志 getSelfAttackStatus")
 	local selfAttackObjects = -1
 	for i, battleObject in pairs(self.attackObjects) do
 		if (battleObject ~= nil and coordinate == battleObject.coordinate) then
@@ -5030,6 +5163,7 @@ end
 --传递出手人员合击怒气槽
 --0:无人,1:正常普通技能,2:死亡,3:眩晕 4:怒气技能 5:合体技能 6:合体怒气并存
 function FightModule:getAttackZomlllSkillPoint()
+	print("FightModule日志 getAttackZomlllSkillPoint")
 	local selfAttackObjects = {}
 	for i=1,6 do
 		local battleObject = self.attackObjects[i]
@@ -5143,6 +5277,7 @@ function FightModule:getNpcTotalHealthPoint(npc)
 end
 --]]
 function FightModule:checkDefenceResult()
+	print("FightModule日志 checkDefenceResult")
 	local liveHealth = 0
 	for _, battleObject in pairs(self.byAttackObjects) do			
 		if(battleObject~=nil and battleObject.isDead ~= true) then
@@ -5153,6 +5288,7 @@ function FightModule:checkDefenceResult()
 end
 
 function FightModule:initUserBattleField(attackUser, battleCache)
+	print("FightModule日志 initUserBattleField")
 	if(battleCache == nil or attackUser == nil) then
 		return
 	end
@@ -5164,6 +5300,7 @@ function FightModule:initUserBattleField(attackUser, battleCache)
 end
 
 function FightModule:initNpcBattleField(attackUser, npc, battleCache)
+	print("FightModule日志 initNpcBattleField")
 	if(battleCache == nil or npc == nil or attackUser == nil) then
 		return
 	end
@@ -5759,6 +5896,7 @@ function FightModule:battlegroundFight(userInfo, resultBuffer, member)
 end
 --]]
 function FightModule:initAttackerBattleInfo(battleCache)
+	print("FightModule日志 initAttackerBattleInfo")
 		local attackObjects = battleCache.attackerObjects
 		self.totalHealth = 0
 		self.attackObjects = {}
@@ -5773,6 +5911,7 @@ function FightModule:initAttackerBattleInfo(battleCache)
 end
 
 function FightModule:initAttackerBattleInfo(attackUser)
+	print("FightModule日志 initAttackerBattleInfo")
 	FightModule:initAttackerBattleInfo(attackUser.battleCache)
 end
 --[[
@@ -6222,9 +6361,20 @@ end
 --]]
 
 function FightModule:initFight(npcId, difficulty, fightType,resultBuffer,eveNpc)
+	print("FightModule日志 initFight")
+	print(npcId)
+	print(difficulty)
+	print(fightType)
+	print(resultBuffer)
+	print(eveNpc)
+	-- debug.print_r(_ED.user_info, "玩家数据111")
+
 	-- local formulaUtil = FormulaUtil:new()
 	-- formulaUtil:findFormulaByIndex(1)
 	local npcObj = ConfigDB.load("npc", npcId)
+	-- debug.print_r(npcObj)
+
+
 	--_crint ("FightModule:initFight ", npcId, difficulty, fightType)
 	if(resultBuffer == nil) then
 		resultBuffer = {}
@@ -6237,6 +6387,8 @@ function FightModule:initFight(npcId, difficulty, fightType,resultBuffer,eveNpc)
 	table.insert(resultBuffer, 4, IniUtil.enter)
 	table.insert(resultBuffer, 5, "0")                   -- result
 	table.insert(resultBuffer, 6, IniUtil.enter)
+
+	-- debug.print_r(resultBuffer, "拼接战斗场景初始化数据")
 	
 	local protocalData = {}
 	protocalData.resouce = table.concat(resultBuffer, "")
@@ -6247,6 +6399,7 @@ end
 
 --数码工会副本
 function FightModule:initUninoFight(npcId, difficulty, fightType,resultBuffer,eveNpc)
+	print("FightModule日志 initUninoFight")
 	-- local formulaUtil = FormulaUtil:new()
 	-- formulaUtil:findFormulaByIndex(1)
 	local npcObj = ConfigDB.load("npc", npcId)
@@ -6288,6 +6441,7 @@ end
 
 --数码净化
 function FightModule:initPurifyFight(npcId, difficulty, fightType,resultBuffer,eveNpc)
+	print("FightModule日志 initPurifyFight")
 	local npcObj = ConfigDB.load("npc", npcId)
 	if(resultBuffer == nil) then
 		resultBuffer = {}
@@ -6485,6 +6639,7 @@ function FightModule:initPurifyFight(npcId, difficulty, fightType,resultBuffer,e
 end
 
 function FightModule:initSpecialFight(npcId, difficulty, fightType,resultBuffer,eveNpc)
+	print("FightModule日志 initSpecialFight")
 	-- local formulaUtil = FormulaUtil:new()
 	-- formulaUtil:findFormulaByIndex(1)
 	local npcObj = ConfigDB.load("npc", npcId)
@@ -6576,6 +6731,7 @@ function FightModule:initSpecialFight(npcId, difficulty, fightType,resultBuffer,
 end
 
 function FightModule:doFight()
+	print("FightModule日志 doFight")
 	local resultBuffer = {}
 	
 	self:fight(_ED.user_info, resultBuffer)
@@ -6605,6 +6761,7 @@ function FightModule:doFight()
 end
 
 function FightModule:setFightIndex(idx)
+	print("FightModule日志 setFightIndex")
 	if  (_ED.user_info.battleCache ~= nil) then
 		_ED.user_info.battleCache.currentBattleCount = idx
 	else
@@ -6613,6 +6770,7 @@ function FightModule:setFightIndex(idx)
 end
 
 function FightModule:initDailyInstance()
+	print("FightModule日志 initDailyInstance")
 	for i = 1, 6 do
 		if(self.attackObjects[i] == nil) then
 			--continue
@@ -6625,6 +6783,7 @@ function FightModule:initDailyInstance()
 end
 
 function FightModule:calculateRebelArmy(userRebelArmy)
+	print("FightModule日志 calculateRebelArmy")
 	local deadCount = 0
 	if(byAttackObjects[1] ~= nil and byAttackObjects[1].isDead ~= true) then
 		userRebelArmy.setOne=byAttackObjects[1].healthPoint

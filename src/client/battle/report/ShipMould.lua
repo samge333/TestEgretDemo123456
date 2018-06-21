@@ -13,6 +13,8 @@ ShipMould.CAPTAIN_TYPE_GENERAL =  1
 ShipMould.CAPTAIN_TYPE_ARMY =  2
 
 function ShipMould:ctor()
+    print("创建ShipMould")
+    -- print(debug.traceback())
     --主角名称
     self.captainName =  ""
 
@@ -213,4 +215,4 @@ function ShipMould:ctor()
 
 end
 
-local obj = ShipMould:new()
+local obj = ShipMould:new()

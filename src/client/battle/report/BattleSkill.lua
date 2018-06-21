@@ -140,6 +140,8 @@ BattleSkill.SKILL_INFUENCE_RESULT_FOR_78 = 78	-- 免疫控制
 BattleSkill.SKILL_INFUENCE_RESULT_FOR_79 = 79	-- 复活
 
 function BattleSkill:ctor()
+	-- print("创建BattleSkill")
+	-- print(debug.traceback())
     --出手方标识(0:我方 1:敌方)
     self.attackerTag =  0
 
@@ -294,6 +296,7 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 	table.insert(effectBuffer, endureDirection[2])
 	table.insert(effectBuffer, IniUtil.compart)
 	if(attackObject.isAction ~= true) then
+		print("BattleSkill:processAttack 2")
 		attackObject.isAction = true
 		self:restoreStatus()
 		self.effectAmount = self.effectAmount + 1
@@ -316,7 +319,9 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 			attackObject:addZomSkillPoint(FightModule.ATTACK_SP_ADD_VAULE)
 		end
 		--_crint ("Exit before write")
+		debug.print_r(effectBuffer, "BattleSkill:processAttack 2-0----start")
 		self:writeSkillAttack(userInfo, attackObject, attackObject, fightModule, effectBuffer)
+		debug.print_r(effectBuffer, "BattleSkill:processAttack 2-0----end")
 	end
 
 	if __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon or __lua_project_id == __lua_project_l_naruto then
@@ -326,8 +331,11 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 		else
 			attackObjects = fightModule.byAttackObjects
 		end
+
+		-- debug.print_r(effectBuffer, "BattleSkill:processAttack 2-1----start")
 		TalentJudge:judge(TalentConstant.JUDGE_OPPORTUNITY_ATTACK_BEFORE, attackObject, byAttackObject, self.skillMould, fightModule)
 		attackObject:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_ATTACK_BEFORE, fightModule, userInfo, attackObject, byAttackObject, byAttackCoordinates, attackObjects, byAttackObjects, self, effectBuffer )
+		-- debug.print_r(effectBuffer, "BattleSkill:processAttack 2-1----end")
 	end
 	
 	local count=0
@@ -339,6 +347,8 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 	for _, byAttackCoordinate in pairs(byAttackCoordinates) do
 		--_crint(byAttackCoordinate)
 	end
+
+	-- debug.print_r(byAttackCoordinates, "BattleSkill:processAttack 3")
 	
 	for _, byAttackCoordinate in pairs(byAttackCoordinates) do
 		count = count + 1
@@ -350,9 +360,9 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 			--continue
 			--_crint ("Target attack obj nil")
 		else
-			--[[输出攻击过程信息
-		    ___writeDebugInfo("\t\t\t" .. "当前的承受方：" .. byAttackObject.battleTag .. "\t" .. "当前的承受方站位：" .. byAttackObject.coordinate .. "\r\n")
-		    --]]
+			-- 输出攻击过程信息
+		    print("\t\t\t" .. "当前的承受方：" .. byAttackObject.battleTag .. "\t" .. "当前的承受方站位：" .. byAttackObject.coordinate .. "\r\n")
+		    print("byAttackObject.healthPoint1: " .. byAttackObject.healthPoint)
 
 			byAttackObject.reboundDamageValueResult = 0
 			local currentHp = byAttackObject.healthPoint
@@ -382,8 +392,11 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 
 				if __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon or __lua_project_id == __lua_project_l_naruto then
 					-- 攻击中的天赋判断
+					-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-1 ----start")
 					attackObject:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_ATTACK, fightModule, userInfo, attackObject, byAttackObject, byAttackCoordinates, attackObjects, byAttackObjects, self, effectBuffer )
+					-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-1 ----end")
 					byAttackObject:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_BY_ATTACK, fightModule, userInfo, byAttackObject, attackObject, byAttackCoordinates, byAttackObjects, attackObjects, self, effectBuffer )
+					-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-2 ----end")
 				end
 
 				FightUtil.computeEvasion(self.skillMould, self.skillInfluence, attackObject, byAttackObject)
@@ -437,6 +450,9 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 			else
 				self.bearState = 0
 			end
+
+			print("byAttackObject.healthPoint2: " .. byAttackObject.healthPoint)
+
 			local effectArray = nil
 			if(self.skillInfluence.skillCategory == FightUtil.FORMULA_INFO_CLEAR_BUFF) then
 				--_crint ("effectArray is clear buff")
@@ -444,7 +460,11 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 				debug.print_r(effectArray, "打印effectArray 111")
 			else
 				--_crint ("effectArray is computeSkillEffect")
+
+				-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-3 ---- start")
 				effectArray = FightUtil.computeSkillEffect(self,self.skillMould, self.skillInfluence, attackObject, byAttackObject, userInfo, fightModule, effectBuffer)
+				-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-3 ---- end")
+
 				if(self.skillInfluence.formulaInfo == FightUtil.FORMULA_INFO_DIZZY
 						 and effectArray[3] == 1) then
 						self.isDisplay = 0
@@ -454,6 +474,11 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 					self.bearState = 0
 				end
 			end
+
+			print("byAttackObject.healthPoint2: " .. byAttackObject.healthPoint)
+
+			debug.print_r(effectArray, "computeSkillEffect 公式计算后的结果")
+
 			attackObject.totalSkillPoint = 0
 			self.effectValue = effectArray[1]
 			self.effectRound =  effectArray[2]
@@ -512,6 +537,11 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 				dspValue = (currentHp - byAttackObject.healthPoint) / byAttackObject.healthMaxPoint * FightModule.MAX_SP
 			end
 
+			print("currentHp: " .. currentHp)
+			print("byAttackObject.healthPoint: " .. byAttackObject.healthPoint)
+			print("byAttackObject.healthMaxPoint: " .. byAttackObject.healthMaxPoint)
+			print("dspValue: " .. dspValue)
+
 
 			if __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon or __lua_project_id == __lua_project_l_naruto then
 				if byAttackObject.isDead == true then
@@ -524,28 +554,42 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 							bs.effectType = BattleSkill.SKILL_INFLUENCE_ADDSP
 							bs.effectValue = FightModule.KILL_TARGET_SP_ADD_VAULE
 							attackObject:addSkillPoint(FightModule.KILL_TARGET_SP_ADD_VAULE)
+							-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-4 ---- start")
 							bs:writeSkillAttack(userInfo, attackObject, attackObject, fightModule, effectBuffer)
+							-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-4 ---- end")
 							self.effectAmount = self.effectAmount + 1
 						end
 					end
 
+					print("BattleSkill:processAttack 3-4")
 					TalentJudge:judge(TalentConstant.JUDGE_OPPORTUNITY_OPPONENT_DEAD, attackObject, byAttackObject, self.skillMould, fightModule)
+
+					-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-5 ---- start")
 					attackObject:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_OPPONENT_DEAD, fightModule, userInfo, attackObject, byAttackObject, byAttackCoordinates, attackObjects, byAttackObjects, self, effectBuffer )
+					-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-5 ---- end")
 
 					for ii, vv in pairs(attackObjects) do
 						if nil ~= vv and vv.isDead ~= true then
 							TalentJudge:judge(TalentConstant.JUDGE_OPPORTUNITY_OPPONENT_DEAD_GLOBAL, attackObject, byAttackObject, self.skillMould, fightModule, vv.talentMouldList, vv)
 						end
 					end
+
+					print("BattleSkill:processAttack 3-5")
 					attackObject:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_OPPONENT_DEAD_GLOBAL, fightModule, userInfo, attackObject, byAttackObject, byAttackCoordinates, attackObjects, byAttackObjects, self, effectBuffer )
+					-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-5-1 ---- end")
 
 					TalentJudge:judge(TalentConstant.JUDGE_OPPORTUNITY_SELF_DEAD, byAttackObject, attackObject, self.skillMould, fightModule)
+
+					-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-6 ---- start")
 					byAttackObject:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_SELF_DEAD, fightModule, userInfo, byAttackObject, attackObject, byAttackCoordinates, byAttackObjects, attackObjects, self, effectBuffer )
+					-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-6 ---- end")
 
 					for m, n in pairs(byAttackObjects) do
 						if nil ~= n and true ~= n.isDead then
 							TalentJudge:judge(TalentConstant.JUDGE_OPPORTUNITY_CAMP_ROLE_DEATH, n, attackObject, self.skillMould, fightModule)
+							-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-7 ---- start")
 							n:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_CAMP_ROLE_DEATH, fightModule, userInfo, n, attackObject, byAttackCoordinates, byAttackObjects, attackObjects, self, effectBuffer )
+							-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-7 ---- end")
 						end
 					end
 				end
@@ -564,7 +608,10 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 								bs.effectType = BattleSkill.SKILL_INFLUENCE_ADDSP
 								bs.effectValue = reboundDamageDspValue
 								bs.effectValue = attackObject:addSkillPoint(reboundDamageDspValue, true)
+								-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-8 ---- start")
 								bs:writeSkillAttack(userInfo, attackObject, attackObject, fightModule, effectBuffer)
+								-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-8 ---- end")
+
 								self.effectAmount = self.effectAmount + 1
 								-- _crint("反弹伤害回复怒气:", reboundDamageDspValue, reboundDamageValueResult, attackObject.healthMaxPoint, FightModule.MAX_SP)
 							end
@@ -577,7 +624,9 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 						bs.effectType = BattleSkill.SKILL_INFUENCE_RESULT_FOR_41
 						bs.effectValue = reboundDamageValueResult
 						attackObject:subHealthPoint(bs.effectValue)
+						-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-9 ---- start")
 						bs:writeSkillAttack(userInfo, attackObject, attackObject, fightModule, effectBuffer)
+						-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-9 ---- end")
 						self.effectAmount = self.effectAmount + 1
 
 						-- _crint("反弹：", bs.effectValue, byAttackObject.reboundDamageValue, "承受者的信息：", attackObject.battleTag, attackObject.coordinate)
@@ -596,7 +645,9 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 							bs.effectType = BattleSkill.SKILL_INFLUENCE_DRAINS_HP
 							bs.effectValue = inhaleHpDamageValueResult
 							attackObject:addHealthPoint(bs.effectValue)
+							-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-10 ---- start")
 							bs:writeSkillAttack(userInfo, attackObject, attackObject, fightModule, effectBuffer)
+							-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-10 ---- end")
 							self.effectAmount = self.effectAmount + 1
 
 							-- _crint("吸血：", bs.effectValue, attackObject.inhaleHpDamagePercent, "承受者的信息：", attackObject.battleTag, attackObject.coordinate)
@@ -613,7 +664,9 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 						bs.effectType = BattleSkill.SKILL_INFLUENCE_ADDSP
 						bs.effectValue = dspValue
 						bs.effectValue = byAttackObject:addSkillPoint(dspValue, true)
+						-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-11---- start")
 						bs:writeSkillAttack(userInfo, attackObject, byAttackObject, fightModule, effectBuffer)
+						debug.print_r(effectBuffer, "BattleSkill:processAttack 3-11 ---- end")
 						self.effectAmount = self.effectAmount + 1
 					end
 				end
@@ -662,7 +715,10 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 						bs.effectValue = 0
 						bs.effectRound = 2
 						bs.aliveState = 3
+					
+						-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-12---- start")
 						bs:writeSkillAttack(userInfo, attackObject, byAttackObject, fightModule, effectBuffer)
+						-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-12---- end")
 						self.effectAmount = self.effectAmount + 1
 						--> __crint("被复活后的信息：", byAttackObject.battleTag, byAttackObject.coordinate, byAttackObject.healthMaxPoint, byAttackObject.healthPoint, oldsp, byAttackObject.skillPoint)
 					end
@@ -701,24 +757,36 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 							bs.effectValue = 0
 							bs.effectRound = 2
 							bs.aliveState = 3
+							print("BattleSkill:processAttack 3-12")
+
+							-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-12-1 ---- end")
 							bs:writeSkillAttack(userInfo, attackObject, byAttackObject, fightModule, effectBuffer)
+							-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-12-2 ---- end")
+
 							self.effectAmount = self.effectAmount + 1
 					        --> __crint("复活后的信息：", byAttackObject.battleTag, byAttackObject.coordinate, byAttackObject.healthMaxPoint, byAttackObject.healthPoint, oldsp, byAttackObject.skillPoint)
 						end
 					end
 				end
 			end
+			
 			if 1 == effectArray[3] then
 				-- print("未触发，不传结果数据")
 			else
 				if (true == byAttackObject.isNoDamage) then
 					self.isDisplay = 2 -- 绘制承受动作和承受动画，但不绘制伤害数字
 				end
+				
+				-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-13---- start")
+				print("self.effectType: " .. self.effectType)
 				self:writeSkillAttack(userInfo, attackObject, byAttackObject, fightModule, effectBuffer)
+				debug.print_r(effectBuffer, "BattleSkill:processAttack 3-13---- end")
 				self.effectAmount = self.effectAmount + 1
 				attackObject:addTotalEffectDamage(self.effectValue)
 
+				-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-14---- start")
 				self:executeNextSkillInfluence(attackObject, byAttackObject, userInfo, fightModule, effectBuffer)
+				-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-14---- end")
 			end
 
 
@@ -740,10 +808,16 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 			if attackObject.isDead == true then
 				if __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon or __lua_project_id == __lua_project_l_naruto then
 					TalentJudge:judge(TalentConstant.JUDGE_OPPORTUNITY_OPPONENT_DEAD, byAttackObject, attackObject, self.skillMould, fightModule)
+
+					-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-14-1 ---- end")
 					byAttackObject:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_OPPONENT_DEAD, fightModule, userInfo, byAttackObject, attackObject, byAttackCoordinates, byAttackObjects, attackObjects, self, effectBuffer )
+					-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-14-2 ---- end")
 
 					TalentJudge:judge(TalentConstant.JUDGE_OPPORTUNITY_SELF_DEAD, attackObject, byAttackObject, self.skillMould, fightModule)
+
+					-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-14-3 ---- end")
 					attackObject:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_SELF_DEAD, fightModule, userInfo, attackObject, byAttackObject, byAttackCoordinates, attackObjects, byAttackObjects, self, effectBuffer )
+					-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-14-4 ---- end")
 
 					for m, n in pairs(attackObjects) do
 						if nil ~= n and true ~= n.isDead then
@@ -751,6 +825,8 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 							n:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_CAMP_ROLE_DEATH, fightModule, userInfo, n, byAttackObject, byAttackCoordinates, attackObjects, byAttackObjects, self, effectBuffer )
 						end
 					end
+					-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3-14-5 ---- end")
+
 				end
 			end
 			--[[输出攻击过程信息
@@ -767,7 +843,11 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 		    --]]
 		end
 	end  -- endfor
+
+	-- debug.print_r(effectBuffer, "BattleSkill:processAttack 3xxxxxxxxxxxxxxxxxxxx")
+
 	if(self.effectAmount > 0) then
+		print("BattleSkill:processAttack 4: " .. self.effectAmount)
 		fightModule.battleSkillCount = fightModule.battleSkillCount + 1
 		table.insert(resultBuffer, self.skillInfluence.id)
 		table.insert(resultBuffer, IniUtil.compart)

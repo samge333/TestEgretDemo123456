@@ -4,6 +4,8 @@
 EnvironmentFormation = class("EnvironmentFormation")
 
 function EnvironmentFormation:ctor()
+    print("创建环境战船阵型")
+    -- print(debug.traceback())
     --环境战船阵型名称
     self.formationName =  ""
 
@@ -153,4 +155,4 @@ function EnvironmentFormation:getSeat(seatIndex)
 	return 0
 end
 
-local obj = EnvironmentFormation:new()
+local obj = EnvironmentFormation:new()

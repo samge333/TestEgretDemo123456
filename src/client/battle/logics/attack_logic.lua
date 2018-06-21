@@ -6122,12 +6122,16 @@ function BattleSceneClass:resumePVEBattle()
 end
 
 function BattleSceneClass:startPVEBattle(_battleData, _attackData, _attackers, _defenders)
+	print("日志 attack_logic BattleSceneClass:startPVEBattle")
 	state_machine.excute("fight_ui_for_daily_activity_copy_begin_calc_fight_hurt", 0, nil)
 	if __lua_project_id == __lua_project_gragon_tiger_gate or __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon or __lua_project_id == __lua_project_l_naruto  
 		or __lua_project_id == __lua_project_red_alert 
 		or __lua_project_id == __lua_project_legendary_game then
 		-- state_machine.excute("fight_role_controller_change_battle", 0, 0)
 		-- state_machine.excute("fight_role_controller_start_fight", 0, 0)
+
+		print("日志 attack_logic BattleSceneClass:startPVEBattle 1")
+
 		state_machine.excute("fight_role_controller_ready_fight", 0, 0)
 		return
 	end

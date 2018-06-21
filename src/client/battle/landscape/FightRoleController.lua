@@ -202,7 +202,7 @@ function FightRoleController:ctor()
             _instance = self,
             _state = 0,
             _invoke = function(terminal, instance, params)
-                print("日志 _invoke fight_role_controller_role_enter_into_over")
+                print("日志 _invoke 角色入场完成")
                 instance.enter_into_count = instance.enter_into_count - 1
                 if instance.enter_into_count == 0 then
                     if instance.current_fight_index == 0 then
@@ -276,7 +276,7 @@ function FightRoleController:ctor()
             _instance = self,
             _state = 0,
             _invoke = function(terminal, instance, params)
-                print("日志 _invoke fight_role_controller_notification_skeep_fight")
+                print("日志 _invoke 跳过当前战斗，进入下一回合")
                 instance.current_fight_round = _ED.attackData.roundCount
                 instance:nextRoundFight()
                 return true
@@ -356,7 +356,7 @@ function FightRoleController:ctor()
             _instance = self,
             _state = 0,
             _invoke = function(terminal, instance, params)
-                print("准备开始战斗")
+                print("FightRoleController 准备开始战斗")
                 instance:readyFight()
                 return true
             end,
@@ -643,7 +643,7 @@ function FightRoleController:ctor()
             _instance = self,
             _state = 0,
             _invoke = function(terminal, instance, params)
-                print("qte切换到下一个进攻角色")
+                print("FightRoleController qte切换到下一个进攻角色")
                 instance:qteToNextAttackRole(params)
                 return true
             end,
@@ -2349,6 +2349,7 @@ end
 
 function FightRoleController:qteAddAttackRole(selectRole)
     print("FightRoleController:qteAddAttackRole")
+    print(debug.traceback())
     if selectRole.isBeginHeti == false then
         selectRole.qteOver = true
     end
@@ -2361,7 +2362,9 @@ function FightRoleController:qteAddAttackRole(selectRole)
     print("selectRole.comKill: " .. selectRole.comKill)
     print("(5 - selectRole.comKill) * 2 + 2: " .. (5 - selectRole.comKill) * 2 + 2)
     print("qteAddAttackRole分数: " .. comKillScore)
+
     local roleFightData = self:getFightData(selectRole, comKillScore)
+
     if roleFightData ~= nil then
         if selectRole.isBeginHeti == false then
             self.qte_fighting = true
@@ -2425,7 +2428,11 @@ function FightRoleController:qteToNextAttackRole(params)
     if self.isPvEType ~= true then
         return
     end
+
+    print("日志 FightRoleController:qteToNextAttackRole 1")
+
     if self.auto_fighting == false then
+        print("日志 FightRoleController:qteToNextAttackRole 2")
         -- 当前点击角色
         local selectRole = params[1]
         local dIndex = params[2]
@@ -2434,6 +2441,7 @@ function FightRoleController:qteToNextAttackRole(params)
             return
         end
         if #self.auto_queue == 0 then
+            print("日志 FightRoleController:qteToNextAttackRole 3")
             if dIndex > 4 then
                 dIndex = 4
                 self._open_hit_count = false
@@ -2443,6 +2451,7 @@ function FightRoleController:qteToNextAttackRole(params)
             selectRole._open_hit_count = self._open_hit_count
             selectRole.comKill = dIndex
             if self:qteAddAttackRole(selectRole) == true then
+                print("日志 FightRoleController:qteToNextAttackRole 4")
                 if table.getn(self.auto_double_hit_queue) > 1 then
                     if true == self.auto_select then
                         selectRole._play_pinjia_ani = dIndex
@@ -2455,11 +2464,14 @@ function FightRoleController:qteToNextAttackRole(params)
                 self:qteExecuteRoleAttack(selectRole)
                 state_machine.excute("fight_qte_controller_enter_next_auto_fight", 0, selectRole)
             else
+                print("日志 FightRoleController:qteToNextAttackRole 5")
                 self:checkAttackerRoundOver()
             end
             self._open_hit_count = true
         else
+            print("日志 FightRoleController:qteToNextAttackRole 6")
             if _ED._fightModule ~= nil and _ED._fightModule:checkAttackSell() == true then
+                print("日志 FightRoleController:qteToNextAttackRole 7")
                 local isHaveSameRole = false
                 for i,v in ipairs(self.auto_wait_queue) do
                     if v == selectRole then
@@ -2761,7 +2773,7 @@ function FightRoleController:fightEndAll( ... )
 end
 
 function FightRoleController:nextRoundFight()
-    print("下一回合战斗")
+    print("FightRoleController 下一回合战斗，下一波")
     if missionIsOver() == true then
         local windowLock = fwin:find("WindowLockClass")
         if windowLock ~= nil then
@@ -2984,6 +2996,7 @@ function FightRoleController:nextRoundFight()
                 debug.print_r(states, "打印手操攻击状态")
                 local isAttackState = _ED._fightModule:checkAttackSell(true)
                 if isAttackState == true then
+                    print("FightRoleController:nextRoundFight 9-1")
                     -- FightRole._current_attack_camp = 0
                     -- self:cleanBuffState(nil, 0)
                     if false == missionIsOver() then
@@ -2994,8 +3007,10 @@ function FightRoleController:nextRoundFight()
                     self:wakeUpBeAttackerEffect()
                 else
                     if _ED._fightModule:checkByAttackSell() ~= true then
+                        print("FightRoleController:nextRoundFight 9-2")
                         _ED._fightModule:resetAction(1)
                         if true ~= _ED._fightModule:checkByAttackSell() then
+                            print("FightRoleController:nextRoundFight 9-3")
                             -- fwin:addService({
                             --     callback = function ( params )
                             --         print(".............")
@@ -3010,10 +3025,12 @@ function FightRoleController:nextRoundFight()
                             --     params = self
                             -- })
                         else
+                            print("FightRoleController:nextRoundFight 9-4")
                             self:checkAttackerRoundOver()
                         end
                         return
                     else
+                        print("FightRoleController:nextRoundFight 9-5")
                         -- FightRole._current_attack_camp = 1
                         -- self:cleanBuffState(nil, 1)
                         if false == missionIsOver() then
@@ -3024,7 +3041,10 @@ function FightRoleController:nextRoundFight()
                         -- self:executeCurrentRountFightData()
                     end
                 end
+
+                print("FightRoleController:nextRoundFight 9-6")
                 if self.isPvEType == true and isAttackState == true then
+                    print("FightRoleController:nextRoundFight 9-7")
                     for i,v in pairs(states) do
                         -- print("初始化手操攻击状态，", i, v)
                         -- for index, hero in pairs(self._hero_formation) do
@@ -3609,7 +3629,7 @@ function FightRoleController:readyFight()
 end
 
 function FightRoleController:startFight()
-    -- print("开始战斗")
+    print("日志 FightRoleController 开始战斗")
     self.open_camera = true
     state_machine.excute("fight_ui_init_heti_skill_state", 0, self._hero_formation_copy)
 
@@ -3728,6 +3748,7 @@ function FightRoleController:initHero()
         v._move_pos.y = v._base_pos.y
         v:removeAllChildren(true)
         local hrole = _ED.battleData._heros["" .. i]
+        -- debug.print_r(hrole, "创建英雄1: " .. i)
         local hero = nil
         if hrole ~= nil then
             local role = FightRole:new():init(v, v:getContentSize(), 0, (i - 1) % 3 + 1, hrole, self, self.fightIndex)
@@ -3754,6 +3775,8 @@ function FightRoleController:initHero()
         end
         
     end
+
+    debug.print_r(_ED.battleData._heros, "创建英雄1")
 
     local slObjIdxs = {
         "4", "5", "6", "1", "2", "3"
@@ -3830,7 +3853,7 @@ function FightRoleController:resetHero()
 end
 
 function FightRoleController:initMaster()
-    print("初始化怪物")
+    print("创建怪物")
     self._master_formation_ex = {}
     self.masters_current_hp = 0
     self.masters_total_hp = 0
@@ -3843,6 +3866,7 @@ function FightRoleController:initMaster()
         v:setPosition(v._base_pos)
         v:removeAllChildren(true)
         local hrole = _ED.battleData._armys[self.fightIndex]._data["" .. i]
+        -- debug.print_r(hrole, "创建怪物1: " .. i)
         if hrole ~= nil then
             local role = FightRole:new():init(v, v:getContentSize(), 1, (i - 1) % 3 + 1, hrole, self, self.fightIndex)
             table.insert(self._master_formation_ex, role)
@@ -3904,6 +3928,8 @@ function FightRoleController:initMaster()
             end
         end
     end
+
+    debug.print_r(_ED.battleData._armys, "创建怪物1")
 
     state_machine.lock("fight_role_controller_select_by_attack_role")
 
@@ -4101,6 +4127,7 @@ function FightRoleController:nextBattle()
 end
 
 function FightRoleController:roldJoinScene()
+    print("FightRoleController 角色移动到战场中")
     local offsetInfo = {
         {590, 544, 494, 586, 536, 486},
         {562, 516, 466, 560, 510, 460},
@@ -4237,6 +4264,9 @@ function FightRoleController:onInit()
             self.move_camp_boundary.x = self.base_camp_boundary.x
         end
     end
+
+    debug.print_r(self.hero_slots, "self.hero_slots111")
+    debug.print_r(self.master_slots, "self.hero_slots222")
 
     for i = 1, 3 do
         local hero = self.hero_slots[i]

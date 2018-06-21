@@ -3,6 +3,8 @@
 BattleObject = class("BattleObject")
 
 function BattleObject:ctor()
+    print("创建BattleObject")
+    -- print(debug.traceback())
     --攻击标识
     self.battleTag =  0
 
@@ -617,6 +619,13 @@ function BattleObject:initProperty(fightObject)
 	self.strength = fightObject.strength
 	self.wisdom = fightObject.wisdom
 	self:setHealthPoint(fightObject.healthPoint)
+
+    if fightObject.healthPoint_from_try then
+        -- 新增一个变量专门为了处理试炼回血bug068，只有数码试炼走到这里
+        self:setHealthPoint(fightObject.healthPoint_from_try)
+    else
+        self:setHealthPoint(fightObject.healthPoint)
+    end
 	self.healthMaxPoint = fightObject.healthPoint
 	self:setSkillPoint(fightObject.skillPoint)
 	self.attack = fightObject.attack
@@ -701,6 +710,9 @@ function BattleObject:initProperty(fightObject)
 
 	self.advance = fightObject.advance
 	self.shipMould = fightObject.shipMould
+    print("打印BattleObject的shipMould: " .. self.shipMould)
+    print(debug.traceback())
+    
 	self.capacity = fightObject.capacity
 
     if nil ~= _ED.user_ship[self.id] then
@@ -1426,6 +1438,8 @@ function BattleObject:setHealthPoint(healthPoint)
         end
     end
 
+    print("设置BattleObject血量1: " .. healthPoint)
+
     self.healthPoint = healthPoint
     self.historyHealthPoint = aeslua.encrypt("jar-world", self.healthPoint, aeslua.AES128, aeslua.ECBMODE)
 end
@@ -1449,12 +1463,16 @@ function BattleObject:addHealthPoint(healthPoint)
     if self.healthPoint > self.healthMaxPoint then
         self.healthPoint = self.healthMaxPoint
     end
+
+    print("设置BattleObject血量3: " .. healthPoint)
+
     self.historyHealthPoint = aeslua.encrypt("jar-world", self.healthPoint, aeslua.AES128, aeslua.ECBMODE)
 end
 
 function BattleObject:addHealthMaxPoint(healthMaxPoint)
 	--_crint ("Calling BattleObject:addHealthMaxPoint(healthMaxPoint)")
 	self.healthMaxPoint = self.healthMaxPoint + healthMaxPoint
+    print("最大血量2: " .. self.healthMaxPoint)
 end
 
 function BattleObject:subHealthPoint(healthPoint)
@@ -1493,9 +1511,11 @@ end
 
 function BattleObject:addSkillPoint(skillPoint, needCallFormula)
     -- 回复怒气 * （1  + 提高怒气回复速度[61] - 降低怒气回复速度[69] ）
+    print("BattleObject:addSkillPoint1: " .. skillPoint)
     if true == needCallFormula then
         skillPoint = skillPoint * (math.max(0, (1 + self.ptvf61 - self.ptvf69)))
     end
+    print("BattleObject:addSkillPoint2: " .. skillPoint, self.skillPoint)
 
     if nil ~= self.historySkillPoint then
         local history_info = aeslua.decrypt("jar-world", self.historySkillPoint, aeslua.AES128, aeslua.ECBMODE)
@@ -1509,6 +1529,8 @@ function BattleObject:addSkillPoint(skillPoint, needCallFormula)
     end
 
 	self.skillPoint = tonumber(self.skillPoint) + tonumber(skillPoint)
+    print("BattleObject:addSkillPoint3: " .. self.skillPoint)
+
 	if self.skillPoint > FightModule.MAX_SP then
 		self.skillPoint = FightModule.MAX_SP
     end
@@ -1625,9 +1647,11 @@ function BattleObject:processUserBuffEffect(userInfo, fightModule, resultBuffer)
     ___writeDebugInfo("\t处理攻击者的BUFF" .. "\r\n")
     --]]
 	if(#self.buffEffect == 0 or self.isDead or true == self._lockBuff) then
+        print("BattleObject:processUserBuffEffect 1")
 		table.insert(resultBuffer, 0)
 		table.insert(resultBuffer, IniUtil.compart)
 	else
+        print("BattleObject:processUserBuffEffect 2")
 		local buffBuffer = {}
 		local buffCount = 0
 		local deadState = 0
@@ -1696,17 +1720,22 @@ function BattleObject:processUserBuffEffect(userInfo, fightModule, resultBuffer)
     			end
             end
 		end
+
 		if(#buffBuffer > 0) then
+            print("BattleObject:processUserBuffEffect 3")
 			table.insert(resultBuffer, buffCount)
 			IniUtil.concatTable(resultBuffer, buffBuffer)
 			table.insert(resultBuffer,IniUtil.compart)
 			table.insert(resultBuffer,deadState)
 			table.insert(resultBuffer,IniUtil.compart)
 		else
+            print("BattleObject:processUserBuffEffect 4")
 			table.insert(resultBuffer, 0)
 			table.insert(resultBuffer, IniUtil.compart)
 		end
+
 		if(self.isDead) then
+            print("BattleObject:processUserBuffEffect 5")
 			if(self.battleTag == 0) then
 				if(nil ~= fightModule.attackObjects[self.coordinate]) then				
 					fightModule.attackCount = fightModule.attackCount - 1
@@ -1926,7 +1955,7 @@ function BattleObject:addPropertyByTalentInfluencePriorValueResults(attackerForm
 end
 
 function BattleObject:addPropertyByTalentInfluencePriorValueResult(talentMould, attackerFormationObjects, defenderFormationObjects, camp, battleCache, fightModule)
-	--> __crint("战斗回合前赋予效果：", talentMould.influencePriorType, talentMould.influencePriorValue)
+	print("BattleObject 战斗回合前赋予效果：", talentMould.influencePriorType, talentMould.influencePriorValue)
 	if talentMould.influencePriorType < 0 then
 		-- self:addPropertyValues(talentMould.influencePriorValue)
     elseif talentMould.influencePriorType == TalentConstant.INFLUENCE_PRIOR_TYPE_ALL_SELF then -- 22影响我方全体 
@@ -2081,6 +2110,9 @@ function BattleObject:addPropertyValue(propertyType, propertyValue)
         local addValue = this.fightObject.healthPoint * propertyValue
         self.healthPoint = self.healthPoint + addValue
         self.healthMaxPoint = self.healthMaxPoint + addValue
+        print("最大血量3: " .. self.healthMaxPoint)
+
+        print("设置BattleObject血量4: " .. self.healthPoint)
 
         --> __crint(self.battleTag, self.coordinate, "属性【" .. EquipmentMould.PROPERTY_TYPE_LIFE_ADDITIONAL_PERCENTAGE .. "】：", self.powerAdditionalPercent, propertyValue)
 		--break
@@ -2559,6 +2591,7 @@ function BattleObject:setPropertyValue(propertyType, propertyValue)
     --]]
     if (propertyType == EquipmentMould.PROPERTY_TYPE_LIFE_ADDITIONAL) then
         self.healthPoint = propertyValue
+        print("设置BattleObject血量2: " .. self.healthPoint)
     elseif (propertyType == EquipmentMould.PROPERTY_TYPE_ATTACK_ADDITIONAL) then
         self.attack = propertyValue
     elseif (propertyType == EquipmentMould.PROPERTY_TYPE_PHYSIC_DEFENCE_ADDITIONAL) then
@@ -2567,6 +2600,7 @@ function BattleObject:setPropertyValue(propertyType, propertyValue)
         self.skillDefence = propertyValue
     elseif (propertyType == EquipmentMould.PROPERTY_TYPE_LIFE_ADDITIONAL_PERCENTAGE) then
         self.healthMaxPoint = propertyValue
+        print("最大血量4: " .. self.healthMaxPoint)
     elseif (propertyType == EquipmentMould.PROPERTY_TYPE_ATTACK_ADDITIONAL_PERCENTAGE) then
         self.courageAdditionalPercent = propertyValue
     elseif (propertyType == EquipmentMould.PROPERTY_TYPE_PHYSIC_DEFENCE_ADDITIONAL_PERCENTAGE) then
@@ -3053,6 +3087,8 @@ end
 -- 天赋判断
 function BattleObject:influenceTalentJudgeResults( judgeOpportunity, fightModule, userInfo, attackObject, byAttackObject, byAttackCoordinates, attackObjects, byAttackObjects, battleSkill, resultBuffer )
     print("天赋判断 BattleObject:influenceTalentJudgeResults")
+    debug.print_r(talentJudgeResultList, "talentJudgeResultList111222")
+    -- print(debug.traceback())
     -- print("战斗中赋予效果，类型：", attackObject.battleTag, attackObject.coordinate, judgeOpportunity, table.nums(self.talentJudgeResultList))
     -- -- 输出攻击过程信息
     -- print("\t触发天赋的时机：" .. __fight_debug_execute_time_type_info["" .. judgeOpportunity .. ""] .. "\t" .. "发动方：" .. attackObject.battleTag .. "\t" .. "发动者的占位：" .. attackObject.coordinate .. "\r\n")
@@ -3069,6 +3105,7 @@ function BattleObject:influenceJudgeResults( fightModule, userInfo, attackObject
     --[[输出攻击过程信息
     ___writeDebugInfo("\t\t处理天赋信息：" .. "发动方：" .. attackObject.battleTag .. "\t" .. "发动者的占位：" .. attackObject.coordinate .. "\t" .. "触发天赋的ID：" .. talentJudgeResult.talentMould.id .. "\r\n")
     --]]
+    print("BattleObject:influenceJudgeResults")
 
 	local judgeResultGroup = zstring.split(talentJudgeResult.talentMould.influenceJudgeResult, "|")
 	for i, v in pairs(judgeResultGroup) do

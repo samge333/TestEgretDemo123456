@@ -2,6 +2,7 @@
 BattleCache = class("BattleCache")
 
 function BattleCache:ctor()
+    print("创建BattleCache")
     --用户信息
     self.userInfo =  nil
 
@@ -74,4 +75,4 @@ function BattleCache:getFightObjectCount(fightObjects)
 	end
 	return count
 end
-
+

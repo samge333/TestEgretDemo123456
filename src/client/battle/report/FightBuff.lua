@@ -1,6 +1,8 @@
 FightBuff = class("FightBuff")
 
 function FightBuff:ctor()
+	print("创建FightBuff")
+	-- print(debug.traceback())
     --技能效用
     self.skillInfluence =  nil
 

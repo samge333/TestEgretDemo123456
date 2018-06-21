@@ -221,7 +221,8 @@ function FightQTEController:ctor()
             _instance = self,
             _state = 0,
             _invoke = function(terminal, instance, params)
-                print("连击 _invoke, fight_qte_controller_qte_to_auto_next_attack_role")
+                print("连击 _invoke, 自动攻击下一个目标 fight_qte_controller_qte_to_auto_next_attack_role")
+
                 if __lua_project_id == __lua_project_l_digital 
                     or __lua_project_id == __lua_project_l_pokemon 
                     or __lua_project_id == __lua_project_l_naruto 
@@ -973,7 +974,7 @@ function FightQTEController:qteToNextAttackRole(params)
 end
 
 function FightQTEController:qteToAutoNextAttackRole(params)
-    print("FightQTEController:qteToAutoNextAttackRole 1")
+    print("日志 FightQTEController:qteToAutoNextAttackRole 1")
     if nil ~= _ED._fightModule and _ED._fightModule.greadCount > 0 then
         -- self._FightRoleController._open_hit_count = true
     end

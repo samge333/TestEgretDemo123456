@@ -381,7 +381,7 @@ function FightRole:ctor()
             _instance = self,
             _state = 0,
             _invoke = function(terminal, instance, params)
-                -- print("角色移动")
+                -- print("FightRole 角色移动")
                 local role = params
                 if role ~= nil and role.armature ~= nil then
                     role:moveEvent()
@@ -739,7 +739,7 @@ local function bossRewardDrop(l, h, s, m, d, p, v, rv, rd)
     return p, rv, rd
 end
 
-local function showRoleHP(armature, skf, bAttackEndRedraw)
+local function showRoleHP(armature, skf)
     print("日志 FightRole:showRoleHP")
 
     -- print(debug.traceback())
@@ -759,8 +759,11 @@ local function showRoleHP(armature, skf, bAttackEndRedraw)
             armature._role._hp = armature._self._info._max_hp
         end
 
-        if bAttackEndRedraw == true and armature.__aliveHP then
-            armature._role._hp = armature.__aliveHP
+        print("showRoleHP 111222: " .. armature._brole._head)
+        local armatureSkf = nil
+        if nil ~= armature.__skill_influence then
+            armatureSkf = armature.__skill_influence
+            print("armatureSkf: " .. armatureSkf)
         end
 
         if nil ~= skf and skf.__skill_influence ~= nil then
@@ -773,6 +776,10 @@ local function showRoleHP(armature, skf, bAttackEndRedraw)
             --     end
             -- end
 
+            print("skf.__skill_influence: " .. skf.__skill_influence)
+            print("skf.aliveHP: " .. skf.aliveHP)
+            print("armature._role._hp: " .. armature._role._hp)
+
             if nil ~= armature.__skill_influence and armature.__skill_influence > skf.__skill_influence then
                 armature._role._hp = armature.__aliveHP
             else
@@ -783,7 +790,8 @@ local function showRoleHP(armature, skf, bAttackEndRedraw)
         armature._heroInfoWidget:showRoleHP()
 
         state_machine.excute("fight_role_controller_update_hp_progress", 0, nil)
-        state_machine.excute("battle_qte_head_update_draw", 0, {cell = armature._self._qte, status = "update"})
+        -- state_machine.excute("battle_qte_head_update_draw", 0, {cell = armature._self._qte, status = "update", skf = skf})
+        state_machine.excute("battle_qte_head_update_draw", 0, {cell = armature._self._qte, status = "update", armatureSkf = armatureSkf, skf = skf})
 
         if _ED.battleData.battle_init_type == _enum_fight_type._fight_type_211 then
             if armature._camp == 0 then
@@ -1159,9 +1167,9 @@ function FightRole:updateDrawRoleHP()
     showRoleHP(self.armature)
 end
 
-function FightRole:updateDrawRoleHPwhenByAttackEnd()
-    showRoleHP(self.armature, nil, true)
-end
+-- function FightRole:updateDrawRoleHPwhenByAttackEnd()
+--     showRoleHP(self.armature, nil, true)
+-- end
 
 function FightRole:showKillAddSp()
     print("日志 FightRole:showKillAddSp")
@@ -1217,6 +1225,9 @@ function FightRole:init(parent, size, roleCamp, attackLine, brole, fightRoleCont
         local current_brole = brole
         current_brole._max_hp = brole._hp
         current_brole._hp = brole._current_hp
+
+        print("创建角色时的血量: " .. brole._current_hp)
+        print("创建角色时的头像： " .. brole._head)
         current_brole._sp = brole._current_sp
         self._info = current_brole
     else
@@ -1411,7 +1422,7 @@ function FightRole:resetInfo(brole, fightIndex)
 end
 
 function FightRole:changeAction(actionIndex)
-    print("日志 FightRole:changeAction")
+    print("日志 FightRole:changeAction 切换到指定动作")
     self.armature:getAnimation():playWithIndex(actionIndex)
 end
 
@@ -3227,7 +3238,7 @@ function FightRole:checkMoveEvent()
 end
 
 function FightRole:waitByAttack()
-    print("日志 FightRole:waitByAttack")
+    print("日志 FightRole:waitByAttack: " .. self._brole._head)
     self.parent:stopAllActionsByTag(2)
     if self.repelAndFlyEffectCount > 0 then
     else
@@ -3351,7 +3362,7 @@ function FightRole:changeActtackToAttackMoving()
 
     local function acttackMoveEventMoveOverFuncN(_parent)
         if _parent ~= nil and _parent._self ~= nil then
-            -- print("攻击前的移动结束")
+            print("攻击前的移动结束 acttackMoveEventMoveOverFuncN 1")
             if _parent._self.pursuit_target ~= nil then
                 -- _parent._self.pursuit_target.parent:stopAllActionsByTag(2)
                 -- if _parent._self.pursuit_target.repelAndFlyEffectCount > 0 then
@@ -3374,6 +3385,8 @@ function FightRole:changeActtackToAttackMoving()
                 --     end
                 -- end
 
+                print("攻击前的移动结束 acttackMoveEventMoveOverFuncN 2")
+
                 local xx, yy = _parent._self.pursuit_target.parent:getPosition()
                 local xx1, yy1 = _parent:getPosition()
                 _parent._self.pursuit_action = nil
@@ -3382,10 +3395,12 @@ function FightRole:changeActtackToAttackMoving()
                 _parent._self.jumpOffsetY = _parent:getPositionY() - _parent._swap_pos.y
                 -- _parent._self:executeAttacking()
             elseif _parent._self.pursuit_line_action ~= nil then
+                print("攻击前的移动结束 acttackMoveEventMoveOverFuncN 3")
                 _parent._self.pursuit_line_action = nil
                 _parent._self.pursuit_line_target = nil
                 _parent._self:changeActtackToAttackBegan(_parent._self.armature)
             else
+                print("攻击前的移动结束 acttackMoveEventMoveOverFuncN 4")
                 _parent._self:changeActtackToAttackBegan(_parent._self.armature)
             end
         end
@@ -3393,6 +3408,7 @@ function FightRole:changeActtackToAttackMoving()
 
     local function acttackMoveEventMoveOverFuncN1(_parent)
         if _parent ~= nil and _parent._self ~= nil then
+            print("acttackMoveEventMoveOverFuncN1 1")
             local armatureEffect = _parent._self:createEffect("bishabaoqi", "sprite/effect_")
             armatureEffect._self = _parent._self
             armatureEffect._invoke = function ( armatureBack )
@@ -3410,6 +3426,7 @@ function FightRole:changeActtackToAttackMoving()
 
     local function acttackMoveEventMoveOverFuncN2(_parent)
         if _parent ~= nil and _parent._self ~= nil then
+            print("acttackMoveEventMoveOverFuncN2 1")
             local armatureEffect = _parent._self:createEffect("bishabaoqi", "sprite/effect_")
             armatureEffect._self = _parent._self
             armatureEffect._invoke = _parent._self.__deleteEffectFile
@@ -3535,12 +3552,15 @@ function FightRole:changeActtackToAttackMoving()
     if fightingMoveMode == 1 then
         print("日志 FightRole:changeActtackToAttackMoving 8")
     else
+        print("日志 FightRole:changeActtackToAttackMoving 8-1")
         local moveCampBoundary, baseCampBoundary = state_machine.excute("fight_role_controller_update_camp_boundary", 0, {self, false, false, 0})
 
         local pioneer = self:getCampPioneer(self.roleCamp)  -- 当前阵营最前方的角色
         if pioneer ~= nil and math.floor(pioneer._info._pos / 4) == math.floor(self._info._pos / 4) then
             local flag = self.roleCamp == 0 and 1 or -1
             xx = xx + self.moveByPosition.x
+
+            print("日志 FightRole:changeActtackToAttackMoving 8-2")
      
             local moveX = xx - (moveCampBoundary.x - _battle_controller._camp_space * flag)
             -- local mpioneer = self:getCampPioneer((self.roleCamp + 1) % 2, 1)  -- 当前阵营最前方的角色
@@ -3557,14 +3577,17 @@ function FightRole:changeActtackToAttackMoving()
     end
 
     if self.lockRole ~= nil and self.lockRole.parent ~= nil and tonumber(isJump) == 1 and 
+
         self.jumpOffsetY >= _battle_controller._air_pursuit_min_height then
         self.lockRole.parent:stopAllActionsByTag(2)
         if self.lockRole.repelAndFlyEffectCount > 0 then
+            print("日志 FightRole:changeActtackToAttackMoving 8-4")
             self.lockRole.parent:stopAllActionsByTag(100)
             self.lockRole.parent:stopAllActionsByTag(101)
             self.lockRole.repelAndFlyEffectCount = self.lockRole.repelAndFlyEffectCount - 1
         end
         if self.current_fight_data ~= nil then
+            print("日志 FightRole:changeActtackToAttackMoving 8-5")
             local defenderList = self.current_fight_data.__defenderList
             for i, v in pairs(defenderList) do
                 if v.roleCamp ~= nil and tonumber(v.roleCamp) ~= tonumber(self.roleCamp) and
@@ -3630,11 +3653,15 @@ function FightRole:changeActtackToAttackMoving()
             end
         end
     else
+        print("日志 FightRole:changeActtackToAttackMoving 16")
         if self.pursuit_action ~= nil then
+            print("日志 FightRole:changeActtackToAttackMoving 17")
             table.insert(array, self.pursuit_action)
         elseif self.pursuit_line_target ~= nil then
+            print("日志 FightRole:changeActtackToAttackMoving 18")
             table.insert(array, self.pursuit_line_action)
         else
+            print("日志 FightRole:changeActtackToAttackMoving 19")
             table.insert(array, cc.MoveBy:create(duration * __fight_recorder_action_time_speed, self.moveByPosition))
         end
     end
@@ -3643,27 +3670,31 @@ function FightRole:changeActtackToAttackMoving()
         or __lua_project_id == __lua_project_l_pokemon
         then
         if skillQuality == 1 then
-            print("日志 FightRole:changeActtackToAttackMoving 16")
+            print("日志 FightRole:changeActtackToAttackMoving 20")
             table.insert(array, cc.CallFunc:create(acttackMoveEventMoveOverFuncN2))
             table.insert(array, cc.CallFunc:create(acttackMoveEventMoveOverFuncN))
         else
+            print("日志 FightRole:changeActtackToAttackMoving 21")
             table.insert(array, cc.CallFunc:create(acttackMoveEventMoveOverFuncN))
         end
     else
+        print("日志 FightRole:changeActtackToAttackMoving 22")
         table.insert(array, cc.CallFunc:create(acttackMoveEventMoveOverFuncN))
     end
 
     local seq = cc.Sequence:create(array)
     self.parent:runAction(seq)
     if self.pursuit_target ~= nil then
+        print("日志 FightRole:changeActtackToAttackMoving 23")
         self:changeActtackToAttackBegan(self.armature)
     end
 end
 
 function FightRole:changeActtackToAttackBegan(armatureBack)
-    print("直接打，不移动")
+    print("开始打击，普通或技能 FightRole:changeActtackToAttackBegan 1")
     print("日志 FightRole:changeActtackToAttackBegan: " .. self._brole._head)
     if FightRole.__skeep_fighting == true or self.fight_over == true then
+        print("FightRole:changeActtackToAttackBegan 2")
         return
     end
     local armature = armatureBack
@@ -3697,6 +3728,7 @@ function FightRole:changeActtackToAttackBegan(armatureBack)
     local skillCategory = dms.atoi(armature._sie_action, skill_influence.skill_category)
     -->___rint(armature._sie_action)
     if skillCategory ~= 0 and skillCategory ~= 1 and skillCategory ~= 34 and skillCategory ~= 35 then
+        print("FightRole:changeActtackToAttackBegan 3")
         -->___rint("不需要调用攻击动作帧组", skillCategory)
         self:executeAnimationSkillAttacking(self.armature)
         return
@@ -3704,7 +3736,10 @@ function FightRole:changeActtackToAttackBegan(armatureBack)
         -->___rint("需要调用攻击动作帧组", skillCategory)
     end
 
+    print("FightRole:changeActtackToAttackBegan 4")
+
     if self.skillQuality == 1 then
+        print("FightRole:changeActtackToAttackBegan 5")
         self.armature._role._sp = 0
         showRoleSP(self.armature)
     end
@@ -3715,14 +3750,21 @@ function FightRole:changeActtackToAttackBegan(armatureBack)
     if actionIndex == nil then
         actionIndex = _enum_animation_l_frame_index.animation_skill_attacking
     end
+
+    print("FightRole:changeActtackToAttackBegan 6")
     local isJump = dms.atoi(armature._sed_action, skill_mould.is_jump)
     local skillQuality = dms.atoi(self.armature._sed_action, skill_mould.skill_quality)  -- 技能类型(0:普通 1:怒气)
     if self.lockRole ~= nil and self.lockRole.parent ~= nil then
+
+        print("FightRole:changeActtackToAttackBegan 7")
+
         local offsetY = self.lockRole.parent:getPositionY() - self.lockRole.parent._move_pos.y or -99999
         if offsetY > _battle_controller._air_pursuit_min_height then
+            print("FightRole:changeActtackToAttackBegan 8")
             if __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon or __lua_project_id == __lua_project_l_naruto then
                 -- 取消龙虎门浮空追击的动作组调用
             else
+                print("FightRole:changeActtackToAttackBegan 9")
                 if skillQuality == 0 then
                     actionIndex = _enum_animation_l_frame_index.animation_attack_normal_in_the_sky
                 else
@@ -3754,6 +3796,8 @@ function FightRole:changeActtackToAttackBegan(armatureBack)
                 self.parent:getParent():addChild(armatureEffect, kZOrderInFightScene_Effect)
             end
         end
+
+        print("FightRole:changeActtackToAttackBegan 10")
                 
         if __lua_project_id == __lua_project_l_digital 
             or __lua_project_id == __lua_project_l_pokemon 
@@ -3790,10 +3834,12 @@ function FightRole:changeActtackToAttackBegan(armatureBack)
     -- armature._nextAction = actionIndex
 
     if actionIndex > 0 then
+        print("FightRole:changeActtackToAttackBegan 11")
         armature._actionIndex = actionIndex
         armature._nextAction = actionIndex
         armature:getAnimation():playWithIndex(actionIndex)
     else
+        print("FightRole:changeActtackToAttackBegan 12")
         self:executeAnimationSkillAttacking(armature)
     end
     -->___crint("切换到角色攻击动作1", actionIndex)
@@ -4221,15 +4267,18 @@ function FightRole:executeHeroMoveToTarget()
     local attData               = self.current_fight_data.__attData
     local attackMovePos         = tonumber(attData.attackMovePos)                   -- 移动到的位置(0-8)
     if attackMovePos == 0 or attackMovePos == 8 then
+        print("日志 FightRole:executeHeroMoveToTarget 1")
         self:changeActtackToAttackBegan(self.armature)
         if attackMovePos == 8 then
             self:setVisible(false)
         end
     else
         if self:getAttackMovePosition() == true then
+            print("日志 FightRole:executeHeroMoveToTarget 2")
             -- print("changeActtackToAttackMoving", self.roleCamp, self._info._pos)
             self:changeActtackToAttackMoving()
         else
+            print("日志 FightRole:executeHeroMoveToTarget 3")
             -- print("get attack move position lose!!!", self.roleCamp, self._info._pos)
             self:changeActtackToAttackBegan(self.armature)
         end
@@ -4805,7 +4854,11 @@ function FightRole:drawDamageNumber(stValue, attackSection, stRound, def, isBuff
     -- if _baseValue == 0 then
     --     return
     -- end
+    print("FightRole:drawDamageNumber")
+    print("_baseValue: " .. _baseValue)
+    print("attackSection: " .. attackSection)
     local _value = math.ceil(zstring.tonumber(_baseValue) / attackSection)
+    print("_value: " .. _value)
     -->___rint("伤害数字的绘制")
     if _value < 1 and 1 == zstring.tonumber(_baseValue) then
         _value = 1
@@ -4898,7 +4951,10 @@ function FightRole:drawDamageNumber(stValue, attackSection, stRound, def, isBuff
                 (_def.stVisible ~= "1" or (_def.stVisible == "1" and defenderST == "1")) then
                 numberFilePath = "images/ui/number/jiaxue.png"
             end
+            print("血量增加1 前: " .. drawString)
+            print(armatureBase._role._hp)
             armatureBase._role._hp = zstring.tonumber(armatureBase._role._hp) + zstring.tonumber(drawString)
+            print("血量增加1 后: " .. armatureBase._role._hp)
             armatureBase._role._lhp = _def.aliveHP
             showRoleHP(armatureBase, _def)
             -- state_machine.excute("fight_role_controller_update_hp_progress", 0, {self.roleCamp, zstring.tonumber(drawString)})
@@ -5074,6 +5130,7 @@ function FightRole:drawDamageNumber(stValue, attackSection, stRound, def, isBuff
         else
             numberFilePath = "images/ui/number/xue.png"
             armatureBase._role._hp = zstring.tonumber(armatureBase._role._hp) + tonumber(drawString)
+            print("血量增加2")
             armatureBase._role._lhp = _def.aliveHP
             showRoleHP(armatureBase, def)
             -- 绘制连击伤害
@@ -5116,6 +5173,7 @@ function FightRole:drawDamageNumber(stValue, attackSection, stRound, def, isBuff
             end
             --armature._hnb = true
             armatureBase._role._hp = zstring.tonumber(armatureBase._role._hp) + tonumber(drawString)
+            print("血量增加3")
             armatureBase._role._lhp = _def.aliveHP
             showRoleHP(armatureBase, def)
 
@@ -5233,6 +5291,9 @@ function FightRole:createEffect(fileIndex, fileNameFormat, animationNames)
     debug.print_r(fileIndex, "fileIndex")
     debug.print_r(fileNameFormat, "fileNameFormat")
     debug.print_r(animationNames, "animationNames")
+
+    print(debug.traceback())
+
     -- 创建光效
     local armature = nil
     if animationMode == 1 then
@@ -6127,12 +6188,16 @@ end
 -- 78  免疫控制    
 -- 80  小技能伤害提升（绘制类型）   
 function FightRole:executeByAttackLogic(bone,evt,originFrameIndex,currentFrameIndex, frameEvents, isDrawExplode, attacker)
-    print("FightRole 执行被攻击的逻辑")
+    print("FightRole:executeByAttackLogic 执行被攻击的逻辑")
     local _def = self.current_fight_data.__def
     -- print(evt, self.roleCamp, self._info._pos)
     if evt ~= nil and #evt > 0 then
         local datas = frameEvents -- zstring.split(evt, "_")
+
+        print("FightRole 执行被攻击的逻辑 1-1")
+
         if checkFrameEvent(datas, "start") == true then
+            print("FightRole 执行被攻击的逻辑 1-2")
             local tempArmature = armatureBack
             if tempArmature == nil then
                 tempArmature = bone:getArmature()
@@ -6147,14 +6212,17 @@ function FightRole:executeByAttackLogic(bone,evt,originFrameIndex,currentFrameIn
         end
         if checkFrameEvent(datas, "after") == true then
             if _def~=nil then
+                print("FightRole 执行被攻击的逻辑 1-3")
                 local defenderST = _def.defenderST
                 -- 0:命中 1:闪避 2:暴击 3:格挡 4:暴击加挡格
                 local defState = _def.defState
                 if defState == "3" or defState == "4" then
+                    print("FightRole 执行被攻击的逻辑 1-4")
                     -- print("3:格挡 4:暴击加挡格")
                     self:updateDrawInfluenceInfo(_def)
                 elseif defState == "1" 
                     then
+                    print("FightRole 执行被攻击的逻辑 1-5")
                     -- 取消掉美术闪避的动作帧组的调用，改由后跳的动作来实现闪避的效果
                     -- local armature = self.armature
                     -- local actionIndex = _enum_animation_l_frame_index.animation_miss_action
@@ -6164,6 +6232,7 @@ function FightRole:executeByAttackLogic(bone,evt,originFrameIndex,currentFrameIn
                     -- print("1:闪避")
                     local tempArmature = bone:getArmature()
                     if tempArmature._missed ~= true then
+                        print("FightRole 执行被攻击的逻辑 1-6")
                         tempArmature._missed = true
                         local armature = self.armature
                         local actionIndex = _enum_animation_l_frame_index.animation_pursue_back
@@ -6187,6 +6256,7 @@ function FightRole:executeByAttackLogic(bone,evt,originFrameIndex,currentFrameIn
                         return
                     end
                 else
+                    print("FightRole 执行被攻击的逻辑 1-6")
                     self:updateDrawInfluenceInfo(_def)
                     -- 修改BUFF处理状态(6为中毒，9为灼烧)
                     if (defenderST == "4" or defenderST == "5" or defenderST == "6" or defenderST == "7" or 
@@ -6223,7 +6293,9 @@ function FightRole:executeByAttackLogic(bone,evt,originFrameIndex,currentFrameIn
                         -- self.armature:getAnimation():playWithIndex(self.armature._actionIndex)
                         -- -- self.armature._invoke = self.changeActionCallback
 
-                        -- print("角色进入被攻击状态")
+                        print("角色进入被攻击状态")
+
+                        print("FightRole 执行被攻击的逻辑 1-7")
 
                         if self.repelAndFlyEffectCount <= 0 and self.roleCamp ~= self.current_fight_data.__attackArmature._self.roleCamp then
                             local armature = self.armature
@@ -6232,10 +6304,12 @@ function FightRole:executeByAttackLogic(bone,evt,originFrameIndex,currentFrameIn
                                 local actionIndex = zstring.tonumber(actionIndexs[self.roleCamp] or actionIndexs[1])
 
                                 if self.roleByAttacking == true and actionIndex > -1 then
+                                    print("FightRole 执行被攻击的逻辑 1-8")
                                     if __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon or __lua_project_id == __lua_project_l_naruto then
                                         if actionIndex ~= armature._actionIndex then
                                             if self.repelAndFlyEffectCount <= 0 then
                                                 if (true ~= self.roleAttacking) and (nil == attacker or attacker.roleCamp ~= self.roleCamp) then
+                                                    print("FightRole 执行被攻击的逻辑 1-9")
                                                     armature._actionIndex = actionIndex
                                                     armature._nextAction = actionIndex
                                                     armature:getAnimation():playWithIndex(actionIndex)
@@ -6251,6 +6325,7 @@ function FightRole:executeByAttackLogic(bone,evt,originFrameIndex,currentFrameIn
                                             end
                                         end
                                     else
+                                        print("FightRole 执行被攻击的逻辑 1-10")
                                         armature._actionIndex = actionIndex
                                         armature._nextAction = actionIndex
                                         armature:getAnimation():playWithIndex(actionIndex)
@@ -6483,10 +6558,15 @@ function FightRole:executeByAttackLogic(bone,evt,originFrameIndex,currentFrameIn
         return
     end
 
-    print("绘制掉血或加血动画，或是加怒、减怒")
+    print("绘制掉血或加血动画，或是加怒、减怒，头像: " .. self._brole._head)
     if self.armature ~= nil then
         local skillInfluenceElementData = self.armature._sie_action
         local attackSection = dms.atoi(skillInfluenceElementData, skill_influence.attack_section) or 1
+
+        print("绘制掉血或加血动画，或是加怒、减怒 1-1")
+        print(dms.atoi(skillInfluenceElementData, skill_influence.attack_section))
+        print("attackSection: " .. attackSection)
+
         if attackSection < 0 then
             attackSection = 1
         end
@@ -6495,7 +6575,9 @@ function FightRole:executeByAttackLogic(bone,evt,originFrameIndex,currentFrameIn
                 print("绘制承受动作和承受动画，但不绘制伤害数字")
             else
                 if tonumber(_def.stValue) ~= 0 then
+                    print("头像是: " .. self._brole._head)
                     print("绘制掉血或加血动画，或是加怒、减怒2： " .. _def.stValue)
+                    print("attackSection: " .. attackSection)
                     self:drawDamageNumber(_def.stValue, attackSection, _def.stRound, _def, false)
                 end
             end
@@ -6506,6 +6588,7 @@ end
 
 local function onFrameEvent(bone,evt,originFrameIndex,currentFrameIndex)
     print("日志 FightRole:onFrameEvent")
+    print(evt)
     if FightRole.__skeep_fighting == true then
         return
     end
@@ -6740,7 +6823,12 @@ local function onFrameEvent(bone,evt,originFrameIndex,currentFrameIndex)
                             byAttackTarget._hurtCount = 1
                             -- byAttackTarget.drawDamageNumberCount = 0
                             if tonumber(_def.stValue) > 0 then
-                                byAttackTarget:drawDamageNumber(_def.stValue, 1, _def.stRound, _def, true,skillInfluenceId)
+                                -- 加一个处理，如果是加血，则分多段增加血槽，避免一次加满
+                                if tonumber(_def.defenderST) == 1 then
+                                    byAttackTarget:drawDamageNumber(_def.stValue, 1, _def.stRound, _def, true, skillInfluenceId)
+                                else
+                                    byAttackTarget:drawDamageNumber(_def.stValue, 1, _def.stRound, _def, true,skillInfluenceId)
+                                end 
                             else
                                 byAttackTarget:updateDrawInfluenceInfo(_def)
                             end
@@ -7293,16 +7381,16 @@ function FightRole:checkAttackEnd(isNeedCheckNextSkill)
     --     end
     -- end
 
-    if __lua_project_id == __lua_project_l_digital and _ED.battleData.battle_init_type == _enum_fight_type._fight_type_54 then
-        local defenderList = self.current_fight_data.__defenderList
-        if defenderList ~= nil then
-            for i, v in pairs(defenderList) do
-                if v.parent ~= nil and tonumber(v.roleCamp) == 0 then
-                    v:updateDrawRoleHPwhenByAttackEnd()
-                end 
-            end
-        end
-    end
+    -- if __lua_project_id == __lua_project_l_digital and _ED.battleData.battle_init_type == _enum_fight_type._fight_type_54 then
+    --     local defenderList = self.current_fight_data.__defenderList
+    --     if defenderList ~= nil then
+    --         for i, v in pairs(defenderList) do
+    --             if v.parent ~= nil and tonumber(v.roleCamp) == 0 then
+    --                 v:updateDrawRoleHPwhenByAttackEnd()
+    --             end 
+    --         end
+    --     end
+    -- end
 
 
     if self.fitAttacking == true then
@@ -8311,6 +8399,7 @@ end
 
 function FightRole:executeAttackLogicing()
     print("日志 FightRole:executeAttackLogicing")
+    print(debug.traceback())
     if FightRole.__skeep_fighting == true or self.fight_over == true then
         return
     end
@@ -8318,6 +8407,7 @@ function FightRole:executeAttackLogicing()
     local function executeAttackLogicingFunc()
         if self:lockAttackTarget(true) == true then
             -- print("锁定角色一", self.roleCamp, self._info._pos)
+            print("日志 FightRole:executeAttackLogicing 1")
             self:executeHeroMoveToTarget()
         else
             -- print("锁定角色二", self.roleCamp, self._info._pos)
@@ -8325,6 +8415,7 @@ function FightRole:executeAttackLogicing()
     end
     
     if is2004 == true then 
+        print("日志 FightRole:executeAttackLogicing 2")
         local armature = self.armature
         local actionIndexs = zstring.split(dms.atos(armature._sie_action, skill_influence.after_action), ",")
         local actionIndex = zstring.tonumber(actionIndexs[self.roleCamp] or actionIndexs[1])
@@ -8341,6 +8432,7 @@ function FightRole:executeAttackLogicing()
     
         if FightRole.__attacking_roles[1] ~= nil and
           #FightRole.__attacking_roles > 1 then
+          print("日志 FightRole:executeAttackLogicing 3")
             math.randomseed(tostring(os.time()):reverse():sub(1,6))
             local speed_index = math.random(1,#_battle_controller._random_move_time)
             local speed_random = _battle_controller._random_move_time[speed_index]
@@ -8351,9 +8443,11 @@ function FightRole:executeAttackLogicing()
             local seq = cc.Sequence:create(array)
             self:runAction(seq)
         else
+            print("日志 FightRole:executeAttackLogicing 4")
             executeAttackLogicingFunc()
         end
     else
+        print("日志 FightRole:executeAttackLogicing 5")
         executeAttackLogicingFunc()
     end
 end
@@ -8434,10 +8528,13 @@ function FightRole:checkDefenderList( defenderListEx, isBuff )
 end
 
 function FightRole:executeAttackLogic(nextSkillInfluence, changeTarget)
-    print("开始执行攻击逻辑: " .. self._brole._head)
+    print("FightRole:executeAttackLogic 开始执行攻击逻辑: " .. self._brole._head)
+    print(debug.traceback())
     if FightRole.__skeep_fighting == true or self.fight_over == true then
         return
     end
+
+    print("日志 FightRole:executeAttackLogic 1")
 
     self:cleanBuffStateWithType("79")
 
@@ -8485,11 +8582,14 @@ function FightRole:executeAttackLogic(nextSkillInfluence, changeTarget)
         end
     end
 
+    print("日志 FightRole:executeAttackLogic 2")
+
     local addFightData = {}
     -- self.current_fight_data.add_fight_data = {}
     local nextFightData = nil
     local isCheckFightData = false
     if #self.fight_cacher_pool > 1 then
+        print("日志 FightRole:executeAttackLogic 3")
         for k,v in pairs(self.fight_cacher_pool) do
             if v ~= nil then
                 local skillInfluenceId = v.__skf.skillInfluenceId
@@ -8592,7 +8692,10 @@ function FightRole:executeAttackLogic(nextSkillInfluence, changeTarget)
     --     end
     -- end
 
+    print("日志 FightRole:executeAttackLogic 4")
+
     if attacker == "0" then
+        print("日志 FightRole:executeAttackLogic 5")
         local totalHurt = 0
         for j = 1, attData.skillInfluenceCount do
             local _skf = attData.skillInfluences[j]
@@ -8653,9 +8756,11 @@ function FightRole:executeAttackLogic(nextSkillInfluence, changeTarget)
     end
 
     if nextSkillInfluence == true then
+        print("日志 FightRole:executeAttackLogic 6")
         -->___rint("进入下一个效用")
         self:changeActtackToAttackBegan(self.armature)
     else
+        print("日志 FightRole:executeAttackLogic 7")
         -- if self.current_fight_data.__fitAttacker ~= nil then
         --     FightRole.__fit_attacking = true
         --     self.fiter = true
@@ -8666,12 +8771,15 @@ function FightRole:executeAttackLogic(nextSkillInfluence, changeTarget)
         --     state_machine.excute("fight_scene_views_visible", 0, {false,false,false,true,false})
         -- else
             if self.fitAttacking == true then
+                print("日志 FightRole:executeAttackLogic 8")
                 self:executeAttackLogicing()
             else
+                print("日志 FightRole:executeAttackLogic 9")
                 if __lua_project_id == __lua_project_l_digital 
                     or __lua_project_id == __lua_project_l_pokemon 
                     or __lua_project_id == __lua_project_l_naruto 
                     then
+                    print("日志 FightRole:executeAttackLogic 10")
                     if true == changeTarget then
                         -- ...
                     elseif skillQuality == 1 then
@@ -8700,9 +8808,11 @@ function FightRole:executeAttackLogic(nextSkillInfluence, changeTarget)
                     end
                 end
                 if skillQuality == 1 or skillQuality == 2 then
+                    print("日志 FightRole:executeAttackLogic 11")
                     self.parent:stopAllActionsByTag(2)
                     self:excuteSPSkillEffect()
                 else
+                    print("日志 FightRole:executeAttackLogic 12")
                     self:executeAttackLogicing()
                 end
             end
@@ -8742,6 +8852,7 @@ function FightRole:removeByAttackSignEffect( ... )
 end
 
 function FightRole:executeAnimationStandby(armatureBack)
+    -- print("执行动画 Standby")
     local armature = armatureBack
 
     self.changeActionToAttacking = false
@@ -8766,6 +8877,7 @@ function FightRole:executeAnimationStandby(armatureBack)
 end
 
 function FightRole:executeAnimationMove(armatureBack)
+    -- print("执行动画 Move")
     -- if self.chanageMoveActions == true and self.move_state == self._move_state_enum._MOVE_STATE_FREE then
     --     -->___crint("----------executeAnimationMove---------", self.move_state, self.chanageMoveActions)
     --     state_machine.excute("fight_role_check_move_event", 0, self)
@@ -8773,6 +8885,7 @@ function FightRole:executeAnimationMove(armatureBack)
 end
 
 function FightRole:executeAnimationMoveBack(armatureBack)
+    -- print("执行动画 MoveBack")
     -- if self.chanageMoveActions == true and self.move_state == self._move_state_enum._MOVE_STATE_FREE then
     --     -->___crint("-----------executeAnimationMoveBack--------", self.move_state, self.chanageMoveActions)
     --     state_machine.excute("fight_role_check_move_event", 0, self)
@@ -8780,6 +8893,7 @@ function FightRole:executeAnimationMoveBack(armatureBack)
 end
 
 function FightRole:executeAnimationOnrush(armatureBack)
+    print("执行动画 Onrush")
     if self.current_fight_data ~= nil then
         -- local function checkMoveEventMoveOverFuncN(_parent)
         --     if _parent ~= nil and _parent._self ~= nil then
@@ -8797,6 +8911,7 @@ function FightRole:executeAnimationOnrush(armatureBack)
 end
 
 function FightRole:executeAnimationSkillBegan(armatureBack)
+    print("执行动画 SkillBegan")
     -- local armature = armatureBack
 
     -- local actionIndexs = zstring.split(dms.atos(armature._sie_action, skill_influence.after_action), ",")
@@ -8816,26 +8931,31 @@ function FightRole:executeAnimationSkillBegan(armatureBack)
 end
 
 function FightRole:executeAnimationNormalBeAttacked(armatureBack)
+    print("执行动画 NormalBeAttacked")
     local armature = armatureBack
     -- armature._nextAction = _enum_animation_l_frame_index.animation_standby
 end
 
 function FightRole:executeAnimationNormalConversely(armatureBack)
+    print("执行动画 NormalConversely")
     local armature = armatureBack
     armature._nextAction = _enum_animation_l_frame_index.animation_standby
 end
 
 function FightRole:executeAnimationDiagonalFloated(armatureBack)
+    print("执行动画 DiagonalFloated")
     local armature = armatureBack
     -- armature._nextAction = _enum_animation_l_frame_index.animation_standby
 end
 
 function FightRole:executeAnimationLandscapeBlowFly(armatureBack)
+    print("执行动画 LandscapeBlowFly")
     local armature = armatureBack
     armature._nextAction = _enum_animation_l_frame_index.animation_standby
 end
 
 function FightRole:executeAnimationConversely(armatureBack)
+    print("执行动画 Conversely")
     local armature = armatureBack
     
     if self.is_killed == true
@@ -8891,7 +9011,7 @@ function FightRole:executeAnimationConversely(armatureBack)
 end
 
 function FightRole:executeAnimationConverselyToGetUp(armatureBack)
-    print("日志 FightRole:executeAnimationConverselyToGetUp")
+    print("执行动画 ConverselyToGetUp")
     local armature = armatureBack
     if self.is_killed == true then
         self.is_killed = false
@@ -8902,7 +9022,7 @@ function FightRole:executeAnimationConverselyToGetUp(armatureBack)
 end
 
 function FightRole:executeAnimationDeath(armatureBack)
-    print("日志 FightRole:executeAnimationDeath")
+    print("执行动画 Death")
     local armature = armatureBack
     if self.is_deathed == true then
         -- self.is_deathed = false
@@ -8968,7 +9088,7 @@ function FightRole:executeAnimationDeath(armatureBack)
 end
 
 function FightRole:executeAnimationConverselyGetUp(armatureBack)
-    print("日志 FightRole:executeAnimationConverselyGetUp")
+    print("执行动画 ConverselyGetUp")
     local armature = armatureBack
     if self.is_killed == true then
         self.is_killed = false
@@ -8981,14 +9101,14 @@ function FightRole:executeAnimationConverselyGetUp(armatureBack)
 end
 
 function FightRole:executeAnimationSkillAttacking(armatureBack)
-    print("日志 FightRole:executeAnimationSkillAttacking")
+    print("执行动画 SkillAttacking")
     local armature = armatureBack
     armature._nextAction = _enum_animation_l_frame_index.animation_standby
     self:executeAttacking()    
 end
 
 function FightRole:executeAnimationPowerSkillAttacking(armatureBack)
-    print("日志 FightRole:executeAnimationPowerSkillAttacking")
+    print("执行动画 PowerSkillAttacking")
     local armature = armatureBack
     armature._nextAction = _enum_animation_l_frame_index.animation_standby
     self:executeAttacking()  
@@ -9006,7 +9126,7 @@ function FightRole:executeAnimationPowerSkillAttacking(armatureBack)
 end
 
 function FightRole:executeAnimationFitSkillAttacking(armatureBack)
-    print("日志 FightRole:executeAnimationFitSkillAttacking")
+    print("执行动画 FitSkillAttacking")
     local armature = armatureBack
     -- armature._nextAction = _enum_animation_l_frame_index.animation_standby
     -- self:executeAttacking()
@@ -9014,7 +9134,7 @@ function FightRole:executeAnimationFitSkillAttacking(armatureBack)
 end
 
 function FightRole:executeAnimationWinAction(armatureBack)
-    print("日志 FightRole:executeAnimationWinAction")
+    print("执行动画 WinAction")
     local armature = armatureBack
     -- local actionIndex = _enum_animation_l_frame_index.animation_win_on_action
     -- csb.animationChangeToAction(armature, actionIndex, actionIndex, false)
@@ -9023,27 +9143,27 @@ function FightRole:executeAnimationWinAction(armatureBack)
 end
 
 function FightRole:executeAnimationAttackJumpBack(armatureBack)
-    print("日志 FightRole:executeAnimationAttackJumpBack")
+    print("执行动画 AttackJumpBack")
     local armature = armatureBack
     armature._nextAction = _enum_animation_l_frame_index.animation_standby
 end
 
 function FightRole:executeAnimationAttackNormalInTheSky(armatureBack)
-    print("日志 FightRole:executeAnimationAttackNormalInTheSky")
+    print("执行动画 AttackNormalInTheSky")
     local armature = armatureBack
     armature._nextAction = _enum_animation_l_frame_index.animation_standby
     self:executeAttacking()
 end
 
 function FightRole:executeAnimationAttackSkillInTheSky(armatureBack)
-    print("日志 FightRole:executeAnimationAttackSkillInTheSky")
+    print("执行动画 AttackSkillInTheSky")
     local armature = armatureBack
     armature._nextAction = _enum_animation_l_frame_index.animation_standby
     self:executeAttacking()
 end
 
 function FightRole:executeAnimationConverselyDeath(armatureBack)
-    print("日志 FightRole:executeAnimationConverselyDeath")
+    print("执行动画 ConverselyDeath")
     local armature = armatureBack
     -- armature._nextAction = _enum_animation_l_frame_index.animation_standby
     self:setVisible(false)
@@ -9051,10 +9171,14 @@ end
 
 -- FightRole角色切换动作
 function FightRole.changeActionCallback(armatureBack)
+    print("FightRole.changeActionCallback")
+    print(debug.traceback())
+
     local armature = armatureBack
     local fightRole = armature._self
     if armature ~= nil then
         local actionIndex = armature._actionIndex
+        -- print("切换动作 " .. actionIndex)
         -- if actionIndex ~= _enum_animation_l_frame_index.animation_dizziness then
         --     if fightRole.dizzinessEffect ~= nil then
         --         deleteEffectFile(fightRole.dizzinessEffect)
@@ -10222,6 +10346,7 @@ function FightRole:attackListener()
     end
     
     if self.run_fight_listener == true then
+        print("日志 开始动手 FightRole:attackListener")
         if self.fight_cacher_pool == nil or #self.fight_cacher_pool == 0 then
             self.openAttackListener = false
             self.run_fight_listener = false
@@ -10478,6 +10603,7 @@ function FightRole:onUpdate(dt)
     end
 
     if self.pursuit_line_action ~= nil and self.pursuit_line_action.updatePositionDelta ~= nil then
+        print("FightRole:onUpdate 1")
         local xx, yy = self.pursuit_line_target.parent:getPosition()
         if self.pursuit_line_target ~= nil then
             yy = self.pursuit_line_target.parent._base_pos.y
@@ -10513,6 +10639,7 @@ function FightRole:onUpdate(dt)
         end
         self.pursuit_line_action:updatePositionDelta(cc.p(xx, yy))
     elseif self.pursuit_action ~= nil and self.pursuit_action.updatePositionDelta ~= nil then
+        print("FightRole:onUpdate 2")
         local xx, yy = self.pursuit_target.parent:getPosition()
         -- if yy < self.parent._swap_pos.y then
         --     yy = self.parent._swap_pos.y
@@ -10585,11 +10712,13 @@ function FightRole:onUpdate(dt)
     end
 
     if self.isCheckAttackEnd == true then
+        print("FightRole:onUpdate 3")
         self:checkAttackEnd()
     end
 
     if self.waitByAttackOver == true then
         if self.drawByAttackEffectCount == 0 and self.repelAndFlyEffectCount == 0 then
+            print("FightRole:onUpdate 4")
             self.waitByAttackOver = false
             -->___rint("999999999999")
             self:checkByAttackEnd()
@@ -10636,6 +10765,7 @@ function FightRole:onUpdate(dt)
     if self.parent ~= nil then
         self:attackListener()
         if self.repelAndFlyEffectCount > 0 and self._mdx ~= 0 then
+            print("FightRole:onUpdate 6")
             local dx, dy = self.parent:getPosition()
             local size = self._FightRoleController:getContentSize()
             if dx > size.width or dx < 0 then

@@ -4,6 +4,8 @@
 FightObject = class("FightObject")
 
 function FightObject:ctor()
+	print("创建FightObject")
+	-- print(debug.traceback())
     --战斗标识
     self.battleTag =  0
 
@@ -741,6 +743,7 @@ function FightObject:addPropertyValue(propertyType, propertyValue)
 	-- print("战场初始化,属性增加：", propertyType, propertyValue)
 	if (propertyType == EquipmentMould.PROPERTY_TYPE_LIFE_ADDITIONAL) then
 		self.healthPoint = self.healthPoint + propertyValue
+		print("最大血量 FightObject1: " .. self.healthPoint)
 		--break
 	elseif (propertyType == EquipmentMould.PROPERTY_TYPE_ATTACK_ADDITIONAL) then
 		self.attack = self.attack + propertyValue
@@ -1083,6 +1086,7 @@ function FightObject:initWithEnvironmentShip(environmentShipId, fakeLevel, isFak
 	self.gender = environmentShip.gender
 	self.quality = environmentShip.shipType
 	self.healthPoint =  environmentShip.power * tonumber(difficultyAdditionalArray[1])
+	print("最大血量 FightObject2: " .. self.healthPoint)
 	self.lessHealthPoint =  environmentShip.power * tonumber(difficultyAdditionalArray[1])
 	-- self.skillPoint = 1
 	self.skillPoint = environmentShip.haveDeadly
@@ -1154,12 +1158,18 @@ function FightObject:initWithEnvironmentShip(environmentShipId, fakeLevel, isFak
 end
 
 function FightObject:initWithUserData(coordinate, ship, battleTag, userId)
+	print("FightObject:initWithUserData")
+	print("ship.ship_template_id: " .. ship.ship_template_id)
+	-- debug.print_r(ship)
+
 	self.roleType = 0
 	self.battleTag = battleTag
 	self.coordinate = coordinate
 	local shipMould = ConfigDB.load("ship_mould", ship.ship_template_id)
 
 	local tempCommonSkill = ConfigDB.load("skill_mould", shipMould.skillMould);
+	print("shipMould.skillMould: " .. shipMould.skillMould)
+
 	local tempSpecialSkill = nil
 	if shipMould.deadlySkillMould > 0 then
 		tempSpecialSkill = ConfigDB.load("skill_mould", shipMould.deadlySkillMould)
@@ -1189,6 +1199,8 @@ function FightObject:initWithUserData(coordinate, ship, battleTag, userId)
 		-- 技能信息
 		local skillInfos = zstring.splits(dms.string(dms["ship_evo_mould"], evo_mould_id, ship_evo_mould.attack), "|", ",")
 		tempCommonSkill = ConfigDB.load("skill_mould", skillInfos[1][1])
+		print("shipMould.skillMould2: " .. skillInfos[1][1])
+
 		-- tempSpecialSkill = ConfigDB.load("skill_mould", skillInfos[3][1])
 		self.skillInfos = skillInfos
 
@@ -1200,6 +1212,8 @@ function FightObject:initWithUserData(coordinate, ship, battleTag, userId)
 			tempSpecialSkill = ConfigDB.load("skill_mould", tempSpecialSkillId)
 		end
 		self.talentInfos = talentInfos
+
+		print("shipMould.skillMould3: " .. talentInfos[1][3])
 
 		self.normalSkillMould = dms.int(dms["talent_mould"], talentInfos[1][3], talent_mould.skill_mould_id)
 		-- self.normalSkillMouldRate = tonumber(nsmArr[2])
@@ -1299,8 +1313,13 @@ function FightObject:initWithUserData(coordinate, ship, battleTag, userId)
 	self.strength = ship.ship_courage                            -- 武力 [1]
 	self.wisdom = ship.ship_wisdom                               -- 智慧
 	self.healthPoint = tonumber(ship.ship_health)                -- 血量
+
+	print("最大血量 FightObject3: " .. self.healthPoint)
+	print("最大血量1-1： " .. self.picIndex)
+
 	self.lessHealthPoint = tonumber(ship.ship_health)  
 	self.skillPoint = self.initialSPIncrease
+	print("创建battleObject时的怒气 " .. self.skillPoint)
 	self.attack = ship.ship_courage                              -- 攻击
 	self.physicalDefence = tonumber(ship.ship_intellect)         -- 物防 [2]
 	self.skillDefence = tonumber( ship.ship_quick)               -- 法防
@@ -1470,6 +1489,7 @@ function FightObject:fightObject(forceMould,userId)
 	fightObject.strength = shipMould.ship_courage                           -- 武力
 	fightObject.wisdom = shipMould.ship_wisdom                               -- 智慧
 	fightObject.healthPoint = tonumber(self.healthPoint)*propertyPercent                -- 血量
+	print("最大血量 FightObject4: " .. fightObject.healthPoint)
 	fightObject.lessHealthPoint = tonumber(self.lessHealthPoint)*propertyPercent
 	fightObject.attack = self.attack*propertyPercent                              -- 攻击
 	fightObject.physicalDefence = tonumber(self.physicalDefence)*propertyPercent         -- 物防

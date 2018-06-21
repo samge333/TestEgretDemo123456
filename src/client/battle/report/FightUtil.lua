@@ -2163,6 +2163,10 @@ function FightUtil.computeCureHealthPoint(skillMould, skillInfluence, attackObje
 	end
 	
 	finalCure = finalCure * attackObject.grade_attack
+	print("经过计算的加血值: " .. finalCure)
+	print("addHpPoint: " .. addHpPoint)
+	print("byAttackObject.healthMaxPoint: " .. byAttackObject.healthMaxPoint)
+	print("byAttackObject.healthPoint: " .. byAttackObject.healthPoint)
 
 	local healthPoint = math.floor(math.min(addHpPoint, finalCure))
 	if(byAttackObject.isBearHP)then	
@@ -4845,7 +4849,7 @@ function FightUtil.computeSkillEffect(battleSkill,skillMould, skillInfluence, at
 	effectArray[2] = 0
 	effectArray[4] = 0
 	local formulaInfo = battleSkill.formulaInfo
-	print("计算技能效用 " .. formulaInfo)
+	print("计算技能效用索引的公式 " .. formulaInfo)
 
 	if (formulaInfo == FightUtil.FORMULA_INFO_COMMON_DAMAGE ) then	
 		FightUtil.computeCommonDamage(skillMould, skillInfluence, attackObject, byAttackObject, effectArray, battleSkill, userInfo, fightModule, effectBuffer)
