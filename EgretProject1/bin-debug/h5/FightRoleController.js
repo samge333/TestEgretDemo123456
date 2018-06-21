@@ -81,14 +81,50 @@ var FightRoleController = (function (_super) {
     };
     //执行指定对象战斗数据attData，然后给到指定的角色fightRole的fight_cacher_pool
     FightRoleController.prototype.executeCurrentSelectRoleFightData = function (data) {
-        var fightRole = null;
-        if (data.attacker == 0) {
-            fightRole = this._hero_formation_pos[data.attackerPos];
+        // let fightRole: FightRole = null;
+        // if (data.attacker == 0) {
+        // 	fightRole = this._hero_formation_pos[data.attackerPos];
+        // } else {
+        // 	fightRole = this._hero_formation_pos[data.attackerPos];
+        // }
+        // fightRole.attackListener();
+        //将战斗数据中的 技能效用数据 给到fightRole
+        for (var i = 0; i < data.skillInfluences.length; i++) {
+            //获取第i个技能效用
+            var skf = data.skillInfluences[i];
+            //获取出手的fightRole
+            var attackRole = null;
+            if (skf.attackerType == 0) {
+                attackRole = this._hero_formation_pos[skf.attackerPos];
+            }
+            else {
+                attackRole = this._master_formation_pos[skf.attackerPos];
+            }
+            //受到效用影响的的fightRole
+            var defenderList = {};
+            for (var j = 0; j < skf._defenders.length; j++) {
+                var _def = skf._defenders[j];
+                //获取受影响的fightRole
+                var defendRole = null;
+                if (_def.defender == 0) {
+                    defendRole = this._hero_formation_pos[_def.defenderPos];
+                }
+                else {
+                    defendRole = this._master_formation_pos[_def.defenderPos];
+                }
+            }
+            if (skf._defenders.length > 0) {
+                //打开开关，fightRole会自行处理自己接收到的效用影响数据
+                attackRole.run_fight_listener = true;
+                attackRole.fight_cacher_pool.push({
+                    _state: 0,
+                    _attData: data,
+                    _skf: skf,
+                    _defenderList: defenderList //承受技能的fightRole列表
+                });
+                attackRole.attackListener();
+            }
         }
-        else {
-            fightRole = this._hero_formation_pos[data.attackerPos];
-        }
-        fightRole.attackListener();
     };
     FightRoleController.prototype.getFightData = function (fightRole, grade) {
         var resultBuffer = {};

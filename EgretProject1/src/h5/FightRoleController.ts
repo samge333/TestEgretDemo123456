@@ -119,11 +119,16 @@ class FightRoleController extends eui.Component {
 			}
 
 			if (skf._defenders.length > 0) {
+				//打开开关，fightRole会自行处理自己接收到的效用影响数据
+				attackRole.run_fight_listener = true;
 				attackRole.fight_cacher_pool.push({
-					_attData: data,
-					_skf: skf,
-					_defenderList: defenderList
+					_state: 0,						//为0表示是发起攻击的fighRole
+					_attData: data,					//攻击数据
+					_skf: skf,						//单个技能效用
+					_defenderList: defenderList		//承受技能的fightRole列表
 				});
+
+				attackRole.attackListener();
 			}
 
 		}

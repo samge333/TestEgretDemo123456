@@ -7,13 +7,17 @@ class FightRole extends eui.Component {
 
 	_info: any = {};
 	_roleCamp = 0;
-	dragonNode:dragonBones.EgretArmatureDisplay = null;
+	dragonNode = null;
 	//父节点
 	parentNode: eui.Rect = null;
 	//攻击时的位移坐标
 	moveByPosition = {x: 0, y: 0};
 	//角色受到的技能效用影响列表
 	fight_cacher_pool = [];
+	//是否开启监听并处理自己受到的效用影响
+	run_fight_listener = false;
+	//当前正在处理的效用影响
+	current_fight_data: any = {};
 
 	public eventListen() {
 		this.addEventListener(eui.UIEvent.CREATION_COMPLETE, this.onCreationComplete, this);
@@ -52,9 +56,9 @@ class FightRole extends eui.Component {
 		// HLog.log(this.dragonNode.anchorOffsetY);
 		// HLog.log(this.anchorOffsetX);
 		// HLog.log(this.anchorOffsetY);
-		Display.initArmature(this.dragonNode, this);
+		Display.initArmature(this.dragonNode, Display.DragonAnimationNames, this);
 		// (this.dragonNode as any).mydata.setMovementEventCallFunc(Display.changeAction_animationEventCallFunc);
-		(this.dragonNode as any).mydata._invoke = this.changeActionCallback;
+		this.dragonNode.mydata._startCallback = this.onChangeActionCallback;
 		this.dragonNode.x = this.width / 2;
 		this.dragonNode.y = this.height;
 		this.addChild(this.dragonNode);
@@ -63,11 +67,26 @@ class FightRole extends eui.Component {
 
 	//监听攻击
 	public attackListener() {
-		this.executeAttackLogic();
+		if (this.run_fight_listener == true) {
+			if (this.fight_cacher_pool.length == 0) {
+				this.run_fight_listener = false;
+			}
+			else {
+				this.current_fight_data = this.fight_cacher_pool[0];
+				//如果当前fightRole发起攻击
+				if (this.current_fight_data._state == 0) {
+					this.executeAttackLogic();
+				}
+			}
+		}
 	}
 
 	//执行攻击逻辑
 	public executeAttackLogic() {
+		let skfId = this.current_fight_data._skf.skillInfluenceId;
+		let skfData = ConfigDB.loadConfig("skill_influence_txt", skfId);
+		this.dragonNode.mydata.skfData = skfData;
+
 		this.executeAttackLogicing();
 	}
 
@@ -112,7 +131,7 @@ class FightRole extends eui.Component {
 	}
 
 	//动作开始的回调
-	public changeActionCallback(thisObj, dragonNode, name: string) {
+	public onChangeActionCallback(thisObj, dragonNode, name: string) {
 		// HLog.log("FightRole 开始执行动作 " +  thisObj._roleCamp + "," +  thisObj._info._pos, name);
 		//普通攻击
 		if (name == Display.DragonAnimationNames[DRAGON_ANIMAE_INDEX.animation_skill_attacking]) {
@@ -128,12 +147,19 @@ class FightRole extends eui.Component {
 
 	//显示攻击光效1
 	public executeAttackInfluence() {
-
+		this.executeEffectSkilling1();
 	}
 
 	//显示攻击光效2
 	public executeEffectSkilling1() {
-		let attackEffect = this.createEffect();
+		let effectId = (this.dragonNode.mydata.skfData as SkillInfluence).posteriorLightingEffectId;
+		if (effectId >= 0) {
+			let attackEffect: any = this.createEffect(effectId);
+			attackEffect.x = this.x;
+			attackEffect.y = this.y;
+			this.parent.addChild(attackEffect);
+		}
+		
 	}
 
 	//执行被攻击的逻辑
@@ -142,8 +168,36 @@ class FightRole extends eui.Component {
 	}
 
 	//创建打击光效
-	public createEffect() {
+	public createEffect(effectId: number) {
+		let effectNode: any = Display.newEffectById(effectId);
+		Display.initArmature(effectNode, Display.effectAnimations, this);
+		effectNode.mydata.loopTimes = 1;
+		effectNode.mydata._completeCallback = this.onEffectAnimCompleteCallback;
+		effectNode.mydata._eventCallback = this.onEffectAnimEventCallback;
+		effectNode.mydata.playWithIndex(0);
+		return effectNode;
+	}
+
+	// 攻击光效播完回调 executeEffectSkilling1Over->executeEffectSkillingOverEx
+	public onEffectAnimCompleteCallback(thisObj, dragonNode, name: string) {
+		thisObj.checkAttackEnd();
+	}
+
+	//攻击光效事件回调
+	public onEffectAnimEventCallback(thisObj, dragonNode, event: dragonBones.EgretEvent) {
+		if (event.eventObject.data && event.eventObject.data.strings && event.eventObject.data.strings.length) {
+			HLog.log("onEffectAnimEventCallback: ", event.eventObject.data.strings[0]);
+		}
+	}
+
+	//攻击光效播完
+	public executeEffectSkillingOverEx() {
 
 	}
 
+	//检查攻击结束
+	public checkAttackEnd() {
+		//删除第一个元素
+		this.fight_cacher_pool.splice(0);
+	}
 }

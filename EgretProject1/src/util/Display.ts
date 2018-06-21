@@ -44,7 +44,13 @@ class Display {
 		"40_ji5",			//37
 		"13_jueji",			//38
 		"29_daodi",			//39
-	]
+	];
+
+	public static effectAnimations = [
+		"animation",		//0
+		"animation2",		//1
+		"animation3",		//2
+	];
 
 	//创建一个角色骨骼
 	public static newDragonById(imgId: number, armatureName: string = "armatureName", scale: number = 1): dragonBones.EgretArmatureDisplay | null {
@@ -90,18 +96,19 @@ class Display {
 	}
 
 	//为dragonNode增加功能
-	public static initArmature(dragonNode, thisObj) {
+	public static initArmature(dragonNode, animNameArr: Array<string>, thisObj) {
 		
 		dragonNode.mydata = {};
 		dragonNode.mydata._actionIndex = 0;
 		dragonNode.mydata._nextAction = 0;
+		dragonNode.mydata.loopTimes = 0;
 
 		//播放指定index的动作
-		dragonNode.mydata.playWithIndex = function(actionIndex: number, loopTimes: number = 0) {
-			let animName = Display.DragonAnimationNames[actionIndex];
+		dragonNode.mydata.playWithIndex = function(actionIndex: number) {
+			let animName = animNameArr[actionIndex];
 			if (animName) {
-				// HLog.log("执行动作", animName);
-				(dragonNode as dragonBones.EgretArmatureDisplay).animation.play(animName, loopTimes);
+				HLog.log("执行动作", animName);
+				(dragonNode as dragonBones.EgretArmatureDisplay).animation.play(animName, dragonNode.mydata.loopTimes);
 			}
 		};
 
@@ -118,20 +125,24 @@ class Display {
 			if (dragonNode.mydata._actionIndex != dragonNode.mydata._nextAction) {
 				dragonNode.mydata._actionIndex = dragonNode.mydata._nextAction;
 				dragonNode.mydata.playWithIndex(dragonNode.mydata._nextAction);
+
+				if (dragonNode.mydata._completeCallback) {
+					dragonNode.mydata._completeCallback(thisObj, dragonNode, event.animationState.name);
+				}
 			}
 		}, this);
 
 		//动作开始回调
 		(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.START, function(event: dragonBones.EgretEvent) {
-			if (dragonNode.mydata._invoke) {
-				dragonNode.mydata._invoke(thisObj, dragonNode, event.animationState.name);
+			if (dragonNode.mydata._startCallback) {
+				dragonNode.mydata._startCallback(thisObj, dragonNode, event.animationState.name);
 			}
 		}, this);
 
 		//事件回调
 		(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.FRAME_EVENT, function(event: dragonBones.EgretEvent) {
 			if (dragonNode.mydata._eventCallback) {
-				dragonNode.mydata._eventCallback(thisObj, dragonNode, event.animationState.name);
+				dragonNode.mydata._eventCallback(thisObj, dragonNode, event);
 			}
 		}, this);
 

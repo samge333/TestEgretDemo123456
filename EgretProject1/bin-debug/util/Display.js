@@ -48,17 +48,17 @@ var Display = (function () {
         return armatureDisplay;
     };
     //为dragonNode增加功能
-    Display.initArmature = function (dragonNode, thisObj) {
+    Display.initArmature = function (dragonNode, animNameArr, thisObj) {
         dragonNode.mydata = {};
         dragonNode.mydata._actionIndex = 0;
         dragonNode.mydata._nextAction = 0;
+        dragonNode.mydata.loopTimes = 0;
         //播放指定index的动作
-        dragonNode.mydata.playWithIndex = function (actionIndex, loopTimes) {
-            if (loopTimes === void 0) { loopTimes = 0; }
-            var animName = Display.DragonAnimationNames[actionIndex];
+        dragonNode.mydata.playWithIndex = function (actionIndex) {
+            var animName = animNameArr[actionIndex];
             if (animName) {
-                // HLog.log("执行动作", animName);
-                dragonNode.animation.play(animName, loopTimes);
+                HLog.log("执行动作", animName);
+                dragonNode.animation.play(animName, dragonNode.mydata.loopTimes);
             }
         };
         // //动作回调
@@ -73,18 +73,21 @@ var Display = (function () {
             if (dragonNode.mydata._actionIndex != dragonNode.mydata._nextAction) {
                 dragonNode.mydata._actionIndex = dragonNode.mydata._nextAction;
                 dragonNode.mydata.playWithIndex(dragonNode.mydata._nextAction);
+                if (dragonNode.mydata._completeCallback) {
+                    dragonNode.mydata._completeCallback(thisObj, dragonNode, event.animationState.name);
+                }
             }
         }, this);
         //动作开始回调
         dragonNode.addEventListener(dragonBones.EventObject.START, function (event) {
-            if (dragonNode.mydata._invoke) {
-                dragonNode.mydata._invoke(thisObj, dragonNode, event.animationState.name);
+            if (dragonNode.mydata._startCallback) {
+                dragonNode.mydata._startCallback(thisObj, dragonNode, event.animationState.name);
             }
         }, this);
         //事件回调
         dragonNode.addEventListener(dragonBones.EventObject.FRAME_EVENT, function (event) {
             if (dragonNode.mydata._eventCallback) {
-                dragonNode.mydata._eventCallback(thisObj, dragonNode, event.animationState.name);
+                dragonNode.mydata._eventCallback(thisObj, dragonNode, event);
             }
         }, this);
         // dragonNode.mydata.setFrameEventCallFunc = function(func) {
@@ -162,6 +165,11 @@ var Display = (function () {
         "40_ji5",
         "13_jueji",
         "29_daodi",
+    ];
+    Display.effectAnimations = [
+        "animation",
+        "animation2",
+        "animation3",
     ];
     return Display;
 }());

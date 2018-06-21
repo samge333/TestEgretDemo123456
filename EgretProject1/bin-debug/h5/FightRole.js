@@ -21,6 +21,10 @@ var FightRole = (function (_super) {
         _this.moveByPosition = { x: 0, y: 0 };
         //角色受到的技能效用影响列表
         _this.fight_cacher_pool = [];
+        //是否开启监听并处理自己受到的效用影响
+        _this.run_fight_listener = false;
+        //当前正在处理的效用影响
+        _this.current_fight_data = {};
         _this.eventListen();
         return _this;
     }
@@ -53,19 +57,33 @@ var FightRole = (function (_super) {
         // HLog.log(this.dragonNode.anchorOffsetY);
         // HLog.log(this.anchorOffsetX);
         // HLog.log(this.anchorOffsetY);
-        Display.initArmature(this.dragonNode, this);
+        Display.initArmature(this.dragonNode, Display.DragonAnimationNames, this);
         // (this.dragonNode as any).mydata.setMovementEventCallFunc(Display.changeAction_animationEventCallFunc);
-        this.dragonNode.mydata._invoke = this.changeActionCallback;
+        this.dragonNode.mydata._startCallback = this.onChangeActionCallback;
         this.dragonNode.x = this.width / 2;
         this.dragonNode.y = this.height;
         this.addChild(this.dragonNode);
     };
     //监听攻击
     FightRole.prototype.attackListener = function () {
-        this.executeAttackLogic();
+        if (this.run_fight_listener == true) {
+            if (this.fight_cacher_pool.length == 0) {
+                this.run_fight_listener = false;
+            }
+            else {
+                this.current_fight_data = this.fight_cacher_pool[0];
+                //如果当前fightRole发起攻击
+                if (this.current_fight_data._state == 0) {
+                    this.executeAttackLogic();
+                }
+            }
+        }
     };
     //执行攻击逻辑
     FightRole.prototype.executeAttackLogic = function () {
+        var skfId = this.current_fight_data._skf.skillInfluenceId;
+        var skfData = ConfigDB.loadConfig("skill_influence_txt", skfId);
+        this.dragonNode.mydata.skfData = skfData;
         this.executeAttackLogicing();
     };
     FightRole.prototype.executeAttackLogicing = function () {
@@ -102,7 +120,7 @@ var FightRole = (function (_super) {
         Display.animationChangeToAction(this.dragonNode, actionIndex, actionIndex);
     };
     //动作开始的回调
-    FightRole.prototype.changeActionCallback = function (thisObj, dragonNode, name) {
+    FightRole.prototype.onChangeActionCallback = function (thisObj, dragonNode, name) {
         // HLog.log("FightRole 开始执行动作 " +  thisObj._roleCamp + "," +  thisObj._info._pos, name);
         //普通攻击
         if (name == Display.DragonAnimationNames[DRAGON_ANIMAE_INDEX.animation_skill_attacking]) {
@@ -116,16 +134,48 @@ var FightRole = (function (_super) {
     };
     //显示攻击光效1
     FightRole.prototype.executeAttackInfluence = function () {
+        this.executeEffectSkilling1();
     };
     //显示攻击光效2
     FightRole.prototype.executeEffectSkilling1 = function () {
-        var attackEffect = this.createEffect();
+        var effectId = this.dragonNode.mydata.skfData.posteriorLightingEffectId;
+        if (effectId >= 0) {
+            var attackEffect = this.createEffect(effectId);
+            attackEffect.x = this.x;
+            attackEffect.y = this.y;
+            this.parent.addChild(attackEffect);
+        }
     };
     //执行被攻击的逻辑
     FightRole.prototype.executeByAttackLogic = function () {
     };
     //创建打击光效
-    FightRole.prototype.createEffect = function () {
+    FightRole.prototype.createEffect = function (effectId) {
+        var effectNode = Display.newEffectById(effectId);
+        Display.initArmature(effectNode, Display.effectAnimations, this);
+        effectNode.mydata.loopTimes = 1;
+        effectNode.mydata._completeCallback = this.onEffectAnimCompleteCallback;
+        effectNode.mydata._eventCallback = this.onEffectAnimEventCallback;
+        effectNode.mydata.playWithIndex(0);
+        return effectNode;
+    };
+    // 攻击光效播完回调 executeEffectSkilling1Over->executeEffectSkillingOverEx
+    FightRole.prototype.onEffectAnimCompleteCallback = function (thisObj, dragonNode, name) {
+        thisObj.checkAttackEnd();
+    };
+    //攻击光效事件回调
+    FightRole.prototype.onEffectAnimEventCallback = function (thisObj, dragonNode, event) {
+        if (event.eventObject.data && event.eventObject.data.strings && event.eventObject.data.strings.length) {
+            HLog.log("onEffectAnimEventCallback: ", event.eventObject.data.strings[0]);
+        }
+    };
+    //攻击光效播完
+    FightRole.prototype.executeEffectSkillingOverEx = function () {
+    };
+    //检查攻击结束
+    FightRole.prototype.checkAttackEnd = function () {
+        //删除第一个元素
+        this.fight_cacher_pool.splice(0);
     };
     return FightRole;
 }(eui.Component));
