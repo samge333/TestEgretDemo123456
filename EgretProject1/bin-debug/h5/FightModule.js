@@ -289,7 +289,7 @@ var FightModule = (function () {
                     //被攻击的位置列表
                     var byAttackCoordinates = void 0;
                     //技能效用数据
-                    var tmpBattleSkillBuffer = {};
+                    var tmpBattleSkillBuffer = [];
                     if (battleObject.isDead != true) {
                         //遍历当前技能的技能效用列表，一个技能有1个或多个技能效用，见表skill_mould表第9列
                         for (var i = 0; i < battleSkillList.length; i++) {
@@ -314,29 +314,35 @@ var FightModule = (function () {
                             if (battleObject.battleTag == 0) {
                                 //作用敌方
                                 if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OPPOSITE) {
-                                    attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this, tmpBattleSkillBuffer);
+                                    var buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this);
+                                    tmpBattleSkillBuffer.push(buf);
                                 }
                                 else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OURSITE) {
-                                    attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this, tmpBattleSkillBuffer);
+                                    var buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this);
+                                    tmpBattleSkillBuffer.push(buf);
                                 }
                                 else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_CURRENT) {
                                     byAttackCoordinates = [];
                                     byAttackCoordinates.push(battleObject.coordinate);
-                                    attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this, tmpBattleSkillBuffer);
+                                    var buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this);
+                                    tmpBattleSkillBuffer.push(buf);
                                 }
                             }
                             else {
                                 //作用敌方
                                 if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OPPOSITE) {
-                                    attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this, tmpBattleSkillBuffer);
+                                    var buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this);
+                                    tmpBattleSkillBuffer.push(buf);
                                 }
                                 else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OURSITE) {
-                                    attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this, tmpBattleSkillBuffer);
+                                    var buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this);
+                                    tmpBattleSkillBuffer.push(buf);
                                 }
                                 else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_CURRENT) {
                                     byAttackCoordinates = [];
                                     byAttackCoordinates.push(battleObject.coordinate);
-                                    attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this, tmpBattleSkillBuffer);
+                                    var buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this);
+                                    tmpBattleSkillBuffer.push(buf);
                                 }
                             }
                         }
@@ -345,7 +351,7 @@ var FightModule = (function () {
                     resultBuffer.attackerSp = battleObject.skillPoint;
                     resultBuffer.restrainState = 0;
                     resultBuffer.skillInfluenceCount = 1;
-                    resultBuffer.tmpBattleSkillBuffer = tmpBattleSkillBuffer;
+                    resultBuffer.skillInfluences = tmpBattleSkillBuffer;
                     //后段技能效用数量写死为0测试
                     resultBuffer.skillAfterInfluenceCount = 0;
                     resultBuffer.skillAfterInfluences = {};

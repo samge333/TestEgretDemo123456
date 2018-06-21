@@ -12,6 +12,8 @@ class FightRole extends eui.Component {
 	parentNode: eui.Rect = null;
 	//攻击时的位移坐标
 	moveByPosition = {x: 0, y: 0};
+	//角色受到的技能效用影响列表
+	fight_cacher_pool = [];
 
 	public eventListen() {
 		this.addEventListener(eui.UIEvent.CREATION_COMPLETE, this.onCreationComplete, this);
@@ -115,7 +117,23 @@ class FightRole extends eui.Component {
 		//普通攻击
 		if (name == Display.DragonAnimationNames[DRAGON_ANIMAE_INDEX.animation_skill_attacking]) {
 			dragonNode.mydata._nextAction = DRAGON_ANIMAE_INDEX.animation_standby;
+			thisObj.executeAttacking();
 		}
+	}
+
+	//显示攻击光效
+	public executeAttacking() {
+		this.executeAttackInfluence();
+	}
+
+	//显示攻击光效1
+	public executeAttackInfluence() {
+
+	}
+
+	//显示攻击光效2
+	public executeEffectSkilling1() {
+		let attackEffect = this.createEffect();
 	}
 
 	//执行被攻击的逻辑
@@ -125,7 +143,7 @@ class FightRole extends eui.Component {
 
 	//创建打击光效
 	public createEffect() {
-		
+
 	}
 
 }

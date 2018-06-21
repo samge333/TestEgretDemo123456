@@ -4,6 +4,7 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 var Display = (function () {
     function Display() {
     }
+    //创建一个角色骨骼
     Display.newDragonById = function (imgId, armatureName, scale) {
         if (armatureName === void 0) { armatureName = "armatureName"; }
         if (scale === void 0) { scale = 1; }
@@ -13,6 +14,19 @@ var Display = (function () {
         var skeFile = "spirte_" + imgId + "_ske_json";
         var texFile = "spirte_" + imgId + "_tex_json";
         var texPng = "spirte_" + imgId + "_tex_png";
+        return Display.newDragon(skeFile, texFile, texPng, armatureName, scale);
+    };
+    //创建一个光效骨骼
+    Display.newEffectById = function (nameIndex, armatureName, scale) {
+        if (armatureName === void 0) { armatureName = "armatureName"; }
+        if (scale === void 0) { scale = 1; }
+        if (nameIndex == null) {
+            return null;
+        }
+        // effice_105211_tex_json
+        var skeFile = "effice_" + nameIndex + "_ske_json";
+        var texFile = "effice_" + nameIndex + "_tex_json";
+        var texPng = "effice_" + nameIndex + "_tex_png";
         return Display.newDragon(skeFile, texFile, texPng, armatureName, scale);
     };
     //返回一个骨架显示对象
@@ -33,8 +47,8 @@ var Display = (function () {
         armatureDisplay.scaleY = scale;
         return armatureDisplay;
     };
+    //为dragonNode增加功能
     Display.initArmature = function (dragonNode, thisObj) {
-        //为dragonNode增加功能
         dragonNode.mydata = {};
         dragonNode.mydata._actionIndex = 0;
         dragonNode.mydata._nextAction = 0;
@@ -68,12 +82,17 @@ var Display = (function () {
             }
         }, this);
         //事件回调
-        dragonNode.mydata.setFrameEventCallFunc = function (func) {
-            dragonNode.mydata.frameCallFunc = func;
-            dragonNode.addEventListener(dragonBones.EventObject.FRAME_EVENT, function (event) {
-                dragonNode.mydata.frameCallFunc(event);
-            }, this);
-        };
+        dragonNode.addEventListener(dragonBones.EventObject.FRAME_EVENT, function (event) {
+            if (dragonNode.mydata._eventCallback) {
+                dragonNode.mydata._eventCallback(thisObj, dragonNode, event.animationState.name);
+            }
+        }, this);
+        // dragonNode.mydata.setFrameEventCallFunc = function(func) {
+        // 	dragonNode.mydata.frameCallFunc = func;
+        // 	(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.FRAME_EVENT, function(event: dragonBones.EgretEvent) {
+        // 		dragonNode.mydata.frameCallFunc(event);
+        // 	}, this);
+        // };
     };
     // //当前动作完成后的回调
     // public static changeAction_animationEventCallFunc(event: dragonBones.EgretEvent, dragonNode, loopTimes: number = 0) {

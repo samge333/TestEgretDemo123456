@@ -83,14 +83,51 @@ class FightRoleController extends eui.Component {
 
 	//执行指定对象战斗数据attData，然后给到指定的角色fightRole的fight_cacher_pool
 	public executeCurrentSelectRoleFightData(data) {
-		let fightRole: FightRole = null;
-		if (data.attacker == 0) {
-			fightRole = this._hero_formation_pos[data.attackerPos];
-		} else {
-			fightRole = this._hero_formation_pos[data.attackerPos];
+		// let fightRole: FightRole = null;
+		// if (data.attacker == 0) {
+		// 	fightRole = this._hero_formation_pos[data.attackerPos];
+		// } else {
+		// 	fightRole = this._hero_formation_pos[data.attackerPos];
+		// }
+
+		// fightRole.attackListener();
+
+		//将战斗数据中的 技能效用数据 给到fightRole
+		for (let i = 0; i < data.skillInfluences.length; i++) {
+			//获取第i个技能效用
+			let skf = data.skillInfluences[i];
+			//获取出手的fightRole
+			let attackRole: FightRole = null;
+			if (skf.attackerType == 0) {
+				attackRole = this._hero_formation_pos[skf.attackerPos];
+			} else {
+				attackRole = this._master_formation_pos[skf.attackerPos];
+			}
+
+			//受到效用影响的的fightRole
+			let defenderList: {[key: string]: FightRole} = {};
+
+			for (let j = 0; j < skf._defenders.length; j++) {
+				let _def = skf._defenders[j];
+				//获取受影响的fightRole
+				let defendRole: FightRole = null;
+				if (_def.defender == 0) {
+					defendRole = this._hero_formation_pos[_def.defenderPos];
+				} else {
+					defendRole = this._master_formation_pos[_def.defenderPos];
+				}
+			}
+
+			if (skf._defenders.length > 0) {
+				attackRole.fight_cacher_pool.push({
+					_attData: data,
+					_skf: skf,
+					_defenderList: defenderList
+				});
+			}
+
 		}
 
-		fightRole.attackListener();
 	}
 
 	public getFightData(fightRole: FightRole, grade: number) {

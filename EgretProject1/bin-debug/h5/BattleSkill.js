@@ -33,7 +33,7 @@ var BattleSkill = (function () {
         //清除的BUFF类型
         this.clearBuffState = 0;
     }
-    BattleSkill.prototype.processAttack = function (userInfo, byAttackCoordinates, attackObject, byAttackObjects, fightModule, resultBuffer) {
+    BattleSkill.prototype.processAttack = function (userInfo, byAttackCoordinates, attackObject, byAttackObjects, fightModule) {
         var effectBuffer = [];
         //我方的效用承受情况
         if (attackObject.isAction == false) {
@@ -128,6 +128,7 @@ var BattleSkill = (function () {
         }
         this.effectAmount = effectBuffer.length;
         if (this.effectAmount > 0) {
+            var resultBuffer = {};
             resultBuffer.skillInfluenceId = this.skillInfluence.id;
             resultBuffer.influenceType = 0;
             resultBuffer.attackerType = attackObject.battleTag;
@@ -136,7 +137,8 @@ var BattleSkill = (function () {
             var endureDirection = FightUtil.computeEndureDirection(attackObject.coordinate, this.skillInfluence, byAttackObjects);
             resultBuffer.attPosType = endureDirection[0];
             resultBuffer.attTarList = endureDirection[1];
-            resultBuffer.effectBuffer = effectBuffer;
+            resultBuffer._defenders = effectBuffer;
+            return resultBuffer;
         }
     };
     //写效用数据

@@ -36,7 +36,7 @@ class BattleSkill {
 	//清除的BUFF类型
     clearBuffState = 0;
 
-	public processAttack(userInfo, byAttackCoordinates: Array<number>, attackObject: BattleObject, byAttackObjects: {[key: number]: BattleObject}, fightModule: FightModule, resultBuffer) {
+	public processAttack(userInfo, byAttackCoordinates: Array<number>, attackObject: BattleObject, byAttackObjects: {[key: number]: BattleObject}, fightModule: FightModule) {
 		let effectBuffer: Array<any> = [];
 	
 		//我方的效用承受情况
@@ -147,6 +147,7 @@ class BattleSkill {
 
 		this.effectAmount = effectBuffer.length;
 		if (this.effectAmount > 0) {
+			let resultBuffer: any = {};
 			resultBuffer.skillInfluenceId = this.skillInfluence.id;
 			resultBuffer.influenceType = 0;
 			resultBuffer.attackerType = attackObject.battleTag;
@@ -155,7 +156,8 @@ class BattleSkill {
 			let endureDirection = FightUtil.computeEndureDirection(attackObject.coordinate, this.skillInfluence, byAttackObjects);
 			resultBuffer.attPosType = endureDirection[0];
 			resultBuffer.attTarList = endureDirection[1];
-			resultBuffer.effectBuffer = effectBuffer;
+			resultBuffer._defenders = effectBuffer;
+			return resultBuffer;
 		}
 
 	}

@@ -348,7 +348,7 @@ class FightModule {
 					//被攻击的位置列表
 					let byAttackCoordinates: Array<any>;
 					//技能效用数据
-					let tmpBattleSkillBuffer = {};
+					let tmpBattleSkillBuffer = [];
 
 					if (battleObject.isDead != true) {
 						//遍历当前技能的技能效用列表，一个技能有1个或多个技能效用，见表skill_mould表第9列
@@ -377,33 +377,39 @@ class FightModule {
 							if (battleObject.battleTag == 0) {
 								//作用敌方
 								if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OPPOSITE) {
-									attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this, tmpBattleSkillBuffer);
+									let buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this);
+									tmpBattleSkillBuffer.push(buf);
 								}	
 								//作用我方
 								else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OURSITE) {
-									attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this, tmpBattleSkillBuffer);
+									let buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this);
+									tmpBattleSkillBuffer.push(buf);
 								}
 								//作用自己
 								else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_CURRENT) {
 									byAttackCoordinates = [];
 									byAttackCoordinates.push(battleObject.coordinate);
-									attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this, tmpBattleSkillBuffer);
+									let buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this);
+									tmpBattleSkillBuffer.push(buf);
 								}
 							}
 							else {
 								//作用敌方
 								if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OPPOSITE) {
-									attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this, tmpBattleSkillBuffer)
+									let buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this)
+									tmpBattleSkillBuffer.push(buf);
 								}
 								//作用我方
 								else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OURSITE) {
-									attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this, tmpBattleSkillBuffer);
+									let buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this);
+									tmpBattleSkillBuffer.push(buf);
 								}
 								//作用自己
 								else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_CURRENT) {
 									byAttackCoordinates = [];
 									byAttackCoordinates.push(battleObject.coordinate);
-									attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this, tmpBattleSkillBuffer);
+									let buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this);
+									tmpBattleSkillBuffer.push(buf);
 								}
 							}
 
@@ -415,7 +421,7 @@ class FightModule {
 					resultBuffer.restrainState = 0;
 
 					resultBuffer.skillInfluenceCount = 1;
-					resultBuffer.tmpBattleSkillBuffer = tmpBattleSkillBuffer;
+					resultBuffer.skillInfluences = tmpBattleSkillBuffer;
 
 					//后段技能效用数量写死为0测试
 					resultBuffer.skillAfterInfluenceCount = 0;

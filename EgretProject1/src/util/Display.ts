@@ -130,7 +130,6 @@ class Display {
 
 		//事件回调
 		(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.FRAME_EVENT, function(event: dragonBones.EgretEvent) {
-			dragonNode.mydata.frameCallFunc(event);
 			if (dragonNode.mydata._eventCallback) {
 				dragonNode.mydata._eventCallback(thisObj, dragonNode, event.animationState.name);
 			}

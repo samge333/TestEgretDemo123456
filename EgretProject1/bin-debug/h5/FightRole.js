@@ -19,6 +19,8 @@ var FightRole = (function (_super) {
         _this.parentNode = null;
         //攻击时的位移坐标
         _this.moveByPosition = { x: 0, y: 0 };
+        //角色受到的技能效用影响列表
+        _this.fight_cacher_pool = [];
         _this.eventListen();
         return _this;
     }
@@ -101,11 +103,29 @@ var FightRole = (function (_super) {
     };
     //动作开始的回调
     FightRole.prototype.changeActionCallback = function (thisObj, dragonNode, name) {
-        HLog.log("FightRole 开始执行动作 " + thisObj._roleCamp + "," + thisObj._info._pos, name);
+        // HLog.log("FightRole 开始执行动作 " +  thisObj._roleCamp + "," +  thisObj._info._pos, name);
         //普通攻击
         if (name == Display.DragonAnimationNames[DRAGON_ANIMAE_INDEX.animation_skill_attacking]) {
             dragonNode.mydata._nextAction = DRAGON_ANIMAE_INDEX.animation_standby;
+            thisObj.executeAttacking();
         }
+    };
+    //显示攻击光效
+    FightRole.prototype.executeAttacking = function () {
+        this.executeAttackInfluence();
+    };
+    //显示攻击光效1
+    FightRole.prototype.executeAttackInfluence = function () {
+    };
+    //显示攻击光效2
+    FightRole.prototype.executeEffectSkilling1 = function () {
+        var attackEffect = this.createEffect();
+    };
+    //执行被攻击的逻辑
+    FightRole.prototype.executeByAttackLogic = function () {
+    };
+    //创建打击光效
+    FightRole.prototype.createEffect = function () {
     };
     return FightRole;
 }(eui.Component));
