@@ -18,6 +18,8 @@ class FightRoleController extends eui.Component {
 	_master_formation_pos: {[key: number]: FightRole} = {};
 	//第几波
 	fightIndex = 0;
+	//敌方的攻击列表，依次发起攻击
+	attack_list: Array<FightRole> = [];
 
 	//位置节点列表
 	hero_slots: {[key: number]: eui.Rect} = {};
@@ -55,23 +57,22 @@ class FightRoleController extends eui.Component {
 		let posMaster = [this.pos11, this.pos12, this.pos13, this.pos14, this.pos15, this.pos16];
 
 		for (let i = 0; i < 6; i++) {
-			let rect = posHero[i];
+			let rect: any = posHero[i];
 			if (rect) {
+				rect.initX = rect.x;
+				rect.initY = rect.y;
 				this.hero_slots[i + 1] = rect;
 			}
 		}
 
 		for (let i = 0; i < 6; i++) {
-			let rect = posMaster[i];
+			let rect: any = posMaster[i];
 			if (rect) {
+				rect.initX = rect.x;
+				rect.initY = rect.y;
 				this.master_slots[i + 1] = rect;
 			}
 		}
-	}
-
-	public changeToNextAttackRole() {
-		let role = this._hero_formation_arr[0];
-		this.qteAddAttackRole(role);
 	}
 
 	public qteAddAttackRole(selectRole: FightRole) {
@@ -116,10 +117,12 @@ class FightRoleController extends eui.Component {
 				} else {
 					defendRole = this._master_formation_pos[_def.defenderPos];
 				}
+
+				defenderList[_def.defender + "t" + _def.defenderPos] = defendRole;
 			}
 
 			if (skf._defenders.length > 0) {
-				//打开开关，fightRole会自行处理自己接收到的效用影响数据
+				//打开开关，fightRole会自行处理自己接收到的效用数据
 				attackRole.run_fight_listener = true;
 				attackRole.fight_cacher_pool.push({
 					_state: 0,						//为0表示是发起攻击的fighRole
@@ -156,7 +159,7 @@ class FightRoleController extends eui.Component {
 		}
 		//敌方
 		else {
-
+			ED.data.fightModule.rountdFight(resultBuffer);
 		}
 
 		return resultBuffer;
@@ -180,7 +183,7 @@ class FightRoleController extends eui.Component {
 			let heroData = ED.data.battleData._heros[k];
 			if (heroData) {
 				let role = new FightRole;
-				role.init(heroData, 0, v);
+				role.init(heroData, 0, v, this);
 				v.addChild(role);
 				this._hero_formation_arr.push(role);
 				this._hero_formation_pos[k] = role;
@@ -195,7 +198,7 @@ class FightRoleController extends eui.Component {
 			let masterData = ED.data.battleData._armys[this.fightIndex]._data[k];
 			if (masterData) {
 				let role = new FightRole;
-				role.init(masterData, 1, v);
+				role.init(masterData, 1, v, this);
 				v.addChild(role);
 				this._master_formation_arr.push(role);
 				this._master_formation_pos[k] = role;
@@ -226,22 +229,22 @@ class FightRoleController extends eui.Component {
 			}
 		}
 
-		// for (let i = 0; i < this._master_formation_arr.length; i++) {
-		// 	let role = this._master_formation_arr[i];
-		// 	if (role) {
-		// 		let offsetX = offsetInfo[1][role._info._pos - 1];
-		// 		role.x = 0 + offsetX;
-		// 		let actionIndex = DRAGON_ANIMAE_INDEX.animation_move;
-		// 		Display.animationChangeToAction(role.dragonNode, actionIndex, actionIndex);
-		// 		egret.Tween.get(role).to({x: 0}, 1500).call(function() {
-		// 			let actionIndex = DRAGON_ANIMAE_INDEX.animation_standby;
-		// 			Display.animationChangeToAction(role.dragonNode, actionIndex, actionIndex);
-		// 		}, this);
-		// 	}		
-		// }
+		for (let i = 0; i < this._master_formation_arr.length; i++) {
+			let role = this._master_formation_arr[i];
+			if (role) {
+				let offsetX = offsetInfo[1][role._info._pos - 1];
+				role.x = 0 + offsetX;
+				let actionIndex = DRAGON_ANIMAE_INDEX.animation_move;
+				Display.animationChangeToAction(role.dragonNode, actionIndex, actionIndex);
+				egret.Tween.get(role).to({x: 0}, 1500).call(function() {
+					let actionIndex = DRAGON_ANIMAE_INDEX.animation_standby;
+					Display.animationChangeToAction(role.dragonNode, actionIndex, actionIndex);
+				}, this);
+			}		
+		}
 	} 
 
-	//开始一下波战斗
+	//开始一下回合战斗，我方打完，敌方打完，算一个回合，下一回合我方出手
 	public nextRoundFight() {
 		// HEvent.dispatch(EvtName.QteCtrlNextAttackRole);
 
@@ -254,4 +257,67 @@ class FightRoleController extends eui.Component {
 	// 	this.qteAddAttackRole();
 	// }
 
+	//获取敌方所有人的攻击数据，然后生成攻击fightRole列表，赋值给fightRole去处理
+	public executeCurrentRountFightData() {
+		let roundData: any = this.getFightData(null, 0);
+		HLog.log("获取敌方所有的攻击数据", roundData);
+
+		//循环敌方所有人，生成fightRole列表
+		for (let i = 0; i < roundData.data.length; i++) {
+			let attData = roundData.data[i];
+
+			let fightRole: any;
+			if (attData.attacker == 0) {
+				fightRole = this._hero_formation_pos[attData.attackerPos];
+			} else {
+				fightRole = this._master_formation_pos[attData.attackerPos];
+			}
+
+			//给没个角色他当前的攻击数据
+			fightRole.attData = attData;
+			this.attack_list.push(fightRole);
+		}
+
+		this.changeToNextAttackRole();
+	}
+
+	//切换到本阵营的下一个攻击角色，本阵营
+	public changeToNextAttackRole() {
+		// let role = this._hero_formation_arr[0];
+		// this.qteAddAttackRole(role);
+
+		let currentRole: any = this.attack_list[0];
+		if (currentRole != null) {
+			this.executeCurrentSelectRoleFightData(currentRole.attData);
+		}
+	}
+
+	//检查是否可以开始下一回合战斗
+	public checkNextRoundFight() {
+		let heroAttackOver = true;
+		let masterAttackOver = true;
+
+		for (let i = 0; i < this._hero_formation_arr.length; i++) {
+			let hero = this._hero_formation_arr[i];
+			if (hero && hero.fight_cacher_pool.length > 0) {
+				heroAttackOver = false;
+			}
+		}
+
+		for (let i = 0; i < this._master_formation_arr.length; i++) {
+			let master = this._master_formation_arr[i];
+			if (master && master.fight_cacher_pool.length > 0) {
+				masterAttackOver = false;
+			}
+		}
+
+		if (this.attack_list.length > 0) {
+			masterAttackOver = false;
+		}
+
+		if (heroAttackOver == true && masterAttackOver == true) {
+			this.nextRoundFight();
+		}
+
+	}
 }

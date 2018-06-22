@@ -19,7 +19,7 @@ var FightRole = (function (_super) {
         _this.parentNode = null;
         //攻击时的位移坐标
         _this.moveByPosition = { x: 0, y: 0 };
-        //角色受到的技能效用影响列表
+        //角色受到的技能效用列表
         _this.fight_cacher_pool = [];
         //是否开启监听并处理自己受到的效用影响
         _this.run_fight_listener = false;
@@ -37,11 +37,12 @@ var FightRole = (function (_super) {
     };
     FightRole.prototype.update = function () {
     };
-    FightRole.prototype.init = function (data, roleCamp, parentNode) {
+    FightRole.prototype.init = function (data, roleCamp, parentNode, roleCtrl) {
         HLog.log("创建角色" + roleCamp, data);
         this._info = data;
         this._roleCamp = roleCamp;
         this.parentNode = parentNode;
+        this.roleCtrl = roleCtrl;
         this.width = parentNode.width;
         this.height = parentNode.height;
         //测试数据
@@ -53,13 +54,9 @@ var FightRole = (function (_super) {
         if (this._roleCamp == 0) {
             this.dragonNode.scaleX = -1;
         }
-        // HLog.log(this.dragonNode.anchorOffsetX);
-        // HLog.log(this.dragonNode.anchorOffsetY);
-        // HLog.log(this.anchorOffsetX);
-        // HLog.log(this.anchorOffsetY);
         Display.initArmature(this.dragonNode, Display.DragonAnimationNames, this);
-        // (this.dragonNode as any).mydata.setMovementEventCallFunc(Display.changeAction_animationEventCallFunc);
         this.dragonNode.mydata._startCallback = this.onChangeActionCallback;
+        // this.dragonNode.mydata.fightRole = this;
         this.dragonNode.x = this.width / 2;
         this.dragonNode.y = this.height;
         this.addChild(this.dragonNode);
@@ -100,7 +97,12 @@ var FightRole = (function (_super) {
     };
     //获取这次攻击的移动位置
     FightRole.prototype.getAttackMovePosition = function () {
-        this.moveByPosition.x = 200;
+        if (this._roleCamp == 0) {
+            this.moveByPosition.x = 200;
+        }
+        else {
+            this.moveByPosition.x = -200;
+        }
         return true;
     };
     //攻击时，向对方移动
@@ -119,7 +121,7 @@ var FightRole = (function (_super) {
         var actionIndex = DRAGON_ANIMAE_INDEX.animation_skill_attacking;
         Display.animationChangeToAction(this.dragonNode, actionIndex, actionIndex);
     };
-    //动作开始的回调
+    //骨骼动画开始的回调
     FightRole.prototype.onChangeActionCallback = function (thisObj, dragonNode, name) {
         // HLog.log("FightRole 开始执行动作 " +  thisObj._roleCamp + "," +  thisObj._info._pos, name);
         //普通攻击
@@ -146,9 +148,6 @@ var FightRole = (function (_super) {
             this.parent.addChild(attackEffect);
         }
     };
-    //执行被攻击的逻辑
-    FightRole.prototype.executeByAttackLogic = function () {
-    };
     //创建打击光效
     FightRole.prototype.createEffect = function (effectId) {
         var effectNode = Display.newEffectById(effectId);
@@ -156,8 +155,18 @@ var FightRole = (function (_super) {
         effectNode.mydata.loopTimes = 1;
         effectNode.mydata._completeCallback = this.onEffectAnimCompleteCallback;
         effectNode.mydata._eventCallback = this.onEffectAnimEventCallback;
+        // effectNode.mydata.fightRole = this;
         effectNode.mydata.playWithIndex(0);
         return effectNode;
+    };
+    //检查攻击光效事件字符串是否包含指定事件名
+    FightRole.prototype.checkFrameEvent = function (arr, event) {
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] == event) {
+                return true;
+            }
+        }
+        return false;
     };
     // 攻击光效播完回调 executeEffectSkilling1Over->executeEffectSkillingOverEx
     FightRole.prototype.onEffectAnimCompleteCallback = function (thisObj, dragonNode, name) {
@@ -166,7 +175,27 @@ var FightRole = (function (_super) {
     //攻击光效事件回调
     FightRole.prototype.onEffectAnimEventCallback = function (thisObj, dragonNode, event) {
         if (event.eventObject.data && event.eventObject.data.strings && event.eventObject.data.strings.length) {
-            HLog.log("onEffectAnimEventCallback: ", event.eventObject.data.strings[0]);
+            // HLog.log("onEffectAnimEventCallback: ", event.eventObject.data.strings[0]);
+            var strings = event.eventObject.data.strings[0].split("_");
+            if (thisObj.checkFrameEvent(strings, "hurt") == true) {
+            }
+            var defenderList = thisObj.current_fight_data._defenderList;
+            var skf = thisObj.current_fight_data._skf;
+            for (var i = 0; i < skf._defenders.length; i++) {
+                var def = skf._defenders[i];
+                //找到受效用影响的fightRole
+                var fightRole = (defenderList[def.defender + "t" + def.defenderPos]);
+                //承受到的影响
+                fightRole.current_fight_data._def = def;
+                fightRole.executeByAttackLogic(strings, thisObj);
+            }
+            if (thisObj.checkFrameEvent(strings, "after") == true) {
+            }
+            if (thisObj.checkFrameEvent(strings, "next") == true) {
+                // //切换到本阵营的下一个角色发起攻击，或者检查回合是否完了，如果回合完了，就轮到对方发起攻击
+                // thisObj.roleCtrl.changeToNextAttackRole();
+                // thisObj.roleCtrl.checkNextRoundFight();
+            }
         }
     };
     //攻击光效播完
@@ -175,7 +204,33 @@ var FightRole = (function (_super) {
     //检查攻击结束
     FightRole.prototype.checkAttackEnd = function () {
         //删除第一个元素
-        this.fight_cacher_pool.splice(0);
+        this.fight_cacher_pool.splice(0, 1);
+        this.moveEventEx();
+        this.roleCtrl.executeCurrentRountFightData();
+    };
+    //执行被攻击的逻辑
+    FightRole.prototype.executeByAttackLogic = function (eventStrings, attacker) {
+        if (this.checkFrameEvent(eventStrings, "after") == true) {
+            if (this.dragonNode.mydata._actionIndex != DRAGON_ANIMAE_INDEX.animation_normal_be_attaked) {
+                if (attacker != null && attacker._roleCamp != this._roleCamp) {
+                    var actionIndex = DRAGON_ANIMAE_INDEX.animation_normal_be_attaked;
+                    var nextAction = DRAGON_ANIMAE_INDEX.animation_standby;
+                    Display.animationChangeToAction(this.dragonNode, actionIndex, nextAction);
+                }
+            }
+        }
+        if (this.checkFrameEvent(eventStrings, "next") == true) {
+        }
+    };
+    //角色回位
+    FightRole.prototype.moveEventEx = function () {
+        var offsetX = this.parentNode.x - this.parentNode.initX;
+        var offsetY = this.parentNode.y - this.parentNode.initY;
+        //角色不在初始位置
+        if (offsetX != 0 || offsetY != 0) {
+            egret.Tween.get(this.parent).to({ x: this.parentNode.initX }, 500).call(function () {
+            }, this);
+        }
     };
     return FightRole;
 }(eui.Component));

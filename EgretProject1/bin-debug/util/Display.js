@@ -57,25 +57,18 @@ var Display = (function () {
         dragonNode.mydata.playWithIndex = function (actionIndex) {
             var animName = animNameArr[actionIndex];
             if (animName) {
-                HLog.log("执行动作", animName);
+                // HLog.log("执行动作", animName);
                 dragonNode.animation.play(animName, dragonNode.mydata.loopTimes);
             }
         };
-        // //动作回调
-        // dragonNode.mydata.setMovementEventCallFunc = function(func) {
-        // 	dragonNode.mydata.changeActionCallfunc = func;
-        // 	(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.START, function(event: dragonBones.EgretEvent) {
-        // 		dragonNode.mydata.changeActionCallfunc(event, dragonNode);
-        // 	}, this);
-        // };
         //动作完成回调
         dragonNode.addEventListener(dragonBones.EventObject.LOOP_COMPLETE, function (event) {
             if (dragonNode.mydata._actionIndex != dragonNode.mydata._nextAction) {
                 dragonNode.mydata._actionIndex = dragonNode.mydata._nextAction;
                 dragonNode.mydata.playWithIndex(dragonNode.mydata._nextAction);
-                if (dragonNode.mydata._completeCallback) {
-                    dragonNode.mydata._completeCallback(thisObj, dragonNode, event.animationState.name);
-                }
+            }
+            if (dragonNode.mydata._completeCallback) {
+                dragonNode.mydata._completeCallback(thisObj, dragonNode, event.animationState.name);
             }
         }, this);
         //动作开始回调
@@ -90,30 +83,7 @@ var Display = (function () {
                 dragonNode.mydata._eventCallback(thisObj, dragonNode, event);
             }
         }, this);
-        // dragonNode.mydata.setFrameEventCallFunc = function(func) {
-        // 	dragonNode.mydata.frameCallFunc = func;
-        // 	(dragonNode as dragonBones.EgretArmatureDisplay).addEventListener(dragonBones.EventObject.FRAME_EVENT, function(event: dragonBones.EgretEvent) {
-        // 		dragonNode.mydata.frameCallFunc(event);
-        // 	}, this);
-        // };
     };
-    // //当前动作完成后的回调
-    // public static changeAction_animationEventCallFunc(event: dragonBones.EgretEvent, dragonNode, loopTimes: number = 0) {
-    // 	// if (dragonNode.mydata._changing == null) {
-    // 		dragonNode.mydata._changing = true;
-    // 		if (dragonNode.mydata._actionIndex != dragonNode.mydata._nextAction) {
-    // 			dragonNode.mydata.playWithIndex(dragonNode.mydata._nextAction, loopTimes);
-    // 			dragonNode.mydata._actionIndex = dragonNode.mydata._nextAction;
-    // 			// if (dragonNode.mydata._invoke) {
-    // 			// 	dragonNode.mydata._invoke(dragonNode);
-    // 			// }
-    // 		}
-    // 		// dragonNode.mydata._changing = null;
-    // 		if (dragonNode.mydata._invoke) {
-    // 			dragonNode.mydata._invoke(dragonNode);
-    // 		}
-    // 	// }
-    // }
     //立即切换到指定动作
     Display.animationChangeToAction = function (dragonNode, changeToAction, nextAction) {
         if (dragonNode == null || changeToAction == null || nextAction == null) {

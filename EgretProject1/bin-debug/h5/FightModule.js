@@ -15,6 +15,8 @@ var FightModule = (function () {
         this.currentObject = null;
         //战斗类型
         this.fightType = FightModuleEnum.FIGHT_TYPE_PVE_NORMAL;
+        //当前出手方
+        this.battleTag = 0;
     }
     FightModule.prototype.initFight = function (npcId, difficulty, fightType) {
         var npcObj = ConfigDB.loadConfig("npc_txt", npcId);
@@ -366,6 +368,137 @@ var FightModule = (function () {
             }
         }
         // HLog.log(resultBuffer);
+    };
+    //获取一回合的攻击数据。不包括已出手的，手操情况下用于获取地方的攻击数据，我方的攻击数据用的fightObjectAttack获取的
+    FightModule.prototype.rountdFight = function (result) {
+        this.battleTag = 1;
+        //找出敌方所有可以出手的battleObject
+        var actorList = [];
+        for (var i = 0; i < this.fightOrderList.length; i++) {
+            var battleObj = this.fightOrderList[i];
+            if (battleObj != null && battleObj.isDead == false && battleObj.battleTag == this.battleTag) {
+                actorList.push(battleObj);
+            }
+        }
+        result.roundCount = 1;
+        result.data = [];
+        while (actorList.length > 0) {
+            var resultBuffer = {};
+            var delBattleObjs = actorList.splice(0, 1);
+            var battleObject = delBattleObjs[0];
+            if (battleObject.isAction == false) {
+                //当前攻击技能效用BattleSkill列表
+                var battleSkillList = void 0;
+                var skillReleasePosion = 0;
+                var goon = true;
+                resultBuffer.attacker = battleObject.battleTag;
+                resultBuffer.attackerPos = battleObject.coordinate;
+                resultBuffer.linkAttackerPos = 0;
+                var skillId = 0;
+                //当前发动的是小技能
+                if (battleObject.normalSkillMouldOpened == true) {
+                    battleSkillList = battleObject.normalBattleSkill;
+                    skillReleasePosion = battleObject.normalSkillMould.skill_release_position;
+                    battleObject.normalSkillMouldOpened = false;
+                    skillId = battleObject.normalSkillMould.id;
+                    battleObject.normalSkillUseCount = battleObject.normalSkillUseCount + 1;
+                }
+                else {
+                    battleSkillList = battleObject.commonBattleSkill;
+                    skillReleasePosion = battleObject.commonSkillMould.skill_release_position;
+                    skillId = battleObject.commonSkillMould.id;
+                }
+                if (battleObject.battleTag == 0) {
+                    resultBuffer.attackMovePos = Number(FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, this.byAttackObjects));
+                }
+                else {
+                    resultBuffer.attackMovePos = Number(FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, this.attackObjects));
+                }
+                resultBuffer.skillMouldId = skillId;
+                //是否有buff影响，写死为0，方便测试
+                resultBuffer.attackerForepartBuffState = 0;
+                resultBuffer.attackerForepartBuffValue = {};
+                if (goon) {
+                    //被攻击的位置列表
+                    var byAttackCoordinates = void 0;
+                    //技能效用数据
+                    var tmpBattleSkillBuffer = [];
+                    if (battleObject.isDead != true) {
+                        //遍历当前技能的技能效用列表，一个技能有1个或多个技能效用，见表skill_mould表第9列
+                        for (var i = 0; i < battleSkillList.length; i++) {
+                            var attackSkill = battleSkillList[i];
+                            attackSkill.formulaInfo = attackSkill.skillInfluence.formulaInfo;
+                            var battleTag = battleObject.battleTag;
+                            var influenceGroup = attackSkill.skillInfluence.influenceGroup;
+                            var needInitAttackTarget = true;
+                            if (needInitAttackTarget == true) {
+                                if (attackSkill.formulaInfo != FORMULA_INFO.FORMULA_INFO_FORTHWITH) {
+                                    if ((battleTag == 0 && influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OPPOSITE)
+                                        || (battleTag == 1 && influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OURSITE)) {
+                                        byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, attackSkill.skillInfluence, battleObject, this.byAttackObjects, this.byAttackTargetTag);
+                                    }
+                                    else {
+                                        byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, attackSkill.skillInfluence, battleObject, this.attackObjects, this.byAttackTargetTag);
+                                    }
+                                }
+                                else {
+                                }
+                            }
+                            if (battleObject.battleTag == 0) {
+                                //作用敌方
+                                if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OPPOSITE) {
+                                    var buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this);
+                                    tmpBattleSkillBuffer.push(buf);
+                                }
+                                else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OURSITE) {
+                                    var buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this);
+                                    tmpBattleSkillBuffer.push(buf);
+                                }
+                                else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_CURRENT) {
+                                    byAttackCoordinates = [];
+                                    byAttackCoordinates.push(battleObject.coordinate);
+                                    var buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this);
+                                    tmpBattleSkillBuffer.push(buf);
+                                }
+                            }
+                            else {
+                                //作用敌方
+                                if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OPPOSITE) {
+                                    var buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.attackObjects, this);
+                                    tmpBattleSkillBuffer.push(buf);
+                                }
+                                else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_OURSITE) {
+                                    var buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this);
+                                    tmpBattleSkillBuffer.push(buf);
+                                }
+                                else if (influenceGroup == EFFECT_GROUP.EFFECT_GROUP_CURRENT) {
+                                    byAttackCoordinates = [];
+                                    byAttackCoordinates.push(battleObject.coordinate);
+                                    var buf = attackSkill.processAttack(null, byAttackCoordinates, battleObject, this.byAttackObjects, this);
+                                    tmpBattleSkillBuffer.push(buf);
+                                }
+                            }
+                        }
+                    }
+                    resultBuffer.attackerHp = battleObject.healthPoint;
+                    resultBuffer.attackerSp = battleObject.skillPoint;
+                    resultBuffer.restrainState = 0;
+                    resultBuffer.skillInfluenceCount = 1;
+                    resultBuffer.skillInfluences = tmpBattleSkillBuffer;
+                    //后段技能效用数量写死为0测试
+                    resultBuffer.skillAfterInfluenceCount = 0;
+                    resultBuffer.skillAfterInfluences = {};
+                    //出手方是否有buff影响
+                    resultBuffer.attackerBuffState = 0;
+                    resultBuffer.attackerBuffType = {};
+                    resultBuffer.attackerBuffValue = {};
+                    //攻击结束后触发的技能效用
+                    resultBuffer.attackerAfterTalentCount = 0;
+                    resultBuffer.attackerAfterTalent = {};
+                }
+                result.data.push(resultBuffer);
+            }
+        }
     };
     FightModule.ATTACK_SP_ADD_VAULE = 200;
     FightModule.KILL_TARGET_SP_ADD_VAULE = 200;

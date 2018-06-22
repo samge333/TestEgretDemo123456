@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,environment_ship_txt,npc_txt,ship_mould_txt,skill_influence_txt,skill_mould_txt,talent_mould_txt,battle_1_1_01_png,battle_1_1_02_png,battle_1_1_03_png,spirte_105201_ske_json,spirte_105201_tex_json,spirte_105201_tex_png,spirte_106601_ske_json,spirte_106601_tex_json,spirte_106601_tex_png,effice_105211_ske_json,effice_105211_tex_json,effice_105211_tex_png",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,environment_ship_txt,npc_txt,ship_mould_txt,skill_influence_txt,skill_mould_txt,talent_mould_txt,battle_1_1_01_png,battle_1_1_02_png,battle_1_1_03_png,spirte_105201_ske_json,spirte_105201_tex_json,spirte_105201_tex_png,spirte_106601_ske_json,spirte_106601_tex_json,spirte_106601_tex_png,effice_105211_ske_json,effice_105211_tex_json,effice_105211_tex_png,effice_101312_tex_png,effice_101312_ske_json,effice_101312_tex_json",
 			"name": "preload"
 		}
 	],
@@ -225,6 +225,21 @@
 			"name": "effice_105211_tex_png",
 			"type": "image",
 			"url": "dragon/effice_105211_tex.png"
+		},
+		{
+			"name": "effice_101312_tex_png",
+			"type": "image",
+			"url": "dragon/effice_101312_tex.png"
+		},
+		{
+			"name": "effice_101312_ske_json",
+			"type": "json",
+			"url": "dragon/effice_101312_ske.json"
+		},
+		{
+			"name": "effice_101312_tex_json",
+			"type": "json",
+			"url": "dragon/effice_101312_tex.json"
 		}
 	]
 }
