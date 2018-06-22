@@ -311,9 +311,9 @@ class FightRoleController extends eui.Component {
 			}
 		}
 
-		if (this.attack_list.length > 0) {
-			masterAttackOver = false;
-		}
+		// if (this.attack_list.length > 0) {
+		// 	masterAttackOver = false;
+		// }
 
 		if (heroAttackOver == true && masterAttackOver == true) {
 			this.nextRoundFight();

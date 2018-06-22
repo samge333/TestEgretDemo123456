@@ -206,7 +206,12 @@ var FightRole = (function (_super) {
         //删除第一个元素
         this.fight_cacher_pool.splice(0, 1);
         this.moveEventEx();
-        this.roleCtrl.executeCurrentRountFightData();
+        if (this._roleCamp == 0) {
+            this.roleCtrl.executeCurrentRountFightData();
+        }
+        else {
+            this.roleCtrl.checkNextRoundFight();
+        }
     };
     //执行被攻击的逻辑
     FightRole.prototype.executeByAttackLogic = function (eventStrings, attacker) {

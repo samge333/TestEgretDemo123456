@@ -238,7 +238,13 @@ class FightRole extends eui.Component {
 
 		this.moveEventEx();
 
-		this.roleCtrl.executeCurrentRountFightData();
+		if (this._roleCamp == 0) {
+			this.roleCtrl.executeCurrentRountFightData();
+		}
+		else {
+			this.roleCtrl.checkNextRoundFight();
+		}
+
 	}
 
 	//执行被攻击的逻辑
