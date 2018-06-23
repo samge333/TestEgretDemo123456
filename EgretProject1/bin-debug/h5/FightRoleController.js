@@ -187,8 +187,8 @@ var FightRoleController = (function (_super) {
     //入场
     FightRoleController.prototype.moveToScene = function () {
         var offsetInfo = [
-            [0, 200, 0, 0, 0, 0],
-            [0, 300, 0, 0, 0, 0],
+            [200, 200, 0, 0, 0, 0],
+            [300, 300, 0, 0, 0, 0],
         ];
         var _loop_1 = function (i) {
             var role = this_1._hero_formation_arr[i];

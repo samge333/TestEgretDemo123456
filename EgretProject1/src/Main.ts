@@ -64,7 +64,7 @@ class Main extends eui.UILayer {
         Dms.loadTxt("skill_influence_txt");
         Dms.loadTxt("skill_mould_txt");
         Dms.loadTxt("environment_ship_txt");
-
+        Dms.loadTxt("environment_formation_txt");
     }
 
     public sceneTest() {

@@ -48,9 +48,19 @@ class FightModule {
 
 		//我方
 		let attackObjects: {[pos: number]: FightObject} = {};
-		let fightObject = new FightObject;
-		fightObject.initWithUserData(2, ED.data.user_ship, ED.data.user_info.user_id);
-		attackObjects[2] = fightObject;
+		// let fightObject = new FightObject;
+		// fightObject.initWithUserData(2, ED.data.user_ship, ED.data.user_info.user_id);
+		// attackObjects[2] = fightObject;
+
+		let shipIdArr = [390, 382, 0, 0, 0, 0];
+		for (let i = 0; i < 6; i++) {
+			let id = shipIdArr[i];
+			if (id != null && id > 0) {
+				let fightObject = new FightObject;
+				fightObject.initWithUserData(2, ED.data.user_ship[id], ED.data.user_info.user_id);
+				attackObjects[i + 1] = fightObject;
+			}
+		}
 
 		battleCache.attackerSpeedValue = 0;
 		battleCache.attackName = ED.data.user_info.user_name;
@@ -61,13 +71,47 @@ class FightModule {
 		battleCache.defender_priority = 0;
 
 		//3波的敌方
+		// let byAttackerObjectsList: Array<{[pos: number]: FightObject}> = [];
+		// let byAttackObjects: {[pos: number]: FightObject} = {};
+		// let fightObject2 = new FightObject;
+		// fightObject2.initWithNpc(npc, 2, 59);
+		// byAttackObjects[2] = fightObject2;
+		// byAttackerObjectsList.push(byAttackObjects);
+
+		// battleCache.byAttackerObjectsList = byAttackerObjectsList;
+
+		let environmentFormationIds = [npc.environmentFormation1, npc.environmentFormation2, npc.environmentFormation3];
+
 		let byAttackerObjectsList: Array<{[pos: number]: FightObject}> = [];
-		let byAttackObjects: {[pos: number]: FightObject} = {};
-		let fightObject2 = new FightObject;
-		fightObject2.initWithNpc(npc, 2, 59);
-		byAttackObjects[2] = fightObject2;
-		byAttackerObjectsList.push(byAttackObjects);
-		battleCache.byAttackerObjectsList = byAttackerObjectsList
+
+		//循环几波敌人
+		for (let i = 0; i < npc.formationCount; i++) {
+			let oneWaveMaster: {[pos: number]: FightObject} = {};
+			let environmentFormationId = environmentFormationIds[i];
+			let environmentFormationData: EnvironmentFormation = ConfigDB.loadConfig("environment_formation_txt", environmentFormationId);
+
+			let shipIdArr = [];
+			shipIdArr.push(environmentFormationData.seatOne);
+			shipIdArr.push(environmentFormationData.seatTwo);
+			shipIdArr.push(environmentFormationData.seatThree);
+			shipIdArr.push(environmentFormationData.seatFour);
+			shipIdArr.push(environmentFormationData.seatFive);
+			shipIdArr.push(environmentFormationData.seatSix);
+
+			for (let i = 0; i < shipIdArr.length; i++) {
+				let shipId = shipIdArr[i];
+				if (shipId != null && shipId != 0) {
+					let fightObject2 = new FightObject;
+					fightObject2.initWithNpc(npc, i, shipId);
+					oneWaveMaster[i + 1] = fightObject2;
+				}
+			}
+
+			byAttackerObjectsList.push(oneWaveMaster);
+
+		}
+
+		battleCache.byAttackerObjectsList = byAttackerObjectsList;
 
 		ED.data.user_info.battleCache = battleCache;
 

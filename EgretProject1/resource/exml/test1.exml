@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <e:Skin class="test" width="960" height="640" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing">
+	<e:Rect id="pos01" width="80" height="80" x="200" y="240" fillColor="0xFFFFFF" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
 	<e:Rect id="pos02" width="80" height="80" x="200" y="362" fillColor="0xffffff" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
-	<e:Rect id="pos12" width="80" height="80" x="680" y="362" fillColor="0xffffff" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
+	<e:Rect id="pos03" width="80" height="80" x="200" y="474.43" fillColor="0xFFFFFF" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
+	<e:Rect id="pos04" width="80" height="80" x="66.67" y="240" fillColor="0xFFFFFF" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
+	<e:Rect id="pos05" width="80" height="80" x="66.67" y="362" fillColor="0xFFFFFF" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
+	<e:Rect id="pos06" width="80" height="80" x="66.67" y="474.43" fillColor="0xFFFFFF" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
+	<e:Rect id="pos11" width="80" height="80" x="640" y="240" fillColor="0xFFFFFF" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
+	<e:Rect id="pos12" width="80" height="80" x="640" y="357" fillColor="0xffffff" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
+	<e:Rect id="pos13" width="80" height="80" x="640" y="474.43" fillColor="0xFFFFFF" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
+	<e:Rect id="pos14" width="80" height="80" x="799.09" y="240" fillColor="0xFFFFFF" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
+	<e:Rect id="pos15" width="80" height="80" x="799.09" y="474.43" fillColor="0xFFFFFF" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
+	<e:Rect id="pos16" width="80" height="80" x="799.09" y="362" fillColor="0xFFFFFF" strokeAlpha="0" fillAlpha="0.2" enabled="true"/>
 </e:Skin>

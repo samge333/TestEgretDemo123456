@@ -72,148 +72,442 @@ class PrivateEnvironmentData {
 	fightModule: FightModule;
 
 	user_ship = {
-		initial_sp_increase: 0,
-		ship_health: 9642,
-		evolution_status: "1|2,0,0,0",
-		skill_mould: "661",
-		captain_name: "1",
-		history_info: "||964213.007003850.0",
-		ship_courage: 700,
-		ship_wisdom: "13.0",
-		ship_grade: "11",
-		courage_grade_type: "11.31",
-		skill_name: "1",
-		quick_grade_type: "0.0",
-		awakenstates: "0,0,0,0",
-		formation_index: "3",
-		deadly_skill_mould: "3",
-		ship_quick: "0.0",
-		ship_intellect: 385,
-		health_growup_type: "59.14",
-		skillLevel: "1,1,1,1,1,1",
-		Order: "1",
-		ship_skin_info: "",
-		ship_force: "0",
-		awakenLevel: 0,
-		ship_base_intellect: "385.68",
-		ship_train_info: {
-			train_physical_defence_temp: "0",
-			train_skill_defence_temp: "0",
-			train_life: "0",
-			train_attack: "0",
-			train_attack_temp: "0",
-			train_skill_defence: "0",
-			train_life_temp: "0",
-			train_physical_defence: "0",
+		[390]: {
+			initial_sp_increase: 0,
+			ship_health: 9642,
+			evolution_status: "1|2,0,0,0",
+			skill_mould: "661",
+			captain_name: "1",
+			history_info: "||964213.007003850.0",
+			ship_courage: 700,
+			ship_wisdom: "13.0",
+			ship_grade: "11",
+			courage_grade_type: "11.31",
+			skill_name: "1",
+			quick_grade_type: "0.0",
+			awakenstates: "0,0,0,0",
+			formation_index: "3",
+			deadly_skill_mould: "3",
+			ship_quick: "0.0",
+			ship_intellect: 385,
+			health_growup_type: "59.14",
+			skillLevel: "1,1,1,1,1,1",
+			Order: "1",
+			ship_skin_info: "",
+			ship_force: "0",
+			awakenLevel: 0,
+			ship_base_intellect: "385.68",
+			ship_train_info: {
+				train_physical_defence_temp: "0",
+				train_skill_defence_temp: "0",
+				train_life: "0",
+				train_attack: "0",
+				train_attack_temp: "0",
+				train_skill_defence: "0",
+				train_life_temp: "0",
+				train_physical_defence: "0",
+			},
+			ship_skillstren: {
+				skill_level: "1",
+				skill_value: "0",
+			},
+			cart_describe: "1",
+			talents: {
+				[1]: {
+					talent_id: "1873",
+					is_activited: "0",
+				},
+				[2]: {
+					talent_id: "1874",
+					is_activited: "0",
+				},
+				[3]: {
+					talent_id: "1875",
+					is_activited: "0",
+				},
+				[4]: {
+					talent_id: "1876",
+					is_activited: "0",
+				}
+			},
+			equipInfo: "10,1,1,1,47,55|0,0,0,0,7,8|0,0,0,0,270,1110|0,0,0,0,0,0|0,0,0,0,0,0",
+			relationship: {
+				[1]: {
+					relationship_id: "321",
+					is_activited: "0",
+				},
+				[2]: {
+					relationship_id: "322",
+					is_activited: "1",
+				},
+				[3]: {
+					relationship_id: "323",
+					is_activited: "1",
+				},
+				[4]: {
+					relationship_id: "324",
+					is_activited: "0"
+				},
+				[5]: {
+					relationship_id: "325",
+					is_activited: "0"
+				}
+			},
+			relationship_count: "5",
+			deadly_skill_describe: "1",
+			ship_base_template_id: "56",
+			ship_picture: "1",
+			ship_id: "390",
+			ship_leader: "0",
+			intellect_grade_type: "4.7",
+			equipment: {
+				[1]: {
+					ship_id: "0",
+					user_equiment_id: "0"
+				},
+				[2]: {
+					ship_id: "0",
+					user_equiment_id: "0"
+				},
+				[3]: {
+					ship_id: "0",
+					user_equiment_id: "0"
+				},
+				[4]: {
+					ship_id: "0",
+					user_equiment_id: "0"
+				},
+				[5]: {
+					ship_id: "0",
+					user_equiment_id: "0"
+				},
+				[6]: {
+					ship_id: "0",
+					user_equiment_id: "0"
+				},
+				[7]: {
+					ship_id: "0",
+					user_equiment_id: "0"
+				},
+				[8]: {
+					ship_id: "0",
+					user_equiment_id: "0"
+				}
+			},
+			deadly_skill_name: "1",
+			train_endtime: "1516255728000",
+			ship_base_health: "9642.82",
+			ship_base_courage: "700.64087",
+			ship_growup_exprience: "0",
+			grade_need_exprience: "600",
+			ship_place: "0",
+			skill_describe: "1",
+			train: "0",
+			property_values: "33:0.1|23:13.0|34:10.1|9:1.1",
+			StarRating: "1",
+			exprience: "536",
+			captain_type: "1",
+			ship_fighting_spirit: "1,0|1,0|1,0|1,0",
+			talent_count: "4",
+			ship_name: "0",
+			shipSpirit: "390:9,5,1,0,0",
+			ship_type: "0",
+			ship_template_id: "56",
+			hero_fight: "1377"
 		},
-		ship_skillstren: {
-			skill_level: "1",
-			skill_value: "0",
+
+		[382]: {
+			initial_sp_increase: 0,
+			ship_health: 282609,
+			evolution_status: "2|2,2,0,0",
+			skill_mould: "145",
+			captain_name: "1",
+			history_info: "||282609199.0068660128580.0",
+			ship_courage: 68660,
+			ship_wisdom: "199.0",
+			ship_grade: "85",
+			courage_grade_type: "14.94",
+			skill_name: "1",
+			quick_grade_type: "0.0",
+			awakenstates: "0,0,0,0",
+			formation_index: "3",
+			deadly_skill_mould: "3",
+			ship_quick: "0.0",
+			ship_intellect: 12858,
+			health_growup_type: "64.55",
+			skillLevel: "76,76,21,1,1,12",
+			Order: "17",
+			ship_skin_info: "",
+			ship_force: "0",
+			awakenLevel: 0,
+			ship_base_intellect: "12858.654",
+			ship_train_info: {
+				train_physical_defence_temp: "0",
+				train_skill_defence_temp: "0",
+				train_life: "0",
+				train_attack: "0",
+				train_attack_temp: "0",
+				train_skill_defence: "0",
+				train_life_temp: "0",
+				train_physical_defence: "0",
+			},
+			ship_skillstren: {
+				skill_level: "1",
+				skill_value: "0",
+			},
+			cart_describe: "1",
+			talents: {
+				[1]: {
+					talent_id: "1701",
+					is_activited: "0",
+				},
+				[2]: {
+					talent_id: "1702",
+					is_activited: "0",
+				},
+				[3]: {
+					talent_id: "1703",
+					is_activited: "0",
+				},
+				[4]: {
+					talent_id: "1704",
+					is_activited: "0",
+				},
+			},
+			equipInfo: "100,100,100,80,80,85|18,18,18,14,14,14|0,0,0,0,340,450|0,5,2,1,5,2|0,158,159,160,168,181",
+			relationship: {
+				[1]: {
+					relationship_id: "73",
+					is_activited: "1",
+				},
+				[2]: {
+					relationship_id: "74",
+					is_activited: "0",
+				},
+				[3]: {
+					relationship_id: "75",
+					is_activited: "1",
+				},
+				[4]: {
+					relationship_id: "76",
+					is_activited: "0",
+				},
+				[5]: {
+					relationship_id: "77",
+					is_activited: "1",
+				},
+				[6]: {
+					relationship_id: "78",
+					is_activited: "1",
+				},
+			},
+			relationship_count: "6",
+			deadly_skill_describe: "1",
+			ship_base_template_id: "13",
+			ship_picture: "1",
+			ship_id: "382",
+			ship_leader: "0",
+			intellect_grade_type: "5.13",
+			equipment: {
+				[1]: {
+					ship_id: "0",
+					user_equiment_id: "0",
+				},
+				[2]: {
+					ship_id: "0",
+					user_equiment_id: "0",
+				},
+				[3]: {
+					ship_id: "0",
+					user_equiment_id: "0",
+				},
+				[4]: {
+					ship_id: "0",
+					user_equiment_id: "0",
+				},
+				[5]: {
+					ship_id: "0",
+					user_equiment_id: "0",
+				},
+				[6]: {
+					ship_id: "0",
+					user_equiment_id: "0",
+				},
+				[7]: {
+					ship_id: "0",
+					user_equiment_id: "0",
+				},
+				[8]: {
+					ship_id: "0",
+					user_equiment_id: "0",
+				}
+			},
+			deadly_skill_name: "1",
+			train_endtime: "1516247637000",
+			ship_base_health: "282609.4",
+			ship_base_courage: "68660.32",
+			ship_growup_exprience: "0",
+			grade_need_exprience: "2880000",
+			ship_place: "0",
+			skill_describe: "1",
+			train: "0",
+			property_values: "11:4.1|33:11.08|45:1.45|23:199.0|34:18.63|9:0.3",
+			StarRating: "7",
+			exprience: "582999",
+			captain_type: "1",
+			ship_fighting_spirit: "20,0|3,0|1,0|1,0",
+			talent_count: "4",
+			ship_name: "0",
+			shipSpirit: "382:10,5,1,0,0",
+			ship_type: "0",
+			ship_template_id: "13",
+			hero_fight: "71149",
 		},
-		cart_describe: "1",
-		talents: {
-			[1]: {
-				talent_id: "1873",
-				is_activited: "0",
-			},
-			[2]: {
-				talent_id: "1874",
-				is_activited: "0",
-			},
-			[3]: {
-				talent_id: "1875",
-				is_activited: "0",
-			},
-			[4]: {
-				talent_id: "1876",
-				is_activited: "0",
-			}
-		},
-		equipInfo: "10,1,1,1,47,55|0,0,0,0,7,8|0,0,0,0,270,1110|0,0,0,0,0,0|0,0,0,0,0,0",
-		relationship: {
-			[1]: {
-				relationship_id: "321",
-				is_activited: "0",
-			},
-			[2]: {
-				relationship_id: "322",
-				is_activited: "1",
-			},
-			[3]: {
-				relationship_id: "323",
-				is_activited: "1",
-			},
-			[4]: {
-				relationship_id: "324",
-				is_activited: "0"
-			},
-			[5]: {
-				relationship_id: "325",
-				is_activited: "0"
-			}
-		},
-		relationship_count: "5",
-		deadly_skill_describe: "1",
-		ship_base_template_id: "56",
-		ship_picture: "1",
-		ship_id: "390",
-		ship_leader: "0",
-		intellect_grade_type: "4.7",
-		equipment: {
-			[1]: {
-				ship_id: "0",
-				user_equiment_id: "0"
-			},
-			[2]: {
-				ship_id: "0",
-				user_equiment_id: "0"
-			},
-			[3]: {
-				ship_id: "0",
-				user_equiment_id: "0"
-			},
-			[4]: {
-				ship_id: "0",
-				user_equiment_id: "0"
-			},
-			[5]: {
-				ship_id: "0",
-				user_equiment_id: "0"
-			},
-			[6]: {
-				ship_id: "0",
-				user_equiment_id: "0"
-			},
-			[7]: {
-				ship_id: "0",
-				user_equiment_id: "0"
-			},
-			[8]: {
-				ship_id: "0",
-				user_equiment_id: "0"
-			}
-		},
-		deadly_skill_name: "1",
-		train_endtime: "1516255728000",
-		ship_base_health: "9642.82",
-		ship_base_courage: "700.64087",
-		ship_growup_exprience: "0",
-		grade_need_exprience: "600",
-		ship_place: "0",
-		skill_describe: "1",
-		train: "0",
-		property_values: "33:0.1|23:13.0|34:10.1|9:1.1",
-		StarRating: "1",
-		exprience: "536",
-		captain_type: "1",
-		ship_fighting_spirit: "1,0|1,0|1,0|1,0",
-		talent_count: "4",
-		ship_name: "0",
-		shipSpirit: "390:9,5,1,0,0",
-		ship_type: "0",
-		ship_template_id: "56",
-		hero_fight: "1377"
 	};
+
+	// user_ship = {
+	// 	initial_sp_increase: 0,
+	// 	ship_health: 9642,
+	// 	evolution_status: "1|2,0,0,0",
+	// 	skill_mould: "661",
+	// 	captain_name: "1",
+	// 	history_info: "||964213.007003850.0",
+	// 	ship_courage: 700,
+	// 	ship_wisdom: "13.0",
+	// 	ship_grade: "11",
+	// 	courage_grade_type: "11.31",
+	// 	skill_name: "1",
+	// 	quick_grade_type: "0.0",
+	// 	awakenstates: "0,0,0,0",
+	// 	formation_index: "3",
+	// 	deadly_skill_mould: "3",
+	// 	ship_quick: "0.0",
+	// 	ship_intellect: 385,
+	// 	health_growup_type: "59.14",
+	// 	skillLevel: "1,1,1,1,1,1",
+	// 	Order: "1",
+	// 	ship_skin_info: "",
+	// 	ship_force: "0",
+	// 	awakenLevel: 0,
+	// 	ship_base_intellect: "385.68",
+	// 	ship_train_info: {
+	// 		train_physical_defence_temp: "0",
+	// 		train_skill_defence_temp: "0",
+	// 		train_life: "0",
+	// 		train_attack: "0",
+	// 		train_attack_temp: "0",
+	// 		train_skill_defence: "0",
+	// 		train_life_temp: "0",
+	// 		train_physical_defence: "0",
+	// 	},
+	// 	ship_skillstren: {
+	// 		skill_level: "1",
+	// 		skill_value: "0",
+	// 	},
+	// 	cart_describe: "1",
+	// 	talents: {
+	// 		[1]: {
+	// 			talent_id: "1873",
+	// 			is_activited: "0",
+	// 		},
+	// 		[2]: {
+	// 			talent_id: "1874",
+	// 			is_activited: "0",
+	// 		},
+	// 		[3]: {
+	// 			talent_id: "1875",
+	// 			is_activited: "0",
+	// 		},
+	// 		[4]: {
+	// 			talent_id: "1876",
+	// 			is_activited: "0",
+	// 		}
+	// 	},
+	// 	equipInfo: "10,1,1,1,47,55|0,0,0,0,7,8|0,0,0,0,270,1110|0,0,0,0,0,0|0,0,0,0,0,0",
+	// 	relationship: {
+	// 		[1]: {
+	// 			relationship_id: "321",
+	// 			is_activited: "0",
+	// 		},
+	// 		[2]: {
+	// 			relationship_id: "322",
+	// 			is_activited: "1",
+	// 		},
+	// 		[3]: {
+	// 			relationship_id: "323",
+	// 			is_activited: "1",
+	// 		},
+	// 		[4]: {
+	// 			relationship_id: "324",
+	// 			is_activited: "0"
+	// 		},
+	// 		[5]: {
+	// 			relationship_id: "325",
+	// 			is_activited: "0"
+	// 		}
+	// 	},
+	// 	relationship_count: "5",
+	// 	deadly_skill_describe: "1",
+	// 	ship_base_template_id: "56",
+	// 	ship_picture: "1",
+	// 	ship_id: "390",
+	// 	ship_leader: "0",
+	// 	intellect_grade_type: "4.7",
+	// 	equipment: {
+	// 		[1]: {
+	// 			ship_id: "0",
+	// 			user_equiment_id: "0"
+	// 		},
+	// 		[2]: {
+	// 			ship_id: "0",
+	// 			user_equiment_id: "0"
+	// 		},
+	// 		[3]: {
+	// 			ship_id: "0",
+	// 			user_equiment_id: "0"
+	// 		},
+	// 		[4]: {
+	// 			ship_id: "0",
+	// 			user_equiment_id: "0"
+	// 		},
+	// 		[5]: {
+	// 			ship_id: "0",
+	// 			user_equiment_id: "0"
+	// 		},
+	// 		[6]: {
+	// 			ship_id: "0",
+	// 			user_equiment_id: "0"
+	// 		},
+	// 		[7]: {
+	// 			ship_id: "0",
+	// 			user_equiment_id: "0"
+	// 		},
+	// 		[8]: {
+	// 			ship_id: "0",
+	// 			user_equiment_id: "0"
+	// 		}
+	// 	},
+	// 	deadly_skill_name: "1",
+	// 	train_endtime: "1516255728000",
+	// 	ship_base_health: "9642.82",
+	// 	ship_base_courage: "700.64087",
+	// 	ship_growup_exprience: "0",
+	// 	grade_need_exprience: "600",
+	// 	ship_place: "0",
+	// 	skill_describe: "1",
+	// 	train: "0",
+	// 	property_values: "33:0.1|23:13.0|34:10.1|9:1.1",
+	// 	StarRating: "1",
+	// 	exprience: "536",
+	// 	captain_type: "1",
+	// 	ship_fighting_spirit: "1,0|1,0|1,0|1,0",
+	// 	talent_count: "4",
+	// 	ship_name: "0",
+	// 	shipSpirit: "390:9,5,1,0,0",
+	// 	ship_type: "0",
+	// 	ship_template_id: "56",
+	// 	hero_fight: "1377"
+	// };
 
 	// _heros:{[pos: number]: {[key: string]: any}} = {
 	// 	2: {

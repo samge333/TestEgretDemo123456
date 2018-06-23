@@ -103,6 +103,7 @@ var Main = (function (_super) {
         Dms.loadTxt("skill_influence_txt");
         Dms.loadTxt("skill_mould_txt");
         Dms.loadTxt("environment_ship_txt");
+        Dms.loadTxt("environment_formation_txt");
     };
     Main.prototype.sceneTest = function () {
         var test = new TestScene;

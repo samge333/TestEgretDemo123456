@@ -36,9 +36,18 @@ var FightModule = (function () {
         battleCache.difficulty = difficulty;
         //我方
         var attackObjects = {};
-        var fightObject = new FightObject;
-        fightObject.initWithUserData(2, ED.data.user_ship, ED.data.user_info.user_id);
-        attackObjects[2] = fightObject;
+        // let fightObject = new FightObject;
+        // fightObject.initWithUserData(2, ED.data.user_ship, ED.data.user_info.user_id);
+        // attackObjects[2] = fightObject;
+        var shipIdArr = [390, 382, 0, 0, 0, 0];
+        for (var i = 0; i < 6; i++) {
+            var id = shipIdArr[i];
+            if (id != null && id > 0) {
+                var fightObject = new FightObject;
+                fightObject.initWithUserData(2, ED.data.user_ship[id], ED.data.user_info.user_id);
+                attackObjects[i + 1] = fightObject;
+            }
+        }
         battleCache.attackerSpeedValue = 0;
         battleCache.attackName = ED.data.user_info.user_name;
         battleCache.attackerObjects = attackObjects;
@@ -47,12 +56,37 @@ var FightModule = (function () {
         battleCache.attacker_priority = battleCache.attackerSpeedValue;
         battleCache.defender_priority = 0;
         //3波的敌方
+        // let byAttackerObjectsList: Array<{[pos: number]: FightObject}> = [];
+        // let byAttackObjects: {[pos: number]: FightObject} = {};
+        // let fightObject2 = new FightObject;
+        // fightObject2.initWithNpc(npc, 2, 59);
+        // byAttackObjects[2] = fightObject2;
+        // byAttackerObjectsList.push(byAttackObjects);
+        // battleCache.byAttackerObjectsList = byAttackerObjectsList;
+        var environmentFormationIds = [npc.environmentFormation1, npc.environmentFormation2, npc.environmentFormation3];
         var byAttackerObjectsList = [];
-        var byAttackObjects = {};
-        var fightObject2 = new FightObject;
-        fightObject2.initWithNpc(npc, 2, 59);
-        byAttackObjects[2] = fightObject2;
-        byAttackerObjectsList.push(byAttackObjects);
+        //循环几波敌人
+        for (var i = 0; i < npc.formationCount; i++) {
+            var oneWaveMaster = {};
+            var environmentFormationId = environmentFormationIds[i];
+            var environmentFormationData = ConfigDB.loadConfig("environment_formation_txt", environmentFormationId);
+            var shipIdArr_1 = [];
+            shipIdArr_1.push(environmentFormationData.seatOne);
+            shipIdArr_1.push(environmentFormationData.seatTwo);
+            shipIdArr_1.push(environmentFormationData.seatThree);
+            shipIdArr_1.push(environmentFormationData.seatFour);
+            shipIdArr_1.push(environmentFormationData.seatFive);
+            shipIdArr_1.push(environmentFormationData.seatSix);
+            for (var i_1 = 0; i_1 < shipIdArr_1.length; i_1++) {
+                var shipId = shipIdArr_1[i_1];
+                if (shipId != null && shipId != 0) {
+                    var fightObject2 = new FightObject;
+                    fightObject2.initWithNpc(npc, i_1, shipId);
+                    oneWaveMaster[i_1 + 1] = fightObject2;
+                }
+            }
+            byAttackerObjectsList.push(oneWaveMaster);
+        }
         battleCache.byAttackerObjectsList = byAttackerObjectsList;
         ED.data.user_info.battleCache = battleCache;
         this.writeBattleFieldInit(battleCache, 0, 1, resultBuffer);

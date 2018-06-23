@@ -15,9 +15,6 @@ var ConfigDB = (function () {
         else if (configName == "ship_mould_txt") {
             obj = new ShipMould;
         }
-        else if (configName == "equipment_mould_txt") {
-            obj = new EquipmentMould;
-        }
         else if (configName == "environment_formation_txt") {
             obj = new EnvironmentFormation;
         }

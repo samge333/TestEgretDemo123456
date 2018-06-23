@@ -209,8 +209,8 @@ class FightRoleController extends eui.Component {
 	//入场
 	public moveToScene() {
 		let offsetInfo = [
-			[0, 200, 0, 0, 0, 0],
-			[0, 300, 0, 0, 0, 0],
+			[200, 200, 0, 0, 0, 0],
+			[300, 300, 0, 0, 0, 0],
 		];
 
 		for (let i = 0; i < this._hero_formation_arr.length; i++) {
