@@ -2332,7 +2332,6 @@ function BattleObject:addPropertyValue(propertyType, propertyValue)
         if self.ptvf62 < 0 then
             self.ptvf62 = 0
         end
-        print("增加前x2 " .. self.ptvf62)
         --> __crint(self.battleTag, self.coordinate, "属性【" .. EquipmentMould.PROPERTY_TYPE_DAMAGE_LESSEN_PERCENT_FOR_62 .. "】：", self.ptvf62, propertyValue)
 	elseif (propertyType == EquipmentMould.PROPERTY_TYPE_DAMAGE_LESSEN_ATTACK_PERCENT_FOR_63) then -- 63.降低攻击(%)	
 		self.ptvf63 = self.ptvf63 + propertyValue

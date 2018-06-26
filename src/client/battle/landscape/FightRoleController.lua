@@ -405,6 +405,8 @@ function FightRoleController:ctor()
             _state = 0,
             _invoke = function(terminal, instance, params)
                 print("日志 _invoke fight_role_controller_check_next_round_fight")
+                print(debug.traceback())
+
                 instance:checkNextRoundFight()
 
                 print("日志 _invoke fight_role_controller_check_next_round_fight 2")
@@ -1747,7 +1749,7 @@ function FightRoleController:fightEndStop( ... )
 end
 
 function FightRoleController:checkNextRoundFight()
-    print("FightRoleController:checkNextRoundFight")
+    print("FightRoleController:checkNextRoundFight 检查是否进入一下回合")
     local attackListCount = #self.attack_list
     local heroAttackCount = 0
     local masterAttackCount = 0
@@ -1809,7 +1811,7 @@ function FightRoleController:checkNextRoundFight()
         --     end
         -- end
 
-        print("FightRoleController:checkNextRoundFight 4")
+        print("FightRoleController:checkNextRoundFight 4 检查是否进入一下回合")
         self:nextRoundFight()
 
         state_machine.excute("fight_ui_resume_action_nodes", 0, 0)
@@ -2118,16 +2120,21 @@ function FightRoleController:checkAttackerRoundOver()
 end
 
 function FightRoleController:checkChangeNextCampBattleRound()
-    print("FightRoleController:checkChangeNextCampBattleRound")
+    print("日志 FightRoleController:checkChangeNextCampBattleRound")
+    print(debug.traceback())
     if true == self.change_next_camp_battle_round then
+        print("日志 FightRoleController:checkChangeNextCampBattleRound 1")
         self.change_next_camp_battle_round = false
         self.auto_fighting = true
         self.qte_fighting = false
         if _ED._fightModule:checkByAttackSell() == true then
+            print("日志 FightRoleController:checkChangeNextCampBattleRound 2")
             self:executeCurrentRountFightData()
         end
         if self.isPvEType == true then
+            print("日志 FightRoleController:checkChangeNextCampBattleRound 3")
             if self.isCalcTotalKillNum == false and self.isAuto == false and self.roundMakeHurtNum ~= 0 then
+                print("日志 FightRoleController:checkChangeNextCampBattleRound 4")
                 state_machine.excute("fight_qte_controller_update_fight_score_info", 0, {self.roundMakeHurtNum, #self.auto_double_hit_queue})
                 self.isCalcTotalKillNum = true
             end
@@ -2172,7 +2179,9 @@ function FightRoleController:changeToNextAttackRole(_currentRole)
         then
         print("切换到下一个攻击角色 1")
         if _currentRole ~= nil then
+            print("切换到下一个攻击角色 1-1")
             if _currentRole == self.attack_list[1] then
+                print("切换到下一个攻击角色 1-2")
                 table.remove(self.attack_list, "1")
                 if nil ~= _currentRole._ecsrfd and #_currentRole._ecsrfd > 0 then
                     table.remove(_currentRole._ecsrfd, "1")
@@ -2184,16 +2193,21 @@ function FightRoleController:changeToNextAttackRole(_currentRole)
                 end
             end
         end
+        print("切换到下一个攻击角色 1-3")
         _currentRole = self.attack_list[1]
         if _currentRole ~= nil then
+            print("切换到下一个攻击角色 1-4")
             -- print("切换到下一个攻击角色--2---", _currentRole.roleCamp, _currentRole._info._pos, #self.attack_list, #_currentRole._ecsrfd)
             if nil ~= _currentRole._ecsrfd and #_currentRole._ecsrfd > 0 then
+                print("切换到下一个攻击角色 1-5")
                 if true == _currentRole._call_next then
+                    print("切换到下一个攻击角色 1-6")
                     _currentRole._call_next1 = true
                     return 
                 end
                 -- table.remove(self.attack_list, "1")
                 local aa = _currentRole._ecsrfd[1]
+                -- print()
                 self:executeCurrentSelectRoleFightData(aa[1], aa[2], true)
             end
             currentAttacker = _currentRole
@@ -2215,34 +2229,48 @@ function FightRoleController:changeToNextAttackRole(_currentRole)
             end
         end
 
+        print("切换到下一个攻击角色 2-1")
+
         local selectRole = self.auto_wait_queue[1]
         if selectRole ~= nil then
+            print("切换到下一个攻击角色 2-1-1")
             currentAttacker = selectRole
             if nil ~= selectRole._ecsrfd and #selectRole._ecsrfd > 0 then
+                print("切换到下一个攻击角色 2-1-2")
                 if true == selectRole._call_next then
                     selectRole._call_next1 = true
+                    print("切换到下一个攻击角色 2-1-3")
                     return 
                 end
                 local aa = table.remove(selectRole._ecsrfd, "1")
                 self:executeCurrentSelectRoleFightData(aa[1], aa[2], true)
             end
+
+            print("切换到下一个攻击角色 2-1-4")
             
             table.remove(self.auto_wait_queue, "1")
             if self:qteAddAttackRole(selectRole) == true then
+                print("切换到下一个攻击角色 2-1-5")
                 self:qteExecuteRoleAttack(selectRole)
                 self.currentAttackCount = self.currentAttackCount + 1
                 state_machine.excute("fight_role_controller_restart_qte_timer", 0, 0)
             else
+                print("切换到下一个攻击角色 2-1-6")
                 self:checkAttackerRoundOver()
                 self.auto_queue = {}
                 self.auto_wait_queue = {}
             end
         end
 
+        print("切换到下一个攻击角色 2-2")
+
         -- 自动选择目标进行攻击
         if true == self.auto_select and nil ~= _currentRole and _currentRole.roleCamp == 0 
             -- and _currentRole.skillQuality == 1 
             then
+
+            print("切换到下一个攻击角色 2-3")
+
             fwin:addService({
                 callback = function ( params )
                     -- print("自动选择目标进行攻击 step 2")
@@ -2325,30 +2353,39 @@ function FightRoleController:changeToNextAttackRole(_currentRole)
 end
 
 function FightRoleController:qteExecuteRoleAttack(selectRole)
+    print("日志 FightRoleController:qteExecuteRoleAttack 1")
     if self.isPvEType ~= true then
         return
     end
+    print("日志 FightRoleController:qteExecuteRoleAttack 2")
     table.insert(self.auto_queue, selectRole)
     local isPlayScoreAni = false
     if #self.auto_wait_queue ~= 0 or _ED._fightModule:checkAttackSell() == true then
+        print("日志 FightRoleController:qteExecuteRoleAttack 3")
         -- print("手动攻击还没有完成")
         --self:restartQTETimer()
     else
+        print("日志 FightRoleController:qteExecuteRoleAttack 4")
         -- print("手动攻击完成，进入评分状态")
         if table.getn(self.auto_double_hit_queue) > 1 then
             isPlayScoreAni = true
             -- state_machine.excute("fight_qte_controller_update_fight_score_info", 0, self.auto_double_hit_queue)
         end
     end
+
+    print("日志 FightRoleController:qteExecuteRoleAttack 5")
+
     if #self.auto_double_hit_queue > 0 then
+        print("日志 FightRoleController:qteExecuteRoleAttack 6")
         state_machine.excute("fight_qte_controller_update_fight_comkill_info", 0, {hitList = self.auto_double_hit_queue, playScoreAni = isPlayScoreAni, totalHurt = self.roundMakeHurtNum})
     end
+    print("日志 FightRoleController:qteExecuteRoleAttack 7")
     state_machine.excute("fight_ui_update_auto_fight_time",0, {time = 0, isShowAuto = false})
     state_machine.excute("fight_role_change_to_next_attack_role", 0, selectRole)
 end
 
 function FightRoleController:qteAddAttackRole(selectRole)
-    print("FightRoleController:qteAddAttackRole")
+    print("日志 FightRoleController:qteAddAttackRole，将会调用getFightData")
     print(debug.traceback())
     if selectRole.isBeginHeti == false then
         selectRole.qteOver = true
@@ -2450,7 +2487,9 @@ function FightRoleController:qteToNextAttackRole(params)
             end
             selectRole._open_hit_count = self._open_hit_count
             selectRole.comKill = dIndex
+
             if self:qteAddAttackRole(selectRole) == true then
+
                 print("日志 FightRoleController:qteToNextAttackRole 4")
                 if table.getn(self.auto_double_hit_queue) > 1 then
                     if true == self.auto_select then
@@ -2773,7 +2812,8 @@ function FightRoleController:fightEndAll( ... )
 end
 
 function FightRoleController:nextRoundFight()
-    print("FightRoleController 下一回合战斗，下一波")
+    print("FightRoleController 下一回合战斗，下一波 nextRoundFight")
+    print(debug.traceback())
     if missionIsOver() == true then
         local windowLock = fwin:find("WindowLockClass")
         if windowLock ~= nil then
@@ -3088,7 +3128,8 @@ function FightRoleController:nextRoundFight()
 end
 
 function FightRoleController:executeCurrentRountFightData()
-    print("日志 FightRoleController:executeCurrentRountFightData")
+    print("日志 FightRoleController:executeCurrentRountFightData 将会调用getFightData")
+    print(debug.traceback())
     local _roundData = nil
     if _ED._fightModule ~= nil then
         _roundData = self:getFightData(nil, 0)
@@ -3129,6 +3170,7 @@ end
 
 function FightRoleController:executeCurrentSelectRoleFightData(attData, _roundData, lazy)
     print("执行指定对象战斗数据attData，然后给到指定的角色fightRole的fight_cacher_pool")
+    print(debug.traceback())
     local skillElementData = dms.element(dms["skill_mould"], attData.skillMouldId)
     local skillQuality = dms.atoi(skillElementData, skill_mould.skill_quality)      -- 技能类型(0:普通 1:怒气)
     local skillProperty = dms.atoi(skillElementData, skill_mould.skill_property)    -- 技能属性(0:物理 1:法术)
@@ -3363,6 +3405,9 @@ function FightRoleController:executeCurrentSelectRoleFightData(attData, _roundDa
             --     table.insert(t.fight_cacher_pool, {__state = 1, __round = self.current_fight_round, __attData = attData, __skf = _skf, __bySkf = nil, __attacker = attackRole, __attackArmature = nil, __defenderList = nil,  __def = nil})
             -- end
         end
+
+        -- debug.print_r(attackRole.fight_cacher_pool, "技能效用产生的fight_cacher_pool" .. j)
+
     end
     
     if tonumber(attData.attackerBuffState) ~= 0 then  -- 出手方是否有buff影响(0:没有 1:有)
@@ -3418,6 +3463,8 @@ function FightRoleController:executeCurrentSelectRoleFightData(attData, _roundDa
                     table.insert(attackRole.fight_cacher_pool, {__isTalent = true, __state = 0, __round = self.current_fight_round, __attData = attData, __skf = _skf, __bySkf = nil, __attacker = nil, __attackArmature = nil, __defenderList = defenderList, __def = nil})
                 end
             end
+
+            debug.print_r(attackRole.fight_cacher_pool, "天赋技能产生的fight_cacher_pool" .. j)
         end
     end
     -- if heti == true then
@@ -3464,6 +3511,7 @@ end
 
 function FightRoleController:getFightData( fightRole, grade )
     print("获取战斗数据")
+    print(debug.traceback())
     print("分数:" .. grade)
 
     local attData = {}
@@ -4265,8 +4313,8 @@ function FightRoleController:onInit()
         end
     end
 
-    debug.print_r(self.hero_slots, "self.hero_slots111")
-    debug.print_r(self.master_slots, "self.hero_slots222")
+    -- debug.print_r(self.hero_slots, "self.hero_slots111")
+    -- debug.print_r(self.master_slots, "self.hero_slots222")
 
     for i = 1, 3 do
         local hero = self.hero_slots[i]

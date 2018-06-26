@@ -808,13 +808,11 @@ function showFightUpOrDown()
 				needChange = true
 			end
 			if needChange == true then
-				print("战力1")
 				_ED.last_fight_number = _ED.user_info.fighter_capacity
 			end
 		else
 			local needChange = state_machine.excute("combat_effectiveness_up_window_open",0,0)
 			if needChange == true then
-				print("战力2")
 				_ED.last_fight_number = _ED.user_info.fighter_capacity
 			end
 		end
@@ -844,11 +842,9 @@ function getUserFight()
 	end
 	if __lua_project_id == __lua_project_red_alert_time or __lua_project_id == __lua_project_pacific_rim then
 		if tonumber(_ED.user_info.fight_capacity) ~= 0 then
-			print("战力3")
 			_ED.last_fight_number = _ED.user_info.fight_capacity
 		end
 	else
-		print("战力4")
 		_ED.last_fight_number = _ED.user_info.fight_capacity
 	end
 

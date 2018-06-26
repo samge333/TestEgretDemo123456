@@ -1444,7 +1444,7 @@ function Fight:ctor()
 end
 
 function Fight:init(_fight_type, _scene_id, _npc_id, _difficulty, _addition_params)
-    -- --> print("Fight:init---------", _fight_type)
+    -- print("Fight:init---------", _fight_type, _scene_id, _npc_id)
     -- _ED.user_info.last_user_grade = _ED.user_info.user_grade
     -- _ED.user_info.last_user_food = _ED.user_info.user_food
     -- _ED.user_info.last_endurance = _ED.user_info.endurance
@@ -1498,9 +1498,7 @@ function Fight:init(_fight_type, _scene_id, _npc_id, _difficulty, _addition_para
         --  end
         -- end
     end
-    
     if self._fight_type == _enum_fight_type._fight_type_14 then
-    elseif self._fight_type == _enum_fight_type._fight_type_15 then
     elseif self._fight_type >= _enum_fight_type._fight_type_10 then
         mapIndex = "99"
         mapBgIndex = "99"
@@ -1516,7 +1514,6 @@ function Fight:init(_fight_type, _scene_id, _npc_id, _difficulty, _addition_para
         mapIndex = "2"
         mapBgIndex = "2"
     end
-
     self._map_index = mapIndex
     self._map_background_image_index = mapBgIndex
 
@@ -1526,7 +1523,7 @@ function Fight:init(_fight_type, _scene_id, _npc_id, _difficulty, _addition_para
         or __lua_project_id == __lua_project_l_naruto 
         or __lua_project_id == __lua_project_red_alert
         then
-        if self._fight_type == _enum_fight_type._fight_type_1 then
+        if self._fight_type == _enum_fight_type._fight_type_1 or self._fight_type == 15 then
             self._canSkipFighting = false
         elseif self._fight_type == _enum_fight_type._fight_type_7 or 
             self._fight_type == _enum_fight_type._fight_type_8 or
@@ -1683,7 +1680,7 @@ function Fight:playBackgroundMusic()
     elseif _ED.battleData.battle_init_type == 14 then
         -- local npcIndex = LuaClasses["MineInformationClass"].__battleObj
         -- musicIndex = elementAt(NPC, npcIndex):atoi(npc.battle_background_music)
-    elseif _ED.battleData.battle_init_type == 15 then
+        
         -- local npcIndex = elementAt(spiritePalaceMould, tonumber(_ED.palace_inside_info.current_floor)):atoi(spirite_palace_mould.npc_index)
         -- musicIndex = elementAt(NPC, npcIndex):atoi(npc.battle_background_music)
     elseif _ED.battleData.battle_init_type == 16 then
@@ -3640,6 +3637,11 @@ function Fight:fightEnd( ... )
                     if __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon or __lua_project_id == __lua_project_l_naruto then
                         app.load("client.battle.SmArenaBattleReward")
                         state_machine.excute("sm_arena_battle_reward_open", 0, self._fight_type)
+
+
+                        print("竞技场战斗结束")
+                        print(debug.traceback())
+
                     else
 	                    app.load("client.campaign.arena.ArenaBattleReward")
 	                    battleReward = ArenaBattleReward:new()

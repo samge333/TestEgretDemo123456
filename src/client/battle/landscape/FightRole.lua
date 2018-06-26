@@ -759,11 +759,9 @@ local function showRoleHP(armature, skf)
             armature._role._hp = armature._self._info._max_hp
         end
 
-        print("showRoleHP 111222: " .. armature._brole._head)
         local armatureSkf = nil
         if nil ~= armature.__skill_influence then
             armatureSkf = armature.__skill_influence
-            print("armatureSkf: " .. armatureSkf)
         end
 
         if nil ~= skf and skf.__skill_influence ~= nil then
@@ -775,10 +773,6 @@ local function showRoleHP(armature, skf)
             --         end
             --     end
             -- end
-
-            print("skf.__skill_influence: " .. skf.__skill_influence)
-            print("skf.aliveHP: " .. skf.aliveHP)
-            print("armature._role._hp: " .. armature._role._hp)
 
             if nil ~= armature.__skill_influence and armature.__skill_influence > skf.__skill_influence then
                 armature._role._hp = armature.__aliveHP
@@ -6256,7 +6250,7 @@ function FightRole:executeByAttackLogic(bone,evt,originFrameIndex,currentFrameIn
                         return
                     end
                 else
-                    print("FightRole 执行被攻击的逻辑 1-6")
+                    print("FightRole 执行被攻击的逻辑 1-6-1")
                     self:updateDrawInfluenceInfo(_def)
                     -- 修改BUFF处理状态(6为中毒，9为灼烧)
                     if (defenderST == "4" or defenderST == "5" or defenderST == "6" or defenderST == "7" or 
@@ -6417,7 +6411,6 @@ function FightRole:executeByAttackLogic(bone,evt,originFrameIndex,currentFrameIn
                                     if #flyParma > 1 then
                                         print("FightRole 执行被攻击的逻辑 8-3")
                                         -- print("处理角色被击飞", self.roleCamp, self._info._pos, flyParma[1], flyParma[2])
-
                                         -- 如果是火影，并且只是加怒，不做被击动作
                                         if __lua_project_id == __lua_project_l_naruto then
                                             if tonumber(_def.defenderST) ~= 2 then
@@ -6426,7 +6419,6 @@ function FightRole:executeByAttackLogic(bone,evt,originFrameIndex,currentFrameIn
                                         else
                                             self:executeHitRepelAndFlyEffect(1, zstring.tonumber(flyParma[1]), zstring.tonumber(flyParma[2]))
                                         end
-
                                     end
                                 end
                             end
@@ -6869,6 +6861,7 @@ local function onFrameEvent(bone,evt,originFrameIndex,currentFrameIndex)
 
             local attacker = _self
             if attacker.skillQuality ~= 1 and true ~= attacker._call_next then
+                print("帧事件 next 2-1")
                 FightRole.__g_role_attacking = false
                 FightRole.__g_lock_sp_attack = true
                 attacker._call_next = true
@@ -6876,6 +6869,7 @@ local function onFrameEvent(bone,evt,originFrameIndex,currentFrameIndex)
                 attacker._FightRoleController.unchange_next_camp_battle_round = true
                 state_machine.excute("fight_role_controller_change_to_next_attack_role", 0, attacker)
                 if false == attacker._call_next1 then
+                    print("帧事件 next 2-2")
                     state_machine.excute("fight_role_controller_check_next_round_fight", 0, 0)
                 end
             end
@@ -7989,6 +7983,7 @@ end
 
 function FightRole:executeEffectSkilling1()
     print("日志 FightRole:executeEffectSkilling1")
+    print(debug.traceback())
     if FightRole.__skeep_fighting == true or self.fight_over == true then
         return
     end
@@ -9171,8 +9166,8 @@ end
 
 -- FightRole角色切换动作
 function FightRole.changeActionCallback(armatureBack)
-    print("FightRole.changeActionCallback")
-    print(debug.traceback())
+    -- print("FightRole.changeActionCallback")
+    -- print(debug.traceback())
 
     local armature = armatureBack
     local fightRole = armature._self
@@ -9631,6 +9626,7 @@ function FightRole:changeToNextAttackRole()
         self.openAttackListener = true
         -- self:cleanBuffState()
         if self.fight_cacher_pool == nil or #self.fight_cacher_pool == 0 then
+            print("日志 FightRole:changeToNextAttackRole 3")
             -- state_machine.excute("fight_role_controller_change_to_next_attack_role", 0, self)
             -- state_machine.excute("fight_role_controller_check_next_round_fight", 0, 0)
 
@@ -9703,7 +9699,7 @@ function FightRole:changeToNextAttackRole()
             fwin:addService(service)
         end
     else
-        print("日志 FightRole:changeToNextAttackRole 2")
+        print("日志 FightRole:changeToNextAttackRole 4")
         if self.fight_cacher_pool == nil or #self.fight_cacher_pool == 0 then
             if self._atkBuffDeath == true then
                 self:checkAttackerBuffDeath()

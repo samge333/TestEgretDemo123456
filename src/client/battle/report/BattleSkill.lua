@@ -671,16 +671,11 @@ function BattleSkill:processAttack(userInfo, byAttackCoordinates, attackObject, 
 					end
 				end
 
-				if tonumber(byAttackObject.shipMould) == 10 then
-		            print("62属性:" .. byAttackObject.ptvf62)
-		        end
-
 		        -- 如果是青龙兽，并且减伤属性ptvf62大于0，则重置，就是减伤只能持续一次攻击
 		        if tonumber(byAttackObject.shipMould) == 10 then
 		            byAttackObject.ptvf62 = 0
 		            byAttackObject:clearBuffBySkilCategory(26)
 		        end
-
 				if byAttackObject.isDead == true then
 					-- 死亡时被复活概率=	被复活概率[77]	
 					-- 死亡时被复活继承血量=	被复活继承血量[80]	

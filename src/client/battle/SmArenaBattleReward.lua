@@ -329,7 +329,7 @@ function SmArenaBattleReward:onUpdateDraw()
 
         --我的阵容
         local shipAllData = zstring.split(_ED.arena_battle_data[1].battle_object, "!")
-        if  __lua_project_id == __lua_project_l_digital then
+        if  __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon then
             for i, v in pairs(shipAllData) do
                 local panel_wujiang = ccui.Helper:seekWidgetByName(root,string.format("Panel_digimon_icon_%d", i))
                 local shipData = zstring.split(v, ":")
@@ -371,7 +371,7 @@ function SmArenaBattleReward:onUpdateDraw()
 
         --对方de阵容
         local shipAllData = zstring.split(_ED.arena_battle_data[2].battle_object, "!")
-        if  __lua_project_id == __lua_project_l_digital then
+        if  __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon then
             for i, v in pairs(shipAllData) do
                 local panel_wujiang = ccui.Helper:seekWidgetByName(root,string.format("Panel_digimon_icon_0_%d", i))
                 local shipData = zstring.split(v, ":")
@@ -426,7 +426,7 @@ function SmArenaBattleReward:onUpdateDraw()
         --对方的排名
         Text_paiming_2:setString("")
         --我的阵容
-        if  __lua_project_id == __lua_project_l_digital then
+        if  __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon then
             for i= 1,6 do
                 local panel_wujiang = ccui.Helper:seekWidgetByName(root,string.format("Panel_digimon_icon_%d", i))
                 local ship = _ED.user_ship["".._ED.user_formetion_status[i]]
@@ -449,7 +449,7 @@ function SmArenaBattleReward:onUpdateDraw()
         
         --对方阵容
         local shipAllData = zstring.split(_ED.chat_user_info.formation, "!")
-        if  __lua_project_id == __lua_project_l_digital then
+        if  __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon then
             for i, v in pairs(shipAllData) do
                 local panel_wujiang = ccui.Helper:seekWidgetByName(root,string.format("Panel_digimon_icon_0_%d", i))
                 local shipData = zstring.split(v, ":")
@@ -522,7 +522,7 @@ function SmArenaBattleReward:onUpdateDraw()
             formationInfo = zstring.split(formationInfo.param, "@")
             if formationInfo[1] ~= nil then
                 local leftInfo = zstring.split(formationInfo[1], "!")
-                if __lua_project_id == __lua_project_l_digital then
+                if __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon then
                     for i, v in pairs(leftInfo) do
                         local panel_wujiang = ccui.Helper:seekWidgetByName(root,string.format("Panel_digimon_icon_%d", i))
                         local shipData = zstring.split(v, ":")
@@ -566,7 +566,7 @@ function SmArenaBattleReward:onUpdateDraw()
             --对方de阵容
             if formationInfo[2] ~= nil then
                 local rightInfo = zstring.split(formationInfo[2], "!")
-                if __lua_project_id == __lua_project_l_digital then
+                if __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon then
                     for i, v in pairs(rightInfo) do
                         local panel_wujiang = ccui.Helper:seekWidgetByName(root,string.format("Panel_digimon_icon_0_%d", i))
                         local shipData = zstring.split(v, ":")

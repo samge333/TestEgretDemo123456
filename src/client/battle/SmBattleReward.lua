@@ -14,7 +14,7 @@ local sm_battle_reward_open_terminal = {
     _invoke = function(terminal, instance, params)
 		local _homeWindow = fwin:find("SmBattleRewardClass")
         if nil == _homeWindow then
-            local panel = SmBattleReward:new():init()
+            local panel = SmBattleReward:new():init(params)
             fwin:open(panel,fwin._window)
         end
         return true
@@ -285,7 +285,7 @@ function SmBattleReward:onUpdateDraw()
 	   --上阵武将的列表
     local ListView_digimon_icon = ccui.Helper:seekWidgetByName(root,"ListView_digimon_icon")
     local scene_type = dms.int(dms["pve_scene"], self.currentScencId, pve_scene.scene_type)
-    local user_infos = scene_type == 15 and _ED.em_user_ship or _ED.user_formetion_status
+    local user_infos = zstring.tonumber(self._fight_type) == 15 and _ED.em_user_ship or _ED.user_formetion_status
     local ship_list = {}
     for i, v in pairs(user_infos) do
     	if zstring.tonumber(v) > 0 then
@@ -442,20 +442,21 @@ function SmBattleReward:onUpdateDraw()
 
 end
 
-function SmBattleReward:init()
+function SmBattleReward:init(params)
 	self.rewardList = getSceneReward(2)
-    self.currentScencId = 0
-    local _scenes = dms.searchs(dms["pve_scene"], pve_scene.scene_type, 15)
-    for i, v in pairs(_scenes) do
-        local tempSceneId = dms.atoi(v, pve_scene.id)
-        if _ED.scene_current_state[tempSceneId] == nil
-            or _ED.scene_current_state[tempSceneId] == ""
-            or tonumber(_ED.scene_current_state[tempSceneId]) < 0 
-            then
-            self.currentScencId = tempSceneId - 1
-            break
-        end
-    end
+    self._fight_type = params
+    print("self._fight_type==================================", self._fight_type)
+    -- local _scenes = dms.searchs(dms["pve_scene"], pve_scene.scene_type, 15)
+    -- for i, v in pairs(_scenes) do
+    --     local tempSceneId = dms.atoi(v, pve_scene.id)
+    --     if _ED.scene_current_state[tempSceneId] == nil
+    --         or _ED.scene_current_state[tempSceneId] == ""
+    --         or tonumber(_ED.scene_current_state[tempSceneId]) < 0 
+    --         then
+    --         self.currentScencId = tempSceneId - 1
+    --         break
+    --     end
+    -- end
     self:onInit()
     _ED.user_is_level_up = false
     if _ED.user_info.last_user_grade ~= _ED.user_info.user_grade then

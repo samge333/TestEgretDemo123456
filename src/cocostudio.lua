@@ -57,8 +57,8 @@ function csb.createScene(fileName)
 end
 
 function csb.changeAction_animationEventCallFunc(armatureBack,movementType,movementID)
-    print("csb.changeAction_animationEventCallFunc 1")
-    print(debug.traceback())
+    -- print("csb.changeAction_animationEventCallFunc 1")
+    -- print(debug.traceback())
     
     local id = movementID
     if armatureBack._changing == nil then
@@ -67,20 +67,20 @@ function csb.changeAction_animationEventCallFunc(armatureBack,movementType,movem
             armatureBack._reset(armatureBack)
         end
 
-        print("csb.changeAction_animationEventCallFunc 2")
+        -- print("csb.changeAction_animationEventCallFunc 2")
 
         if nil ~= armatureBack._lockActionIndex and armatureBack._lockActionIndex > 0 then
-            print("csb.changeAction_animationEventCallFunc 3")
+            -- print("csb.changeAction_animationEventCallFunc 3")
             armatureBack._nextAction = armatureBack._lockActionIndex
         end
 
-        print("armatureBack._actionIndex1: " .. armatureBack._actionIndex)
-        print("armatureBack._nextAction1: " .. armatureBack._nextAction)
+        -- print("armatureBack._actionIndex1: " .. armatureBack._actionIndex)
+        -- print("armatureBack._nextAction1: " .. armatureBack._nextAction)
 
         if armatureBack._nextAction ~= nil and armatureBack._actionIndex ~= armatureBack._nextAction then
-            print("csb.changeAction_animationEventCallFunc 4")
-            print("armatureBack._actionIndex2: " .. armatureBack._actionIndex)
-            print("armatureBack._nextAction2: " .. armatureBack._nextAction)
+            -- print("csb.changeAction_animationEventCallFunc 4")
+            -- print("armatureBack._actionIndex2: " .. armatureBack._actionIndex)
+            -- print("armatureBack._nextAction2: " .. armatureBack._nextAction)
             armatureBack._actionIndex = armatureBack._nextAction
             armatureBack._actionLoopCount = 0
             armatureBack:getAnimation():playWithIndex(armatureBack._nextAction)
@@ -95,13 +95,13 @@ function csb.changeAction_animationEventCallFunc(armatureBack,movementType,movem
         end
         if armatureBack._nextFunc ~= nil 
             and armatureBack._nextFunc ~= csb.changeAction_animationEventCallFunc  then
-            print("csb.changeAction_animationEventCallFunc 5")
+            -- print("csb.changeAction_animationEventCallFunc 5")
             armatureBack:getAnimation():setMovementEventCallFunc(armatureBack._nextFunc)
         end 
         armatureBack._changing = nil
         
         if armatureBack._invoke ~= nil then
-            print("csb.changeAction_animationEventCallFunc 6")
+            -- print("csb.changeAction_animationEventCallFunc 6")
             armatureBack._invoke(armatureBack)
         end
     end

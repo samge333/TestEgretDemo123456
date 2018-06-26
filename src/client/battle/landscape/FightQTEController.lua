@@ -262,7 +262,9 @@ function FightQTEController:ctor()
                 end
                 
                 state_machine.excute("fight_role_controller_begin_mission", 0, {0, false})
+
                 instance:qteToAutoNextAttackRole(params)
+
                 state_machine.lock("fight_qte_controller_qte_to_auto_next_attack_role_but")
                 return true
             end,
@@ -975,6 +977,7 @@ end
 
 function FightQTEController:qteToAutoNextAttackRole(params)
     print("日志 FightQTEController:qteToAutoNextAttackRole 1")
+    print(debug.traceback())
     if nil ~= _ED._fightModule and _ED._fightModule.greadCount > 0 then
         -- self._FightRoleController._open_hit_count = true
     end

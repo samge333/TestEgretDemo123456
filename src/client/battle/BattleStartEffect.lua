@@ -704,7 +704,7 @@ end
 
 function BattleStartEffect:init(aType)
 	self.currentType = aType
-	print("当前战斗类型" .. aType)
+	print("BattleStartEffect 当前战斗类型" .. aType)
 end
 
 function BattleStartEffect:onExit()

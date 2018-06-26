@@ -10980,7 +10980,7 @@ function toViewShipPushData(ship_id,isBoolean,m_type,m_mouldid)
 	end
 end
 
-function smFightingChange()
+function smFightingChange(  )
 	if zstring.tonumber(_ED.user_info.fight_capacity) ~= zstring.tonumber(_ED.last_fight_number) then
 		if zstring.tonumber(_ED.user_info.fight_capacity) < zstring.tonumber(_ED.last_fight_number) then
 			_ED.last_fight_number = _ED.user_info.fight_capacity
@@ -11103,4 +11103,107 @@ function listviewPositioningMoves(m_listview,record,m_times)
     end)}))
 end
 
+-- 星座守护，数据同步
+function constellationInfoAdd(info)
+	if _ED.constellation_info then
+    	if _ED.constellation_info.hba then
+    		if _ED.constellation_info.hba[info.ccid .. ""] then
+    			if _ED.constellation_info.hba[info.ccid .. ""][info.cmIndex .. ""] then
+    				_ED.constellation_info.hba[info.ccid .. ""][info.cmIndex .. ""] = {}
+    				table.add(_ED.constellation_info.hba[info.ccid .. ""][info.cmIndex .. ""], info.cmList)
+    			else
+    				_ED.constellation_info.hba[info.ccid .. ""][info.cmIndex .. ""] = {}
+    				table.add(_ED.constellation_info.hba[info.ccid .. ""][info.cmIndex .. ""], info.cmList)
+    			end
+    		else
+    			_ED.constellation_info.hba[info.ccid .. ""] = {}
+    			_ED.constellation_info.hba[info.ccid .. ""][info.cmIndex .. ""] = {}
+    			table.add(_ED.constellation_info.hba[info.ccid .. ""][info.cmIndex .. ""], info.cmList)
+    		end
+    	end
+    	if _ED.constellation_info.uc then
+    		if _ED.constellation_info.uc[info.ccid .. ""] then
+    			if _ED.constellation_info.uc[info.ccid .. ""][info.cmIndex .. ""] then
+    				_ED.constellation_info.uc[info.ccid .. ""][info.cmIndex .. ""] = info.cugid
+    			else
+    				_ED.constellation_info.uc[info.ccid .. ""][info.cmIndex .. ""] = info.cugid
+    			end
+    		else
+    			_ED.constellation_info.uc[info.ccid .. ""] = {}
+    			_ED.constellation_info.uc[info.ccid .. ""][info.cmIndex .. ""] = info.cugid
+    		end
+    	end
+	end
+	_ED.constellation_info.ctv = info.ctv
+end
 
+-- 星座守护,红点推送数据
+function constellationRedotData()
+    function sortGroups(info)
+    	local percased_groups = {}
+	    for i=1,6 do
+	    	local temp_ids = {}
+	    	for j,v in pairs(info) do
+	    		local group_id = dms.int(dms["constellation_group"], v, constellation_group.level_id)
+	    		if i == group_id then
+		    		table.insert(temp_ids, v)
+		    	end
+	    	end
+	    	table.insert(percased_groups, temp_ids)
+	    end
+	    return percased_groups
+    end
+	_ED.constellation_redot_data = {}
+	local quality_grades_config = dms.string(dms["play_config"], 80, play_config.param)
+    local quality_need_grades = zstring.splits(quality_grades_config, "|", ",")
+	for i=1,15 do
+		local ship_id = {}
+		if _ED.constellation_info.hba[i .. ""] then
+			for j=0,4 do
+				local group_id = {}
+				if _ED.constellation_info.hba[i .. ""][j..""] then
+					local new_groups = sortGroups(_ED.constellation_info.hba[i .. ""][j..""], j)
+					for x=1,6 do
+						local is_chakan = 0  --- 0 有红点   1 没有红点
+						if #new_groups[x] >= 4 then
+							is_chakan = 1
+						else
+							is_chakan = 0
+						end
+						if zstring.tonumber(quality_need_grades[x][2]) <= tonumber(_ED.user_info.user_grade) then
+							group_id[x] = is_chakan
+						end
+					end
+				else
+					for x=1,6 do
+						local is_chakan = 0  --- 0 有红点   1 没有红点
+						if zstring.tonumber(quality_need_grades[x][2]) <= tonumber(_ED.user_info.user_grade) then
+							group_id[x] = is_chakan
+						end
+					end
+				end
+				ship_id[j] = group_id
+			end
+		else
+			for j=0,4 do
+				local temp_ships = {}
+				for x=1,6 do
+					if zstring.tonumber(quality_need_grades[x][2]) <= tonumber(_ED.user_info.user_grade) then
+						table.insert(temp_ships, 0)
+					end
+				end
+				local ship_ids = dms.string(dms["constellation_mould"], i, constellation_mould.constellation_ship_id)
+    			local ship_template_id = zstring.split(ship_ids, ",")[j+1]
+    			if tonumber(ship_template_id) ~= -1 then
+					ship_id[j] = temp_ships
+				end
+			end
+		end
+		local need_grade = dms.int(dms["constellation_mould"], i, constellation_mould.constellation_open_level)
+		if need_grade <= tonumber(_ED.user_info.user_grade) then
+			_ED.constellation_redot_data[i] = nil
+			_ED.constellation_redot_data[i] = ship_id
+		end
+	end
+	-- debug.print_r(_ED.constellation_redot_data)
+end

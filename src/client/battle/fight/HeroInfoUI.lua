@@ -97,19 +97,21 @@ function HeroInfoUI:onUpdateDraw()
 			    local environment_formation1 = dms.int(dms["npc"], zstring.tonumber(_ED.union_attack_npc_id), npc.environment_formation1)
 			    for i=1, 6 do
 			        local environment_ship_id = dms.int(dms["environment_formation"], zstring.tonumber(environment_formation1), environment_formation.seat_one+i-1)
-			        if environment_ship_id ~= 0 then
+			        if environment_ship_id ~= 0 and environment_ship_id ~= nil then
 			            maxHP = dms.int(dms["environment_ship"], environment_ship_id, environment_ship.power)
 			            break
 			        end
 			    end
 				-- if _ED.union_pve_info_current_hp ~= nil and _ED.union_pve_info_current_hp ~= 0 then
-					self._LoadingBar_m_hp = maxHP / self._LoadingBar_n_Count
-					self._LoadingBar_mc_hp = self._LoadingBar_m_hp
-					self._LoadingBar_n_Count = math.ceil(self.armature._role._hp / self._LoadingBar_m_hp)
-					AtlasLabel_maoxian_xuetiao_n:setString(self._LoadingBar_n_Count)
-					local percent = (self.armature._role._hp % self._LoadingBar_m_hp) / self._LoadingBar_m_hp * 100
-					LoadingBar_maoxian_xuetiao:setPercent(percent)
-					self.armature._role._max_hp = maxHP
+					if maxHP then
+						self._LoadingBar_m_hp = maxHP / self._LoadingBar_n_Count
+						self._LoadingBar_mc_hp = self._LoadingBar_m_hp
+						self._LoadingBar_n_Count = math.ceil(self.armature._role._hp / self._LoadingBar_m_hp)
+						AtlasLabel_maoxian_xuetiao_n:setString(self._LoadingBar_n_Count)
+						local percent = (self.armature._role._hp % self._LoadingBar_m_hp) / self._LoadingBar_m_hp * 100
+						LoadingBar_maoxian_xuetiao:setPercent(percent)
+						self.armature._role._max_hp = maxHP
+					end
 				-- end
 			end
 		end

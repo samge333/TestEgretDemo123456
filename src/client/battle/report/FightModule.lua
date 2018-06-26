@@ -904,8 +904,8 @@ function FightModule:initBattleField(npc, difficulty, fightType, resultBuffer,ev
 			end
 		end
 
-		debug.print_r(_ED.formetion, "出站阵容")
-		debug.print_r(seatArray, "出站阵容") 
+		-- debug.print_r(_ED.formetion, "出站阵容")
+		debug.print_r(seatArray, "我方阵容") 
 
 		
 		battleCache.attackCombatForce = _ED.user_info.fight_capacity
@@ -961,7 +961,7 @@ function FightModule:initBattleField(npc, difficulty, fightType, resultBuffer,ev
 		local amplifyPercentString = dms.string(dms["environment_formation"], formationId, environment_formation.amplify_percentage)
 		local amplifyPercentArray = zstring.split(amplifyPercentString, IniUtil.comma)
 
-		debug.print_r(seatArray, "seatArray123345")
+		debug.print_r(seatArray, "敌方阵容")
 		 
 		for j, val in pairs(seatArray) do
 			if(nil ~= val and 0 ~= tonumber(val)) then
@@ -1007,7 +1007,7 @@ function FightModule:initBattleField(npc, difficulty, fightType, resultBuffer,ev
 	
 	----_crint("Dump battleCache info")
 
-	print("battleCache.attackerSpeedValue: " .. battleCache.attackerSpeedValue)
+	-- print("battleCache.attackerSpeedValue: " .. battleCache.attackerSpeedValue)
 	battleCache.attacker_priority = battleCache.attackerSpeedValue
 	battleCache.defender_priority = 0
 	battleCache.attacker_name = _ED.user_info.user_name
@@ -2986,254 +2986,7 @@ function FightModule:rountdFight(resultBuffer)
 	table.insert(resultBuffer, IniUtil.enter)
 	-- 检查是否有合击技能
 	local needNext = true
-	-- for k, v in pairs(self.fightOrderList) do
-	-- 	local battleObject = self.fightOrderList[k]
-	-- 	if(battleObject ~= nil and true ~= battleObject.revived) then
-	-- 		-- _crint("出手",self.battleTag,battleObject.battleTag)
-	-- 		if tonumber(battleObject.battleTag) ~= tonumber(self.battleTag) then
-	-- 		else
-			
-	-- 		self.counterBuffer = nil
-	-- 		self.battleSkillCount = 0
-	-- 		self.battleSkillBuffer = {}
-	-- 		if battleObject.isAction ~= true then
-	-- 			self.currentObject  = battleObject
 
-	-- 			self.headBuffer = {}
-	-- 			self.bodyBuffer = {}
-	-- 			self.buffBuffer = {}
-	-- 			battleObject.fitBattleObjects = {}
-	-- 			if(battleObject.battleTag == 0) then
-	-- 				battleObject:checkBattleObject(self.attackObjects)
-	-- 			else
-	-- 				battleObject:checkBattleObject(self.byAttackObjects)
-	-- 			end
-	-- 			self.fitBuffer = nil
-	-- 			local hasZoumarSkill = false
-	-- 			if(battleObject.battleTag == 0) then
-	-- 				hasZoumarSkill = battleObject:checkState(self.attackObjects)
-	-- 			else
-	-- 				hasZoumarSkill = battleObject:checkState(self.byAttackObjects)
-	-- 			end
-	-- 			if(hasZoumarSkill == true and battleObject.isDizzy ~= true) then
-	-- 				needNext = false
-	-- 				battleObject.effectDamage = 0
-	-- 				battleObject.effectDamage = 0
-	-- 				battleObject.totalEffectDamage = 0
-	-- 				battleObject.reboundDamageValueResult = 0
-
-	-- 				if(battleObject.isDead) then
-	-- 					if(battleObject.battleTag == 0) then
-	-- 						self.attackObjects[battleObject.coordinate ] = nil
-	-- 					else
-	-- 						self.byAttackObjects[battleObject.coordinate ] = nil
-	-- 					end
-	-- 					self.fightOrderList[k] = nil
-	-- 					self.counterBuffer = nil
-	-- 					self.battleSkillBuffer = {}
-	-- 					--k = k - 1
-	-- 				else
-	-- 					local battleSkillList = nil
-	-- 					local skillReleasePosion = 0
-	-- 					local  realSkillMould = battleObject.specialSkillMould.id
-	-- 					local goon = true
-	-- 					-- 处理怒气攻击, 包括buff 和攻击技能
-	-- 					if (attackOver ~= 0)then
-	-- 						table.insert(resultBuffer, "0")
-	-- 						table.insert(resultBuffer, IniUtil.compart)
-	-- 						-- --_crint("4回合：" + self.roundCount)
-	-- 					end
-	-- 					battleObject:processUserBuffEffect(userInfo, self, self.buffBuffer)
-	-- 					table.insert(self.headBuffer, battleObject.battleTag)
-	-- 					table.insert(self.headBuffer, IniUtil.compart)
-	-- 					table.insert(self.headBuffer, battleObject.coordinate)
-	-- 					skillReleasePosion = battleObject.specialSkillMould.skillReleasePosition
-	-- 					if(hasZoumarSkill == true) then
-	-- 						table.insert(self.headBuffer, IniUtil.compart)
-	-- 						table.insert(self.headBuffer, #battleObject.fitBattleObjects)
-	-- 						battleObject:subZomSkillPoint(5)
-	-- 						battleObject.isNeedAddSkillPoint = false
-	-- 						self:fitFight(battleObject,battleObject.fitBattleObjects, userInfo)
-	-- 						battleObject.isAction = true
-	-- 						battleSkillList = {}
-	-- 						skillReleasePosion = battleObject.zoariumSkillMould.skillReleasePosition
-	-- 						realSkillMould = battleObject.zoariumSkillMould.id
-	-- 					else
-	-- 						table.insert(self.headBuffer, IniUtil.compart)
-	-- 						table.insert(self.headBuffer, 0)
-	-- 						battleSkillList = battleObject.oneselfBattleSkill
-	-- 					end
-	-- 					table.insert(self.headBuffer, IniUtil.compart)
-	-- 					if(battleObject.battleTag == 0) then
-	-- 						local movePos = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, self.byAttackObjects)
-	-- 						table.insert(self.bodyBuffer, movePos)
-	-- 						----_crint ("Move pos 0 : " .. movePos)
-	-- 						--os.exit()
-	-- 					else
-	-- 						local movePos = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, self.attackObjects)
-	-- 						table.insert(self.bodyBuffer, movePos)
-	-- 						----_crint ("Move pos 1 : " .. movePos)
-	-- 						--os.exit()
-	-- 					end
-	-- 					table.insert(self.bodyBuffer, IniUtil.compart)
-	-- 					table.insert(self.bodyBuffer, realSkillMould)
-	-- 					table.insert(self.bodyBuffer, IniUtil.compart)
-	-- 					-- battleObject:processUserBuffEffect(userInfo, self, self.bodyBuffer)
-	-- 					IniUtil.concatTable(self.bodyBuffer, self.buffBuffer)
-	-- 					--  处理普通或者怒气攻击 技能效用
-	-- 					local tmpBattleSkillBuffer = {}
-	-- 					local hasRestrain = 0
-	-- 					local byAttackCoordinates = {}
-	-- 					if(goon) then
-	-- 						if(battleObject.isDead ~= true) then
-	-- 							local lastBattleSkill = nil
-	-- 							for _, battleSkill in pairs(battleSkillList) do
-	-- 								-- if (battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_DAMAGEHP or 
-	-- 								-- 	battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_ADDHP)then
-	-- 								-- 	byAttackCoordinates = {}
-	-- 								-- end
-	-- 								local attackSkill = battleSkill
-	-- 								attackSkill.formulaInfo = battleSkill.skillInfluence.formulaInfo
-	-- 								local battleTag = battleObject.battleTag
-	-- 								local influenceGroup = attackSkill.skillInfluence.influenceGroup
-	-- 								local formulaInfo = attackSkill.skillInfluence.formulaInfo
-	-- 								local skillInfluence =  attackSkill.skillInfluence
-									
-	-- 								if (formulaInfo ~= FightUtil.FORMULA_INFO_FORTHWITH) then
-	-- 									byAttackCoordinates= {}
-	-- 									if((battleTag == 0 and influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE)
-	-- 										or (battleTag == 1 and influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE))then
-	-- 										byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.byAttackObjects)
-	-- 									else
-	-- 										byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.attackObjects)
-	-- 									end
-	-- 								else
-	-- 									local tempList = {}
-	-- 									tempList = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.byAttackObjects)
-	-- 									-- if((battleTag == 0 and influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE)
-	-- 									-- 	or (battleTag == 1 and influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE))then
-	-- 									-- 	tempList = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.byAttackObjects)
-	-- 									-- else
-	-- 									-- 	tempList = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.attackObjects)
-	-- 									-- end
-	-- 									if (#byAttackCoordinates == 0)then
-	-- 										byAttackCoordinates = tempList
-	-- 									else
-	-- 										local realCoordinates = {}
-	-- 										for i,v in pairs(byAttackCoordinates) do
-	-- 											for z,k in pairs(tempList) do
-	-- 												if(v == k) then
-	-- 													table.insert(realCoordinates,v)
-	-- 												end
-	-- 											end
-	-- 										end
-	-- 										byAttackCoordinates = realCoordinates
-	-- 										attackSkill.formulaInfo = lastBattleSkill.formulaInfo
-	-- 									end
-	-- 								end
-	-- 								if (0 == battleTag) then
-	-- 									if(influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE) then
-	-- 										if(hasRestrain == 0) then
-	-- 											hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
-	-- 										end
-	-- 										attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
-	-- 									elseif(influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE)then
-	-- 										if(hasRestrain == 0)then
-	-- 											hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.attackObjects)
-	-- 										end
-	-- 										attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
-	-- 									elseif(influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT) then
-	-- 										byAttackCoordinates = {}
-	-- 										table.insert(byAttackCoordinates, battleObject.coordinate)
-	-- 										if(hasRestrain == 0)then
-	-- 											hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.attackObjects)
-	-- 										end
-	-- 										attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
-	-- 									end
-	-- 								else
-	-- 									if(influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE)then
-	-- 										if(hasRestrain == 0)then
-	-- 											hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.attackObjects)
-	-- 										end
-	-- 										attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
-	-- 									elseif(influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE) then
-	-- 										if(hasRestrain == 0)then
-	-- 											hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
-	-- 										end
-	-- 										attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
-	-- 									elseif(influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT) then
-	-- 										byAttackCoordinates = {}
-	-- 										table.insert(byAttackCoordinates, battleObject.coordinate)
-	-- 										if(hasRestrain == 0) then
-	-- 											hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
-	-- 										end
-	-- 										attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
-	-- 									end
-	-- 								end
-	-- 								lastBattleSkill = battleSkill
-	-- 							end
-	-- 						end
-	-- 					end
-	-- 					IniUtil.concatTable(resultBuffer, self.headBuffer)
-
-	-- 					table.insert(resultBuffer, battleObject.healthPoint)
-	-- 					table.insert(resultBuffer, IniUtil.compart)
-	-- 					table.insert(resultBuffer, battleObject.skillPoint)
-	-- 					table.insert(resultBuffer, IniUtil.compart)
-
-	-- 					table.insert(resultBuffer, hasRestrain)
-	-- 					table.insert(resultBuffer, IniUtil.compart)
-	-- 					IniUtil.concatTable(resultBuffer, self.bodyBuffer)
-	-- 					if hasZoumarSkill then
-	-- 						table.insert(resultBuffer, 0)
-	-- 					else
-	-- 						table.insert(resultBuffer, self.battleSkillCount)
-	-- 					end
-	-- 					table.insert(resultBuffer, IniUtil.compart)
-	-- 					IniUtil.concatTable(resultBuffer, tmpBattleSkillBuffer)
-						
-	-- 					if hasZoumarSkill then
-	-- 						table.insert(resultBuffer, #battleObject.fitBattleObjects)
-	-- 						table.insert(resultBuffer, IniUtil.compart)
-	-- 						if(self.fitBuffer ~= nil) then
-	-- 							IniUtil.concatTable(resultBuffer, self.fitBuffer)
-	-- 						end
-	-- 					end
-						
-						
-	-- 					self.canFreeSkill = false
-	-- 					IniUtil.concatTable(resultBuffer, self.battleSkillBuffer)
-	-- 					if(nil ~= counterBuffer)then
-	-- 						IniUtil.concatTable(resultBuffer, counterBuffer)
-	-- 						counterBuffer = nil
-	-- 					else
-	-- 						table.insert(resultBuffer, 0)
-	-- 						table.insert(resultBuffer, IniUtil.compart)
-	-- 					end
-	-- 					self.battleSkillCount = 0
-	-- 					table.insert(resultBuffer, 0)
-	-- 					table.insert(resultBuffer, IniUtil.compart)
-	-- 					attackOver = 1
-	-- 					self:talentSelfTailFight(userInfo,battleObject,resultBuffer)
-	-- 					battleObject:restoreBuffState()
-
-	-- 				end  -- 死亡判断结束
-	-- 				battleObject.isAction = false
-	-- 				-- battleObject.isNeedAddSkillPoint = true
-	-- 				table.insert(resultBuffer, 1)
-	-- 				table.insert(resultBuffer, IniUtil.compart)
-	-- 				self:checkHasNextRound()
-	-- 				self:checkDefenceResult()
-	-- 				break
-	-- 			end
-	-- 		end
-	-- 		end
-	-- 	end
-	-- end
-	-- -- _crint("是否需要请求下一场战斗",needNext)
-	-- if needNext == false then
-	-- 	return
-	-- end
 
 	local actorList = {}
 
@@ -3264,12 +3017,9 @@ function FightModule:rountdFight(resultBuffer)
 		end
 	end
 
-	-- _crint("=============================================",#self.fightOrderList)
-	-- _crint("#self.fightOrderList",#self.fightOrderList)
-	-- for k = 1,  #self.fightOrderList do
-	-- for k, v in pairs(self.fightOrderList) do
-	-- 	local battleObject = self.fightOrderList[k]
-	-- for i, v in pairs(actorList) do
+	print("日志 #actorList: " .. #actorList)
+	print("日志 self.roundCount: " .. self.roundCount)
+
 	while #actorList > 0 do
 		local k = table.remove(actorList, 1, 1)
 		local battleObject = self.fightOrderList[k]
@@ -3284,10 +3034,13 @@ function FightModule:rountdFight(resultBuffer)
 				___writeDebugInfo("\t\t" .. __fight_debug_skill_influence_type_info["" .. fightBuff.skillInfluence.skillCategory .. ""] .. "\r\n")
 			end
 			--]]
+			print("FightModule:rountdFight 1")
 
 			-- _crint("11出手",self.battleTag,battleObject.battleTag)
 			if tonumber(battleObject.battleTag) ~= tonumber(self.battleTag) then
+				print("FightModule:rountdFight 2")
 			else
+				print("FightModule:rountdFight 3")
 				-- 添加跳过战斗的攻击连击加成
 				if tonumber(battleObject.battleTag) == 0 then
 					local t = {0,	5,	10,	15}
@@ -3307,6 +3060,7 @@ function FightModule:rountdFight(resultBuffer)
 				-- _crint("是否已经出手过:",battleObject.isAction)
 				-- _crint("出手坐标：",battleObject.battleTag.." "..battleObject.coordinate)
 				if battleObject.isAction ~= true then		
+					print("FightModule:rountdFight 4")
 					--_crint("出手坐标：",battleObject.battleTag.." "..battleObject.coordinate)
 					--记录当前出手对象
 					self.currentObject  = battleObject
@@ -3336,6 +3090,7 @@ function FightModule:rountdFight(resultBuffer)
 					battleObject.reboundDamageValueResult = 0
 
 					if(battleObject.isDead ) then
+						print("FightModule:rountdFight 5")
 						if(battleObject.battleTag == 0) then
 							self.attackObjects[battleObject.coordinate ] = nil
 						else
@@ -3345,8 +3100,10 @@ function FightModule:rountdFight(resultBuffer)
 						--k = k - 1
 						battleObject.normalSkillMouldOpened = false
 					else
+						print("FightModule:rountdFight 6")
 						-- print("出手信息：", battleObject.battleTag, battleObject.coordinate, battleObject.isDizzy, battleObject.isParalysis, battleObject.isCripple)
 						if(battleObject.isDizzy or battleObject.isParalysis or battleObject.isCripple or true == battleObject.revived or false == self:checkHasByAttacker(battleObject)) then
+							print("FightModule:rountdFight 7")
 							battleObject.isAction = true
 							if (attackOver ~= 0) then
 								-- --_crint("4回合：" + self.roundCount)
@@ -3384,12 +3141,13 @@ function FightModule:rountdFight(resultBuffer)
 
 							battleObject.isAction = true
 						else
-							
+							print("FightModule:rountdFight 8")
 							local battleSkillList = nil
 							local skillReleasePosion = 0
 							local goon = true
 							-- 处理怒气攻击, 包括buff 和攻击技能
 							if true ~= battleObject.skipSuperSkillMould and nil ~= battleObject.specialSkillMould and ((battleObject.skillPoint >= FightModule.MAX_SP) and battleObject.isDisSp ~= true) then
+								print("FightModule:rountdFight 9")
 								local  realSkillMould = battleObject.specialSkillMould.id
 								if (attackOver ~= 0)then
 									table.insert(resultBuffer, "0")
@@ -3440,10 +3198,12 @@ function FightModule:rountdFight(resultBuffer)
 								___writeDebugInfo("\t当前发动绝技攻击\r\n")
 								--]]
 							else
+								print("FightModule:rountdFight 10")
 								-- battleObject.isAction = true
 								battleObject._isAction = nil
 								-- 处理普通攻击, 包括buff 和攻击技能
 								if(battleObject.isParalysis) then
+									print("FightModule:rountdFight 11")
 									if (attackOver ~= 0) then
 										table.insert(resultBuffer, "0")
 										table.insert(resultBuffer, IniUtil.compart)
@@ -3478,7 +3238,7 @@ function FightModule:rountdFight(resultBuffer)
 
 									battleObject.normalSkillMouldOpened = false
 								else
-									
+									print("FightModule:rountdFight 12")
 									if (attackOver ~= 0) then
 										table.insert(resultBuffer, "0")
 										table.insert(resultBuffer, IniUtil.compart)
@@ -3494,6 +3254,7 @@ function FightModule:rountdFight(resultBuffer)
 									
 									local skillId = 0
 									if true == battleObject.normalSkillMouldOpened then
+										print("FightModule:rountdFight 12-1")
 										battleSkillList = battleObject.normalBattleSkill
 										skillReleasePosion = battleObject.normalSkillMould.skillReleasePosition
 										battleObject.normalSkillMouldOpened = false
@@ -3504,6 +3265,7 @@ function FightModule:rountdFight(resultBuffer)
 										___writeDebugInfo("\t当前发动小技能攻击\r\n")
 										--]]
 									else
+										print("FightModule:rountdFight 12-2")
 										battleSkillList = battleObject.commonBattleSkill
 										skillReleasePosion = battleObject.commonSkillMould.skillReleasePosition
 										skillId = battleObject.commonSkillMould.id
@@ -3528,6 +3290,7 @@ function FightModule:rountdFight(resultBuffer)
 							end
 							if(goon) then -- 麻痹后不走这里
 								--  处理普通或者怒气攻击 技能效用
+								print("FightModule:rountdFight 13")
 								local tmpBattleSkillBuffer = {}
 								local hasRestrain = 0
 								local byAttackCoordinates = {}
@@ -3535,7 +3298,9 @@ function FightModule:rountdFight(resultBuffer)
 								local attackTargetIndex = 0
 								battleObject.byEffectCoordinateList = nil
 								if(battleObject.isDead ~= true) then
+									print("FightModule:rountdFight 14")
 									if __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon or __lua_project_id == __lua_project_l_naruto then
+										print("FightModule:rountdFight 15")
 										-- 触发攻击前的天赋
 										local attackObjects = nil
 										local byAttackObjects = nil
@@ -3554,6 +3319,7 @@ function FightModule:rountdFight(resultBuffer)
 									end
 									local lastBattleSkill = nil
 									for _, battleSkill in pairs(battleSkillList) do
+										print("FightModule:rountdFight 循环111")
 										-- if (battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_DAMAGEHP or 
 										-- 	battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_ADDHP)then
 										-- 	byAttackCoordinates = {}
@@ -3573,7 +3339,9 @@ function FightModule:rountdFight(resultBuffer)
 										end
 
 										if true == needInitAttackTarget then
+											print("FightModule:rountdFight 16")
 											if (formulaInfo ~= FightUtil.FORMULA_INFO_FORTHWITH) then
+												print("FightModule:rountdFight 17")
 												byAttackCoordinates= {}
 												if((battleTag == 0 and influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE)
 													or (battleTag == 1 and influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE))then
@@ -3582,6 +3350,7 @@ function FightModule:rountdFight(resultBuffer)
 													byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.attackObjects)
 												end
 											else
+												print("FightModule:rountdFight 18")
 												local tempList = {}
 												if((battleTag == 0 and influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE)
 													or (battleTag == 1 and influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE))then
@@ -3617,15 +3386,18 @@ function FightModule:rountdFight(resultBuffer)
 										end
 
 										if (0 == battleObject.battleTag) then
+											print("FightModule:rountdFight 19")
 											if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE) then
 												if(hasRestrain == 0) then
 													hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
 												end
+												print("FightModule:rountdFight 20")
 												attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
 											elseif(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE)then
 												if(hasRestrain == 0)then
 													hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.attackObjects)
 												end
+												print("FightModule:rountdFight 21")
 												attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
 											elseif(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT) then
 												byAttackCoordinates = {}
@@ -3633,18 +3405,22 @@ function FightModule:rountdFight(resultBuffer)
 												if(hasRestrain == 0)then
 													hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.attackObjects)
 												end
+												print("FightModule:rountdFight 22")
 												attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
 											end
 										else
+											print("FightModule:rountdFight 23")
 											if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE)then
 												if(hasRestrain == 0)then
 													hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.attackObjects)
 												end
+												print("FightModule:rountdFight 24")
 												attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
 											elseif(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE) then
 												if(hasRestrain == 0)then
 													hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
 												end
+												print("FightModule:rountdFight 25")
 												attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
 											elseif(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT) then
 												byAttackCoordinates = {}
@@ -3652,12 +3428,16 @@ function FightModule:rountdFight(resultBuffer)
 												if(hasRestrain == 0) then
 													hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
 												end
+												print("FightModule:rountdFight 26")
 												attackSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
 											end
 										end
 										lastBattleSkill = battleSkill
 									end
 								end
+
+								print("FightModule:rountdFight 27")
+
 								IniUtil.concatTable(resultBuffer, self.headBuffer)
 
 								table.insert(resultBuffer, battleObject.healthPoint)
@@ -3777,550 +3557,492 @@ function FightModule:rountdFight(resultBuffer)
 	self:checkHasNextRound()
 	self:checkDefenceResult()
 
-	-- if self.battleTag == 0 then
-	-- 	self.battleTag = 1
-	-- 	self:checkChangeBattleTag()
-	-- else
-	-- 	self.battleTag = 0
-	-- 	self:checkChangeBattleTag()
-	-- 	if(self.roundCount >= self.totalRound) then
-	-- 		self.roundCount = self.totalRound
-	-- 		if(self.roundCount == self.totalRound) then
-	-- 			self.hasNextRound = false
-	-- 			self.fightResult = 0
-	-- 		end
-	-- 		if tonumber(self.fightType) == tonumber(FightModule.FIGHT_TYPE_DAILY_INSTANCE) then
-	-- 			self.fightResult = 1
-	-- 		end
-	-- 	else
-	-- 		self.roundCount = self.roundCount+1
 
-	-- 		if __lua_project_id == __lua_project_l_digital or __lua_project_id == __lua_project_l_pokemon or __lua_project_id == __lua_project_l_naruto then
-
-	-- 			local buffBattleSkill = {effectAmount = 0}
-	-- 			local buffBuffer = {}
-
-	-- 			-- 9回合开始时判定
-	-- 			for k, v in pairs(self.fightOrderList) do
-	-- 				v.revived = false
-	-- 				v:resetBuff()
-	-- 				TalentJudge:judge(TalentConstant.JUDGE_OPPORTUNITY_ATTACK_ROUND_START, v, nil, nil, self)
-	-- 				if (v.battleTag == 0) then
-	-- 					v:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_ATTACK_ROUND_START, self, userInfo, v, nil, nil, self.attackObjects, self.byAttackObjects, buffBattleSkill, buffBuffer )
-	-- 				else
-	-- 					v:influenceTalentJudgeResults( TalentConstant.JUDGE_OPPORTUNITY_ATTACK_ROUND_START, self, userInfo, v, nil, nil, self.byAttackObjects, self.attackObjects, buffBattleSkill, buffBuffer )
-	-- 				end
-	-- 			end
-
-	-- 			table.insert(buffBuffer, 1, NetworkProtocol.sequence)			-- seq
-	-- 			table.insert(buffBuffer, 2, IniUtil.enter)
-	-- 			table.insert(buffBuffer, 3, "environment_fight_battle_round")	-- cmdname
-	-- 			table.insert(buffBuffer, 4, IniUtil.enter)
-	-- 			table.insert(buffBuffer, 5, "0")								-- result
-	-- 			table.insert(buffBuffer, 6, IniUtil.enter)
-	-- 			table.insert(buffBuffer, 7, 14711)
-	-- 			table.insert(buffBuffer, 8, IniUtil.enter)
-	-- 			table.insert(buffBuffer, 9, self.roundCount)
-	-- 			table.insert(buffBuffer, 10, IniUtil.enter)
-	-- 			table.insert(buffBuffer, 11, buffBattleSkill.effectAmount)
-	-- 			table.insert(buffBuffer, 12, IniUtil.enter)
-				
-	-- 			local protocalData = {}
-	-- 			protocalData.resouce = table.concat(buffBuffer, "")
-	-- 			NetworkProtocol.parser_func(protocalData)
-	-- 		end
-	-- 	end
-	-- 	-- _crint("总回合数",self.roundCount,self.totalRound)
-		
-	-- 	self:resetActionStatus()
-	-- end
-
-	-- _crint("出手",self.battleTag)
 end
 
 
-function FightModule:fight(userInfo, resultBuffer)
-	print("FightModule日志 fight")
-	self.fightOrderList = {}
-	self.attackCount = 0
-	self.byAttackCount = 0
-	local tempBattleCache = userInfo.battleCache
-	self:initBattleInfo(tempBattleCache)
-	self:initDailyInstance()
-	self.roundCount = 1
-	local fightOver = false
-	local attackerCombatForce = tempBattleCache.attackCombatForce
-	local byAttackerCombatForce = tempBattleCache.byAttackComobatForce
+-- function FightModule:fight(userInfo, resultBuffer)
+-- 	print("FightModule日志 fight")
+-- 	self.fightOrderList = {}
+-- 	self.attackCount = 0
+-- 	self.byAttackCount = 0
+-- 	local tempBattleCache = userInfo.battleCache
+-- 	self:initBattleInfo(tempBattleCache)
+-- 	self:initDailyInstance()
+-- 	self.roundCount = 1
+-- 	local fightOver = false
+-- 	local attackerCombatForce = tempBattleCache.attackCombatForce
+-- 	local byAttackerCombatForce = tempBattleCache.byAttackComobatForce
 	
-	local attackIndex = 1
-	local byAttackIndex = 1
-	local arrLength = #self.attackObjects
-	local win = false
-	local tempAttackObjects = self.attackObjects
-	local tempByAttackObjects = self.byAttackObjects
-	--_crint("AttackCombatForce type: " .. type(attackerCombatForce) .. attackerCombatForce)
-	--_crint("byAttackerCombatForce type: " .. type(byAttackerCombatForce) .. byAttackerCombatForce)
-	--_crint ("attack object size: " .. #tempAttackObjects)
-	if (tonumber(attackerCombatForce) < tonumber(byAttackerCombatForce)) then
-		tempAttackObjects = self.byAttackObjects
-		tempByAttackObjects = self.attackObjects
-	end	
+-- 	local attackIndex = 1
+-- 	local byAttackIndex = 1
+-- 	local arrLength = #self.attackObjects
+-- 	local win = false
+-- 	local tempAttackObjects = self.attackObjects
+-- 	local tempByAttackObjects = self.byAttackObjects
+-- 	--_crint("AttackCombatForce type: " .. type(attackerCombatForce) .. attackerCombatForce)
+-- 	--_crint("byAttackerCombatForce type: " .. type(byAttackerCombatForce) .. byAttackerCombatForce)
+-- 	--_crint ("attack object size: " .. #tempAttackObjects)
+-- 	if (tonumber(attackerCombatForce) < tonumber(byAttackerCombatForce)) then
+-- 		tempAttackObjects = self.byAttackObjects
+-- 		tempByAttackObjects = self.attackObjects
+-- 	end	
 	
-	--- 生成战战斗对象序列
-	for i = 1, 6 do
+-- 	--- 生成战战斗对象序列
+-- 	for i = 1, 6 do
 		
-		if (tempAttackObjects[i] ~= nil) then
-			table.insert(self.fightOrderList, tempAttackObjects[i])
-			if(tempAttackObjects[i].battleTag == 0) then
-				self.attackCount = self.attackCount + 1
-			else
-				self.byAttackCount = self.byAttackCount + 1
-			end
-		end
+-- 		if (tempAttackObjects[i] ~= nil) then
+-- 			table.insert(self.fightOrderList, tempAttackObjects[i])
+-- 			if(tempAttackObjects[i].battleTag == 0) then
+-- 				self.attackCount = self.attackCount + 1
+-- 			else
+-- 				self.byAttackCount = self.byAttackCount + 1
+-- 			end
+-- 		end
 		
-		if (tempByAttackObjects[i] ~= nil) then
-			table.insert(self.fightOrderList, tempByAttackObjects[i])
-			if(tempByAttackObjects[i].battleTag == 0) then
-				self.attackCount = self.attackCount + 1
-			else
-				self.byAttackCount = self.byAttackCount + 1
-			end
-		end
-	end
+-- 		if (tempByAttackObjects[i] ~= nil) then
+-- 			table.insert(self.fightOrderList, tempByAttackObjects[i])
+-- 			if(tempByAttackObjects[i].battleTag == 0) then
+-- 				self.attackCount = self.attackCount + 1
+-- 			else
+-- 				self.byAttackCount = self.byAttackCount + 1
+-- 			end
+-- 		end
+-- 	end
 	
-	for k, obj in pairs(self.fightOrderList) do
-		--_crint(k, obj.battleTag, obj.coordinate)
-	end
-	-- os.exit()
-	--_crint("attackCount = " .. self.attackCount)
-	--_crint("byAttackCount = " .. self.byAttackCount)
-	--_crint("fightType = " .. self.fightType)
-	--_crint("self.roundCount = " .. self.roundCount)
-	--_crint("self.totalRound = " .. self.totalRound)
-	--_crint(self.fightOrderList)
-	-- os.exit()
-	self.talentSelfTailBuffer = {}
-	while(fightOver ~= true) do
-		if (self.attackCount <= 0 or self.byAttackCount <= 0) then
-			win = self.byAttackCount <= 0
-			fightOver = true			
-			self.hasNextRound = false;
-			if self.attackCount <= 0 then
-				self.fightResult = 0
-				if tonumber(self.fightType) == tonumber(FightModule.FIGHT_TYPE_DAILY_INSTANCE) then
-					self.fightResult = 1
-				end
-			else
-				self.fightResult = 1
-			end
-			break
-		end
-		if(self.roundCount == self.totalRound) then
-			win = self.fightType == FightModule.FIGHT_TYPE_PVE_MONEY_TREE
-			fightOver = true
-			hasNextRound = false;
-			self.fightResult = 0
-			if tonumber(self.fightType) == tonumber(FightModule.FIGHT_TYPE_DAILY_INSTANCE) then
-				self.fightResult = 1
-			end
-			break
-		end
-		self:resetActionStatus(true)
-		self.roundCount = self.roundCount + 1
- 		local nowAttackHeathPoint = self:getBattleObjectHeathPoint(self.attackObjects)
-		local nowDefenceHeathPoint = self:getBattleObjectHeathPoint(self.byAttackObjects)
+-- 	for k, obj in pairs(self.fightOrderList) do
+-- 		--_crint(k, obj.battleTag, obj.coordinate)
+-- 	end
+-- 	-- os.exit()
+-- 	--_crint("attackCount = " .. self.attackCount)
+-- 	--_crint("byAttackCount = " .. self.byAttackCount)
+-- 	--_crint("fightType = " .. self.fightType)
+-- 	--_crint("self.roundCount = " .. self.roundCount)
+-- 	--_crint("self.totalRound = " .. self.totalRound)
+-- 	--_crint(self.fightOrderList)
+-- 	-- os.exit()
+-- 	self.talentSelfTailBuffer = {}
+-- 	while(fightOver ~= true) do
+-- 		if (self.attackCount <= 0 or self.byAttackCount <= 0) then
+-- 			win = self.byAttackCount <= 0
+-- 			fightOver = true			
+-- 			self.hasNextRound = false;
+-- 			if self.attackCount <= 0 then
+-- 				self.fightResult = 0
+-- 				if tonumber(self.fightType) == tonumber(FightModule.FIGHT_TYPE_DAILY_INSTANCE) then
+-- 					self.fightResult = 1
+-- 				end
+-- 			else
+-- 				self.fightResult = 1
+-- 			end
+-- 			break
+-- 		end
+-- 		if(self.roundCount == self.totalRound) then
+-- 			win = self.fightType == FightModule.FIGHT_TYPE_PVE_MONEY_TREE
+-- 			fightOver = true
+-- 			hasNextRound = false;
+-- 			self.fightResult = 0
+-- 			if tonumber(self.fightType) == tonumber(FightModule.FIGHT_TYPE_DAILY_INSTANCE) then
+-- 				self.fightResult = 1
+-- 			end
+-- 			break
+-- 		end
+-- 		self:resetActionStatus(true)
+-- 		self.roundCount = self.roundCount + 1
+--  		local nowAttackHeathPoint = self:getBattleObjectHeathPoint(self.attackObjects)
+-- 		local nowDefenceHeathPoint = self:getBattleObjectHeathPoint(self.byAttackObjects)
 
-		table.insert(resultBuffer, IniUtil.enter)
-		table.insert(resultBuffer, self.roundCount)
-		table.insert(resultBuffer, IniUtil.enter)
-		local attackOver = 0
+-- 		table.insert(resultBuffer, IniUtil.enter)
+-- 		table.insert(resultBuffer, self.roundCount)
+-- 		table.insert(resultBuffer, IniUtil.enter)
+-- 		local attackOver = 0
 
-		local backedFightOrderList = self.fightOrderList
-		self.fightOrderList = {}		
-		-- for k = 1, #backedFightOrderList do
-		for k, v in pairs(backedFightOrderList) do
-			local battleObj = backedFightOrderList[k]
-			if (battleObj ~= nil and battleObj.isDead ~= true)  then
-				self.fightOrderList[#self.fightOrderList + 1] = battleObj
-				--_crint ("backedFightOrderList[k].coordinate)
-			end
-		end
+-- 		local backedFightOrderList = self.fightOrderList
+-- 		self.fightOrderList = {}		
+-- 		-- for k = 1, #backedFightOrderList do
+-- 		for k, v in pairs(backedFightOrderList) do
+-- 			local battleObj = backedFightOrderList[k]
+-- 			if (battleObj ~= nil and battleObj.isDead ~= true)  then
+-- 				self.fightOrderList[#self.fightOrderList + 1] = battleObj
+-- 				--_crint ("backedFightOrderList[k].coordinate)
+-- 			end
+-- 		end
 
-		backedFightOrderList = nil
+-- 		backedFightOrderList = nil
 		
-		-- for k = 1,  #self.fightOrderList do
-		for k, v in pairs(self.fightOrderList) do
-			if (self.attackCount <= 0 or self.byAttackCount<=0) then
-				win = self.byAttackCount<=0
-				fightOver = true
-				self.hasNextRound = false;
-				if self.attackCount <= 0 then
-					self.fightResult = 0
-					if tonumber(self.fightType) == tonumber(FightModule.FIGHT_TYPE_DAILY_INSTANCE) then
-						self.fightResult = 1
-					end
-				else
-					self.fightResult = 1
-				end
-				break
-			end
-			self.counterBuffer = nil
-			self.battleSkillCount = 0
-			self.battleSkillBuffer = {}
-			for i = 1, 6 do
-				if(nil ~= self.attackObjects[i]) then
-					self.attackObjects[i].canReAttack = true
-					self.attackObjects[i].talentJudgeResultList = {}
-				end
-			end
-			for i = 1, 6 do
-				if(nil ~= self.byAttackObjects[i]) then
-					self.byAttackObjects[i].canReAttack = true
-					self.byAttackObjects[i].talentJudgeResultList = {}
-				end
-			end
-			local battleObject = self.fightOrderList[k]
-			--_crint("出手坐标："..battleObject.battleTag..battleObject.coordinate)
-			--记录当前出手对象
-			self.currentObject  = battleObject
-			--获取下一个出手对象 
-			self.nextFightObject = FightModule:getNextFightObject(k,self.fightOrderList)
-			--_crint("下一个出手坐标："..self.nextFightObject.battleTag..self.nextFightObject.coordinate)
-			--重置出手状态
-			-- battleObject.isAction = true
+-- 		-- for k = 1,  #self.fightOrderList do
+-- 		for k, v in pairs(self.fightOrderList) do
+-- 			if (self.attackCount <= 0 or self.byAttackCount<=0) then
+-- 				win = self.byAttackCount<=0
+-- 				fightOver = true
+-- 				self.hasNextRound = false;
+-- 				if self.attackCount <= 0 then
+-- 					self.fightResult = 0
+-- 					if tonumber(self.fightType) == tonumber(FightModule.FIGHT_TYPE_DAILY_INSTANCE) then
+-- 						self.fightResult = 1
+-- 					end
+-- 				else
+-- 					self.fightResult = 1
+-- 				end
+-- 				break
+-- 			end
+-- 			self.counterBuffer = nil
+-- 			self.battleSkillCount = 0
+-- 			self.battleSkillBuffer = {}
+-- 			for i = 1, 6 do
+-- 				if(nil ~= self.attackObjects[i]) then
+-- 					self.attackObjects[i].canReAttack = true
+-- 					self.attackObjects[i].talentJudgeResultList = {}
+-- 				end
+-- 			end
+-- 			for i = 1, 6 do
+-- 				if(nil ~= self.byAttackObjects[i]) then
+-- 					self.byAttackObjects[i].canReAttack = true
+-- 					self.byAttackObjects[i].talentJudgeResultList = {}
+-- 				end
+-- 			end
+-- 			local battleObject = self.fightOrderList[k]
+-- 			--_crint("出手坐标："..battleObject.battleTag..battleObject.coordinate)
+-- 			--记录当前出手对象
+-- 			self.currentObject  = battleObject
+-- 			--获取下一个出手对象 
+-- 			self.nextFightObject = FightModule:getNextFightObject(k,self.fightOrderList)
+-- 			--_crint("下一个出手坐标："..self.nextFightObject.battleTag..self.nextFightObject.coordinate)
+-- 			--重置出手状态
+-- 			-- battleObject.isAction = true
 			
-			self.headBuffer = {}
-			self.bodyBuffer = {}
-			battleObject.fitBattleObjects = {}
-			if(battleObject.battleTag == 0) then
-				battleObject:checkBattleObject(self.attackObjects)
-			else
-				battleObject:checkBattleObject(self.byAttackObjects)
-			end
-			self.fitBuffer = nil
-			local hasZoumarSkill = false
-			if(battleObject.battleTag == 0) then
-				hasZoumarSkill = battleObject:checkState(self.attackObjects)
-			else
-				hasZoumarSkill = battleObject:checkState(self.byAttackObjects)
-			end
-			battleObject.effectDamage = 0
-			battleObject.totalEffectDamage = 0
+-- 			self.headBuffer = {}
+-- 			self.bodyBuffer = {}
+-- 			battleObject.fitBattleObjects = {}
+-- 			if(battleObject.battleTag == 0) then
+-- 				battleObject:checkBattleObject(self.attackObjects)
+-- 			else
+-- 				battleObject:checkBattleObject(self.byAttackObjects)
+-- 			end
+-- 			self.fitBuffer = nil
+-- 			local hasZoumarSkill = false
+-- 			if(battleObject.battleTag == 0) then
+-- 				hasZoumarSkill = battleObject:checkState(self.attackObjects)
+-- 			else
+-- 				hasZoumarSkill = battleObject:checkState(self.byAttackObjects)
+-- 			end
+-- 			battleObject.effectDamage = 0
+-- 			battleObject.totalEffectDamage = 0
 
-			if(battleObject.isDead ) then
-				if(battleObject.battleTag == 0) then
-					self.attackObjects[battleObject.coordinate ] = nil
-				else
-					self.byAttackObjects[battleObject.coordinate ] = nil
-				end
-				self.fightOrderList[k] = nil
-				k = k - 1
-				battleObject.normalSkillMouldOpened = false
-			else
-				if(battleObject.isDizzy) then
-					if (attackOver ~= 0) then
-						----_crint("1回合：" .. roundCount)
-						table.insert(resultBuffer, "0")
-						table.insert(resultBuffer, IniUtil.compart)
-					end
-					table.insert(resultBuffer, battleObject.battleTag)
-					table.insert(resultBuffer, IniUtil.compart)
-					table.insert(resultBuffer, battleObject.coordinate)
-					table.insert(resultBuffer, IniUtil.compart)
-					table.insert(resultBuffer, 0)
-					table.insert(resultBuffer, IniUtil.compart)
-					table.insert(resultBuffer, 0)
-					table.insert(resultBuffer, IniUtil.compart)
-					table.insert(resultBuffer, 0)
-					table.insert(resultBuffer, IniUtil.compart)
-					table.insert(resultBuffer, battleObject.commonSkillMould.id)
-					table.insert(resultBuffer, IniUtil.compart)
-					battleObject:processUserBuffEffect(userInfo, self, resultBuffer)
-					table.insert(resultBuffer, 0)
-					table.insert(resultBuffer, IniUtil.compart)
-					table.insert(resultBuffer, 0)
-					table.insert(resultBuffer, IniUtil.compart)
-					table.insert(resultBuffer, 0)
-					table.insert(resultBuffer, IniUtil.compart)
-					-- TODO....
-					self:talentSelfTailFight(userInfo, battleObject, resultBuffer)
-					attackOver = 1
-					--continue
-					battleObject.normalSkillMouldOpened = false
-				else
+-- 			if(battleObject.isDead ) then
+-- 				if(battleObject.battleTag == 0) then
+-- 					self.attackObjects[battleObject.coordinate ] = nil
+-- 				else
+-- 					self.byAttackObjects[battleObject.coordinate ] = nil
+-- 				end
+-- 				self.fightOrderList[k] = nil
+-- 				k = k - 1
+-- 				battleObject.normalSkillMouldOpened = false
+-- 			else
+-- 				if(battleObject.isDizzy) then
+-- 					if (attackOver ~= 0) then
+-- 						----_crint("1回合：" .. roundCount)
+-- 						table.insert(resultBuffer, "0")
+-- 						table.insert(resultBuffer, IniUtil.compart)
+-- 					end
+-- 					table.insert(resultBuffer, battleObject.battleTag)
+-- 					table.insert(resultBuffer, IniUtil.compart)
+-- 					table.insert(resultBuffer, battleObject.coordinate)
+-- 					table.insert(resultBuffer, IniUtil.compart)
+-- 					table.insert(resultBuffer, 0)
+-- 					table.insert(resultBuffer, IniUtil.compart)
+-- 					table.insert(resultBuffer, 0)
+-- 					table.insert(resultBuffer, IniUtil.compart)
+-- 					table.insert(resultBuffer, 0)
+-- 					table.insert(resultBuffer, IniUtil.compart)
+-- 					table.insert(resultBuffer, battleObject.commonSkillMould.id)
+-- 					table.insert(resultBuffer, IniUtil.compart)
+-- 					battleObject:processUserBuffEffect(userInfo, self, resultBuffer)
+-- 					table.insert(resultBuffer, 0)
+-- 					table.insert(resultBuffer, IniUtil.compart)
+-- 					table.insert(resultBuffer, 0)
+-- 					table.insert(resultBuffer, IniUtil.compart)
+-- 					table.insert(resultBuffer, 0)
+-- 					table.insert(resultBuffer, IniUtil.compart)
+-- 					-- TODO....
+-- 					self:talentSelfTailFight(userInfo, battleObject, resultBuffer)
+-- 					attackOver = 1
+-- 					--continue
+-- 					battleObject.normalSkillMouldOpened = false
+-- 				else
 					
-					local battleSkillList = nil
-					local skillReleasePosion = 0
-					local goon = true
-					-- 处理怒气攻击, 包括buff 和攻击技能
-					if true ~= battleObject.skipSuperSkillMould and nil ~= battleObject.specialSkillMould and ((battleObject.skillPoint >= FightModule.MAX_SP or hasZoumarSkill == true) and battleObject.isDisSp ~= true) then
-						local  realSkillMould = battleObject.specialSkillMould.id
-						if (attackOver ~= 0)then
-							table.insert(resultBuffer, "0")
-							table.insert(resultBuffer, IniUtil.compart)
-							----_crint("2回合：" + roundCount)
-						end
-						table.insert(self.headBuffer, battleObject.battleTag)
-						table.insert(self.headBuffer, IniUtil.compart)
-						table.insert(self.headBuffer, battleObject.coordinate)
-						skillReleasePosion = battleObject.specialSkillMould.skillReleasePosition
-						if(hasZoumarSkill == true and self.canFreeSkill == true) then
-							table.insert(self.headBuffer, IniUtil.compart)
-							table.insert(self.headBuffer, #battleObject.fitBattleObjects)
-							battleObject:subZomSkillPoint(5)
-							self:fitFight(battleObject,battleObject.fitBattleObjects, userInfo)
-							-- battleObject.isAction = true
-							battleSkillList = {}
-							skillReleasePosion = battleObject.zoariumSkillMould.skillReleasePosition
-							realSkillMould = battleObject.zoariumSkillMould.id
-						else
-							table.insert(self.headBuffer, IniUtil.compart)
-							table.insert(self.headBuffer, 0)
-							battleSkillList = battleObject.oneselfBattleSkill
-						end
-						table.insert(self.headBuffer, IniUtil.compart)
-						if(battleObject.battleTag == 0) then
-							local movePos = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, self.byAttackObjects)
-							table.insert(self.bodyBuffer, movePos)
-							----_crint ("Move pos 0 : " .. movePos)
-							--os.exit()
-						else
-							local movePos = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, self.attackObjects)
-							table.insert(self.bodyBuffer, movePos)
-							----_crint ("Move pos 1 : " .. movePos)
-							--os.exit()
-						end
-						table.insert(self.bodyBuffer, IniUtil.compart)
-						table.insert(self.bodyBuffer, realSkillMould)
-						table.insert(self.bodyBuffer, IniUtil.compart)
-						-- battleObject:processUserBuffEffect(userInfo, self, self.bodyBuffer)
-						table.insert(self.bodyBuffer, 0)
-						table.insert(self.bodyBuffer, IniUtil.compart)
-					else
-						-- 处理普通攻击, 包括buff 和攻击技能
-						if(battleObject.isParalysis) then
-							if (attackOver ~= 0) then
-								table.insert(resultBuffer, "0")
-								table.insert(resultBuffer, IniUtil.compart)
-								----_crint("3回合：" + roundCount)
-							end
-							table.insert(self.headBuffer, battleObject.battleTag)
-							table.insert(self.headBuffer, IniUtil.compart)
-							table.insert(self.headBuffer, battleObject.coordinate)
-							table.insert(self.headBuffer, IniUtil.compart)
-							table.insert(self.headBuffer, 0)
-							table.insert(self.headBuffer, IniUtil.compart)
-							table.insert(self.bodyBuffer, 0)
-							table.insert(self.bodyBuffer, IniUtil.compart)
-							table.insert(self.bodyBuffer, battleObject.commonSkillMould.id)
-							table.insert(self.bodyBuffer, IniUtil.compart)
-							battleObject:processUserBuffEffect(userInfo, self, self.bodyBuffer)
-							table.insert(self.bodyBuffer, 0)
-							table.insert(self.bodyBuffer, IniUtil.compart)
-							table.insert(self.bodyBuffer, 0)
-							table.insert(self.bodyBuffer, IniUtil.compart)
-							table.insert(self.bodyBuffer, 0)
-							table.insert(self.bodyBuffer, IniUtil.compart)
-							-- TODO....
-							self:talentSelfTailFight(userInfo,battleObject,resultBuffer)
+-- 					local battleSkillList = nil
+-- 					local skillReleasePosion = 0
+-- 					local goon = true
+-- 					-- 处理怒气攻击, 包括buff 和攻击技能
+-- 					if true ~= battleObject.skipSuperSkillMould and nil ~= battleObject.specialSkillMould and ((battleObject.skillPoint >= FightModule.MAX_SP or hasZoumarSkill == true) and battleObject.isDisSp ~= true) then
+-- 						local  realSkillMould = battleObject.specialSkillMould.id
+-- 						if (attackOver ~= 0)then
+-- 							table.insert(resultBuffer, "0")
+-- 							table.insert(resultBuffer, IniUtil.compart)
+-- 							----_crint("2回合：" + roundCount)
+-- 						end
+-- 						table.insert(self.headBuffer, battleObject.battleTag)
+-- 						table.insert(self.headBuffer, IniUtil.compart)
+-- 						table.insert(self.headBuffer, battleObject.coordinate)
+-- 						skillReleasePosion = battleObject.specialSkillMould.skillReleasePosition
+-- 						if(hasZoumarSkill == true and self.canFreeSkill == true) then
+-- 							table.insert(self.headBuffer, IniUtil.compart)
+-- 							table.insert(self.headBuffer, #battleObject.fitBattleObjects)
+-- 							battleObject:subZomSkillPoint(5)
+-- 							self:fitFight(battleObject,battleObject.fitBattleObjects, userInfo)
+-- 							-- battleObject.isAction = true
+-- 							battleSkillList = {}
+-- 							skillReleasePosion = battleObject.zoariumSkillMould.skillReleasePosition
+-- 							realSkillMould = battleObject.zoariumSkillMould.id
+-- 						else
+-- 							table.insert(self.headBuffer, IniUtil.compart)
+-- 							table.insert(self.headBuffer, 0)
+-- 							battleSkillList = battleObject.oneselfBattleSkill
+-- 						end
+-- 						table.insert(self.headBuffer, IniUtil.compart)
+-- 						if(battleObject.battleTag == 0) then
+-- 							local movePos = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, self.byAttackObjects)
+-- 							table.insert(self.bodyBuffer, movePos)
+-- 							----_crint ("Move pos 0 : " .. movePos)
+-- 							--os.exit()
+-- 						else
+-- 							local movePos = FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, self.attackObjects)
+-- 							table.insert(self.bodyBuffer, movePos)
+-- 							----_crint ("Move pos 1 : " .. movePos)
+-- 							--os.exit()
+-- 						end
+-- 						table.insert(self.bodyBuffer, IniUtil.compart)
+-- 						table.insert(self.bodyBuffer, realSkillMould)
+-- 						table.insert(self.bodyBuffer, IniUtil.compart)
+-- 						-- battleObject:processUserBuffEffect(userInfo, self, self.bodyBuffer)
+-- 						table.insert(self.bodyBuffer, 0)
+-- 						table.insert(self.bodyBuffer, IniUtil.compart)
+-- 					else
+-- 						-- 处理普通攻击, 包括buff 和攻击技能
+-- 						if(battleObject.isParalysis) then
+-- 							if (attackOver ~= 0) then
+-- 								table.insert(resultBuffer, "0")
+-- 								table.insert(resultBuffer, IniUtil.compart)
+-- 								----_crint("3回合：" + roundCount)
+-- 							end
+-- 							table.insert(self.headBuffer, battleObject.battleTag)
+-- 							table.insert(self.headBuffer, IniUtil.compart)
+-- 							table.insert(self.headBuffer, battleObject.coordinate)
+-- 							table.insert(self.headBuffer, IniUtil.compart)
+-- 							table.insert(self.headBuffer, 0)
+-- 							table.insert(self.headBuffer, IniUtil.compart)
+-- 							table.insert(self.bodyBuffer, 0)
+-- 							table.insert(self.bodyBuffer, IniUtil.compart)
+-- 							table.insert(self.bodyBuffer, battleObject.commonSkillMould.id)
+-- 							table.insert(self.bodyBuffer, IniUtil.compart)
+-- 							battleObject:processUserBuffEffect(userInfo, self, self.bodyBuffer)
+-- 							table.insert(self.bodyBuffer, 0)
+-- 							table.insert(self.bodyBuffer, IniUtil.compart)
+-- 							table.insert(self.bodyBuffer, 0)
+-- 							table.insert(self.bodyBuffer, IniUtil.compart)
+-- 							table.insert(self.bodyBuffer, 0)
+-- 							table.insert(self.bodyBuffer, IniUtil.compart)
+-- 							-- TODO....
+-- 							self:talentSelfTailFight(userInfo,battleObject,resultBuffer)
 
-							attackOver = 1
-							goon = false
-							--continue
-							battleObject.normalSkillMouldOpened = false
-						else
+-- 							attackOver = 1
+-- 							goon = false
+-- 							--continue
+-- 							battleObject.normalSkillMouldOpened = false
+-- 						else
 							
-							if (attackOver ~= 0) then
-								table.insert(resultBuffer, "0")
-								table.insert(resultBuffer, IniUtil.compart)
-								----_crint("4回合：" + roundCount)
-							end
-							table.insert(self.headBuffer, battleObject.battleTag)
-							table.insert(self.headBuffer, IniUtil.compart)
-							table.insert(self.headBuffer, battleObject.coordinate)
+-- 							if (attackOver ~= 0) then
+-- 								table.insert(resultBuffer, "0")
+-- 								table.insert(resultBuffer, IniUtil.compart)
+-- 								----_crint("4回合：" + roundCount)
+-- 							end
+-- 							table.insert(self.headBuffer, battleObject.battleTag)
+-- 							table.insert(self.headBuffer, IniUtil.compart)
+-- 							table.insert(self.headBuffer, battleObject.coordinate)
 		
-							table.insert(self.headBuffer, IniUtil.compart)
-							table.insert(self.headBuffer, 0)
-							table.insert(self.headBuffer, IniUtil.compart)
+-- 							table.insert(self.headBuffer, IniUtil.compart)
+-- 							table.insert(self.headBuffer, 0)
+-- 							table.insert(self.headBuffer, IniUtil.compart)
 							
-							local skillId = 0
-							if true == battleObject.normalSkillMouldOpened then
-								battleSkillList = battleObject.normalBattleSkill
-								skillReleasePosion = battleObject.normalSkillMould.skillReleasePosition
-								battleObject.normalSkillMouldOpened = false
-								skillId = battleObject.normalSkillMould.id
-								battleObject.normalSkillUseCount = battleObject.normalSkillUseCount + 1
-							else
-								battleSkillList = battleObject.commonBattleSkill
-								skillReleasePosion = battleObject.commonSkillMould.skillReleasePosition
-								skillId = battleObject.commonSkillMould.id
-							end
+-- 							local skillId = 0
+-- 							if true == battleObject.normalSkillMouldOpened then
+-- 								battleSkillList = battleObject.normalBattleSkill
+-- 								skillReleasePosion = battleObject.normalSkillMould.skillReleasePosition
+-- 								battleObject.normalSkillMouldOpened = false
+-- 								skillId = battleObject.normalSkillMould.id
+-- 								battleObject.normalSkillUseCount = battleObject.normalSkillUseCount + 1
+-- 							else
+-- 								battleSkillList = battleObject.commonBattleSkill
+-- 								skillReleasePosion = battleObject.commonSkillMould.skillReleasePosition
+-- 								skillId = battleObject.commonSkillMould.id
+-- 							end
 
-							if(battleObject.battleTag == 0) then							
-								table.insert(self.bodyBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, self.byAttackObjects))
-							else
-								table.insert(self.bodyBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, self.attackObjects))
-							end
-							table.insert(self.bodyBuffer, IniUtil.compart)
-							-- table.insert(self.bodyBuffer, battleObject.commonSkillMould.id)
-							table.insert(self.bodyBuffer, skillId)
-							table.insert(self.bodyBuffer, IniUtil.compart)
+-- 							if(battleObject.battleTag == 0) then							
+-- 								table.insert(self.bodyBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, self.byAttackObjects))
+-- 							else
+-- 								table.insert(self.bodyBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, self.attackObjects))
+-- 							end
+-- 							table.insert(self.bodyBuffer, IniUtil.compart)
+-- 							-- table.insert(self.bodyBuffer, battleObject.commonSkillMould.id)
+-- 							table.insert(self.bodyBuffer, skillId)
+-- 							table.insert(self.bodyBuffer, IniUtil.compart)
 							
-							battleObject:processUserBuffEffect(userInfo, self, self.bodyBuffer)
-						end
-					end
-					if (goon) then -- 麻痹后不走这里
-					    --  处理普通或者怒气攻击 技能效用
-						local tmpBattleSkillBuffer = {}
-						local hasRestrain = 0
-						local byAttackCoordinates = {}
+-- 							battleObject:processUserBuffEffect(userInfo, self, self.bodyBuffer)
+-- 						end
+-- 					end
+-- 					if (goon) then -- 麻痹后不走这里
+-- 					    --  处理普通或者怒气攻击 技能效用
+-- 						local tmpBattleSkillBuffer = {}
+-- 						local hasRestrain = 0
+-- 						local byAttackCoordinates = {}
 						
-						for _, battleSkill in pairs(battleSkillList) do
-							if (battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_DAMAGEHP or 
-								battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_ADDHP)then
-								byAttackCoordinates = {}
-							end
-							if (0 == battleObject.battleTag) then
-								if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE) then
-									if (#byAttackCoordinates == 0) then
-										byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.byAttackObjects)
-									end
-									if(hasRestrain == 0) then
-										hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
-									end
-									battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
-								elseif(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE)then
-									byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.attackObjects)
-									if(hasRestrain == 0)then
-										hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.attackObjects)
-									end
-									battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
-								elseif(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT) then
-									byAttackCoordinates = {}
-									table.insert(byAttackCoordinates, battleObject.coordinate)
-									if(hasRestrain == 0)then
-										hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.attackObjects)
-									end
-									battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
-								end
-							else
-								if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE)then
-									if (#byAttackCoordinates == 0)then
-										byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.attackObjects)
-									end
-									if(hasRestrain == 0)then
-										hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.attackObjects)
-									end
-									battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
-								elseif(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE) then
-									byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.byAttackObjects)
-									if(hasRestrain == 0)then
-										hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
-									end
-									battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
-								elseif(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT) then
-									byAttackCoordinates = {}
-									table.insert(byAttackCoordinates, battleObject.coordinate)
-									if(hasRestrain == 0) then
-										hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
-									end
-									battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
-								end
-							end
-						end
-						IniUtil.concatTable(resultBuffer, self.headBuffer)
-						table.insert(resultBuffer, hasRestrain)
-						table.insert(resultBuffer, IniUtil.compart)
-						IniUtil.concatTable(resultBuffer, self.bodyBuffer)
-						table.insert(resultBuffer, self.battleSkillCount)
-						table.insert(resultBuffer, IniUtil.compart)
-						IniUtil.concatTable(resultBuffer, tmpBattleSkillBuffer)
-						if(hasZoumarSkill == true and self.canFreeSkill == true) then
-							----_crint("合击数量 " + battleObject.fitBattleObjects.size())
-							table.insert(resultBuffer, #battleObject.fitBattleObjects)
-							table.insert(resultBuffer, IniUtil.compart)
-							if(fitBuffer ~= nil) then
-								----_crint("合体技能： " + fitBuffer.toString())
-								IniUtil.concatTable(resultBuffer, fitBuffer)
-							end
-							self.canFreeSkill = false
-						end
-						IniUtil.concatTable(resultBuffer, self.battleSkillBuffer)
-						if(nil ~= counterBuffer)then
-							IniUtil.concatTable(resultBuffer, counterBuffer)
-							counterBuffer = nil
-						else
-							table.insert(resultBuffer, 0)
-							table.insert(resultBuffer, IniUtil.compart)
-						end
-						self.battleSkillCount = 0
-						table.insert(resultBuffer, 0)
-						table.insert(resultBuffer, IniUtil.compart)
-						-- TODO....
-						self:talentSelfTailFight(userInfo,battleObject,resultBuffer)
-						attackOver = 1
-					end  -- 麻痹后不走这里
-				end  --眩晕判断结束  眩晕不走下面的代码
-			end  -- 死亡判断结束
+-- 						for _, battleSkill in pairs(battleSkillList) do
+-- 							if (battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_DAMAGEHP or 
+-- 								battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_ADDHP)then
+-- 								byAttackCoordinates = {}
+-- 							end
+-- 							if (0 == battleObject.battleTag) then
+-- 								if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE) then
+-- 									if (#byAttackCoordinates == 0) then
+-- 										byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.byAttackObjects)
+-- 									end
+-- 									if(hasRestrain == 0) then
+-- 										hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
+-- 									end
+-- 									battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
+-- 								elseif(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE)then
+-- 									byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.attackObjects)
+-- 									if(hasRestrain == 0)then
+-- 										hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.attackObjects)
+-- 									end
+-- 									battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
+-- 								elseif(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT) then
+-- 									byAttackCoordinates = {}
+-- 									table.insert(byAttackCoordinates, battleObject.coordinate)
+-- 									if(hasRestrain == 0)then
+-- 										hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.attackObjects)
+-- 									end
+-- 									battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
+-- 								end
+-- 							else
+-- 								if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE)then
+-- 									if (#byAttackCoordinates == 0)then
+-- 										byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.attackObjects)
+-- 									end
+-- 									if(hasRestrain == 0)then
+-- 										hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.attackObjects)
+-- 									end
+-- 									battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.attackObjects, self, tmpBattleSkillBuffer)
+-- 								elseif(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE) then
+-- 									byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, self.byAttackObjects)
+-- 									if(hasRestrain == 0)then
+-- 										hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
+-- 									end
+-- 									battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
+-- 								elseif(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT) then
+-- 									byAttackCoordinates = {}
+-- 									table.insert(byAttackCoordinates, battleObject.coordinate)
+-- 									if(hasRestrain == 0) then
+-- 										hasRestrain = RestrainUtil.hasRestrain(battleObject, byAttackCoordinates, self.byAttackObjects)
+-- 									end
+-- 									battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, self.byAttackObjects, self, tmpBattleSkillBuffer)
+-- 								end
+-- 							end
+-- 						end
+-- 						IniUtil.concatTable(resultBuffer, self.headBuffer)
+-- 						table.insert(resultBuffer, hasRestrain)
+-- 						table.insert(resultBuffer, IniUtil.compart)
+-- 						IniUtil.concatTable(resultBuffer, self.bodyBuffer)
+-- 						table.insert(resultBuffer, self.battleSkillCount)
+-- 						table.insert(resultBuffer, IniUtil.compart)
+-- 						IniUtil.concatTable(resultBuffer, tmpBattleSkillBuffer)
+-- 						if(hasZoumarSkill == true and self.canFreeSkill == true) then
+-- 							----_crint("合击数量 " + battleObject.fitBattleObjects.size())
+-- 							table.insert(resultBuffer, #battleObject.fitBattleObjects)
+-- 							table.insert(resultBuffer, IniUtil.compart)
+-- 							if(fitBuffer ~= nil) then
+-- 								----_crint("合体技能： " + fitBuffer.toString())
+-- 								IniUtil.concatTable(resultBuffer, fitBuffer)
+-- 							end
+-- 							self.canFreeSkill = false
+-- 						end
+-- 						IniUtil.concatTable(resultBuffer, self.battleSkillBuffer)
+-- 						if(nil ~= counterBuffer)then
+-- 							IniUtil.concatTable(resultBuffer, counterBuffer)
+-- 							counterBuffer = nil
+-- 						else
+-- 							table.insert(resultBuffer, 0)
+-- 							table.insert(resultBuffer, IniUtil.compart)
+-- 						end
+-- 						self.battleSkillCount = 0
+-- 						table.insert(resultBuffer, 0)
+-- 						table.insert(resultBuffer, IniUtil.compart)
+-- 						-- TODO....
+-- 						self:talentSelfTailFight(userInfo,battleObject,resultBuffer)
+-- 						attackOver = 1
+-- 					end  -- 麻痹后不走这里
+-- 				end  --眩晕判断结束  眩晕不走下面的代码
+-- 			end  -- 死亡判断结束
 			
-			-- 下面这段代码, 死亡后也会走, 不过下面这段代码是废代码, 所以可以不管
-			if (self.attackCount <= 0 or self.byAttackCount<=0 ) then
-				win = self.byAttackCount<=0
-				fightOver = true
-				self.fightResult = 0
-				if tonumber(self.fightType) == tonumber(FightModule.FIGHT_TYPE_DAILY_INSTANCE) then
-					self.fightResult = 1
-				end
-				break
-			end
-		end
-		table.insert(resultBuffer, "1")
-		local endAttackHeathPoint = self:getBattleObjectHeathPoint(self.attackObjects)
-		local endDefenceHeathPoint = self:getBattleObjectHeathPoint(self.byAttackObjects)
-		local attackHeathPoint = nowAttackHeathPoint - endAttackHeathPoint
-		local defenceHeathPoint = nowDefenceHeathPoint - endDefenceHeathPoint
-		--_crint("\nThe " .. self.roundCount .. " round health point loses are: " .. attackHeathPoint .. " : " .. defenceHeathPoint)
-		self.attackDamages = self.attackDamages .. "," .. attackHeathPoint
-		self.defenceDamages = self.defenceDamages .. "," .. defenceHeathPoint
-		if (endAttackHeathPoint <= 0) then
-			endAttackHeathPoint = endAttackHeathPoint .. ",1"
-		else
-			endAttackHeathPoint = endAttackHeathPoint .. ",0"
-		end
+-- 			-- 下面这段代码, 死亡后也会走, 不过下面这段代码是废代码, 所以可以不管
+-- 			if (self.attackCount <= 0 or self.byAttackCount<=0 ) then
+-- 				win = self.byAttackCount<=0
+-- 				fightOver = true
+-- 				self.fightResult = 0
+-- 				if tonumber(self.fightType) == tonumber(FightModule.FIGHT_TYPE_DAILY_INSTANCE) then
+-- 					self.fightResult = 1
+-- 				end
+-- 				break
+-- 			end
+-- 		end
+-- 		table.insert(resultBuffer, "1")
+-- 		local endAttackHeathPoint = self:getBattleObjectHeathPoint(self.attackObjects)
+-- 		local endDefenceHeathPoint = self:getBattleObjectHeathPoint(self.byAttackObjects)
+-- 		local attackHeathPoint = nowAttackHeathPoint - endAttackHeathPoint
+-- 		local defenceHeathPoint = nowDefenceHeathPoint - endDefenceHeathPoint
+-- 		--_crint("\nThe " .. self.roundCount .. " round health point loses are: " .. attackHeathPoint .. " : " .. defenceHeathPoint)
+-- 		self.attackDamages = self.attackDamages .. "," .. attackHeathPoint
+-- 		self.defenceDamages = self.defenceDamages .. "," .. defenceHeathPoint
+-- 		if (endAttackHeathPoint <= 0) then
+-- 			endAttackHeathPoint = endAttackHeathPoint .. ",1"
+-- 		else
+-- 			endAttackHeathPoint = endAttackHeathPoint .. ",0"
+-- 		end
 		
-		if (endDefenceHeathPoint <= 0) then
-			self.defenceDeadState = self.defenceDeadState .. ",1"
-		else
-			self.defenceDeadState = self.defenceDeadState .. ",0"
-		end		
-		self:checkDefenceResult()
-	end
-	self.attackDamages = string.sub(self.attackDamages, 1)
-	self.defenceDamages = string.sub(self.defenceDamages, 1)
-	--self.attackDeadState = string.sub(attackDeadState, 1)
-	--self.defenceDeadState = string.sub(defenceDeadState, 1)
-	self:checkFightResult()
-	if(win) then
-		table.insert(resultBuffer, 1, FightModule.FIGHT_RESULT_WIN)
-		table.insert(resultBuffer, 2, IniUtil.enter)
-		table.insert(resultBuffer, 3, self.totalRound)
-		table.insert(resultBuffer, 4, IniUtil.enter)
-		table.insert(resultBuffer, 5, self.roundCount)		
-		--table.insert(resultBuffer, 6, IniUtil.enter)
+-- 		if (endDefenceHeathPoint <= 0) then
+-- 			self.defenceDeadState = self.defenceDeadState .. ",1"
+-- 		else
+-- 			self.defenceDeadState = self.defenceDeadState .. ",0"
+-- 		end		
+-- 		self:checkDefenceResult()
+-- 	end
+-- 	self.attackDamages = string.sub(self.attackDamages, 1)
+-- 	self.defenceDamages = string.sub(self.defenceDamages, 1)
+-- 	--self.attackDeadState = string.sub(attackDeadState, 1)
+-- 	--self.defenceDeadState = string.sub(defenceDeadState, 1)
+-- 	self:checkFightResult()
+-- 	if(win) then
+-- 		table.insert(resultBuffer, 1, FightModule.FIGHT_RESULT_WIN)
+-- 		table.insert(resultBuffer, 2, IniUtil.enter)
+-- 		table.insert(resultBuffer, 3, self.totalRound)
+-- 		table.insert(resultBuffer, 4, IniUtil.enter)
+-- 		table.insert(resultBuffer, 5, self.roundCount)		
+-- 		--table.insert(resultBuffer, 6, IniUtil.enter)
 		
-		userInfo.battleCache.currentBattleCount = math.min(userInfo.battleCache.currentBattleCount + 1, userInfo.battleCache.maxBattleCount)
-		return FightModule.FIGHT_RESULT_WIN
-	else
-		table.insert(resultBuffer, 1, FightModule.FIGHT_RESULT_LOST)
-		table.insert(resultBuffer, 2, IniUtil.enter)
-		table.insert(resultBuffer, 3, self.totalRound)
-		table.insert(resultBuffer, 4, IniUtil.enter)
-		table.insert(resultBuffer, 5, self.roundCount)		
-		--table.insert(resultBuffer, 6, IniUtil.enter)
-		userInfo.battleCache.currentBattleCount = 0
-		return FightModule.FIGHT_RESULT_LOST
-	end
-end
+-- 		userInfo.battleCache.currentBattleCount = math.min(userInfo.battleCache.currentBattleCount + 1, userInfo.battleCache.maxBattleCount)
+-- 		return FightModule.FIGHT_RESULT_WIN
+-- 	else
+-- 		table.insert(resultBuffer, 1, FightModule.FIGHT_RESULT_LOST)
+-- 		table.insert(resultBuffer, 2, IniUtil.enter)
+-- 		table.insert(resultBuffer, 3, self.totalRound)
+-- 		table.insert(resultBuffer, 4, IniUtil.enter)
+-- 		table.insert(resultBuffer, 5, self.roundCount)		
+-- 		--table.insert(resultBuffer, 6, IniUtil.enter)
+-- 		userInfo.battleCache.currentBattleCount = 0
+-- 		return FightModule.FIGHT_RESULT_LOST
+-- 	end
+-- end
 
 
 function FightModule:talentSelfTailFight(userInfo, selfObject, resultBuffer)
@@ -5218,64 +4940,7 @@ function FightModule:clearAttacksStatus()
 		end
 	end
 end
---[[
-function FightModule:getFirstEnvironmentShip(npc)
-	local seatArray = nil
-	local environmentShip = nil
-	for i = 1,  npc.formationCount do
-		local formationId = npc.getEnvironmentFormation(i)
-		--EnvironmentFormation environmentFormation = (EnvironmentFormation)ConfigDB.load("EnvironmentFormation", formationId)
-		--seatArray = new Integer[]{environmentFormation.seatOne, environmentFormation.seatTwo, environmentFormation.seatThree, environmentFormation.seatFour, environmentFormation.seatFive, environmentFormation.seatSix}
-		local formationId = npc:getEnvironmentFormation(i)
-		local seatArray = {}
-		for idx, val in pairs(seatIndex) do
-			seatArray[#seatArray + 1] = dms.int(dms["environment_formation"], formationId, val)
-		end
-			
-		--local amplifyPercentString = dms.string(dms["environment_formation"], formationId, environment_formation.amplify_percentage)
-		--local amplifyPercentArray = zstring.split(amplifyPercentString, IniUtil.comma)
-			 
-		for j, val in pairs(seatArray) do		
-		
-			if(nil ~= seatArray[j] and 0 ~= seatArray[j]){
-				environmentShip = (EnvironmentShip) ConfigDB.load("EnvironmentShip", seatArray[j])
-			end
-		end
-	end
-	return environmentShip
-end
 
-function FightModule:getTotalHealthPoint(userInfo)
-		local seatArray = nil
-		local healthPoint= 0
-		Formation formation = UserDB.findByUserAndIndex(userInfo.id,  1)
-		seatArray = new Integer[]{formation.seatOne, formation.seatTwo, formation.seatThree, formation.seatFour, formation.seatFive, formation.seatSix}
-		for (local i = 0; i < seatArray.length; i++) {
-			if(nil ~= seatArray[i] and 0 ~= seatArray[i]){
-				Ship ship = (Ship) UserDB.load("Ship", seatArray[i])
-				healthPoint += ship.power
-			}
-		}
-		return healthPoint
-end
-
-
-function FightModule:getNpcTotalHealthPoint(npc)
-	local seatArray = nil
-	local healthPoint= 0
-	local formationId = npc.getEnvironmentFormation(1)
-	local environmentFormation =(EnvironmentFormation)ConfigDB.load("EnvironmentFormation", formationId)
-	seatArray = new Integer[]{environmentFormation.seatOne, environmentFormation.seatTwo, environmentFormation.seatThree, environmentFormation.seatFour, environmentFormation.seatFive, environmentFormation.seatSix}
-	for (local j = 0; j < seatArray.length; j++) {
-		if(nil ~= seatArray[j] and 0 ~= seatArray[j]){
-			EnvironmentShip environmentShip = (EnvironmentShip) ConfigDB.load("EnvironmentShip", seatArray[j])
-			String difficultyAdditionalArray[] = npc.difficultyAdditional.split("\\|")[0].split(IniUtil.comma)
-			healthPoint +=(long) (environmentShip.power * Float.parseFloat(difficultyAdditionalArray[0]))
-		}
-	}
-	return healthPoint
-end
---]]
 function FightModule:checkDefenceResult()
 	print("FightModule日志 checkDefenceResult")
 	local liveHealth = 0
@@ -5336,565 +5001,7 @@ function FightModule:initNpcBattleField(attackUser, npc, battleCache)
 	battleCache.byAttackerObjectsList=byAttackerObjectsList
 	attackUser.battleCache=battleCache
 end
---[[
-function FightModule:unionFight(userInfo, resultBuffer, obj, member)
-		attackCount = 0
-		byAttackCount = 0
-		fighters = new Object[2][2]
-		self.attackDamages = ""
-		self.defenceDamages = ""
-		self.attackDeadState = ""
-		self.defenceDeadState = ""
-		roundCount = 0
-		boolean fightOver = false
-		local attackerCombatForce = 0
-		local byAttackerCombatForce = 0
-		List<BattleObject> fightOrderList = new ArrayList<BattleObject>()
-		local attackIndex = 0
-		local byAttackIndex = 0
-		local arrLength = attackObjects.length
-		boolean win = false
-		BattleObject[] tempAttackObjects = attackerCombatForce >= byAttackerCombatForce ? attackObjects : byAttackObjects
-		BattleObject[] tempByAttackObjects = attackerCombatForce >= byAttackerCombatForce ? byAttackObjects : attackObjects
-		for (local i = 0; i < arrLength; i++) {
-			for (; attackIndex<tempAttackObjects.length; attackIndex++){
-				if(nil ~= tempAttackObjects[attackIndex]){
-					fightOrderList.add(tempAttackObjects[attackIndex])
-					if(tempAttackObjects[attackIndex].battleTag == 0){						
-						attackCount++
-					else
-						byAttackCount++
-					}
-					attackIndex++
-					break
-				}
-			}
-			for (; byAttackIndex<tempByAttackObjects.length; byAttackIndex++){
-				if(nil ~= tempByAttackObjects[byAttackIndex]){
-					fightOrderList.add(tempByAttackObjects[byAttackIndex])
-					if(tempByAttackObjects[byAttackIndex].battleTag == 0){						
-						attackCount++
-					else
-						byAttackCount++
-					}
-					byAttackIndex++
-					break
-				}
-			}
-		}
-		while(!fightOver){
-			if (attackCount <= 0 or byAttackCount<=0){
-				win = byAttackCount<=0
-				fightOver = true
-				break
-			}
-			if(roundCount == totalRound){
-				win = self.fightType == FIGHT_TYPE_PVE_MONEY_TREE
-				fightOver = true
-				break
-			}
-			roundCount++
-			long nowAttackHeathPoint = self:getBattleObjectHeathPoint(attackObjects)
-			long nowDefenceHeathPoint = self:getBattleObjectHeathPoint(byAttackObjects)
-			table.insert(resultBuffer, IniUtil.enter)
-			table.insert(resultBuffer, roundCount)
-			table.insert(resultBuffer, IniUtil.enter)
-			byte attackOver = 0
-			for (local k = 0; k < fightOrderList.size(); k++) {
-				if (attackCount <= 0 or byAttackCount<=0){
-					win = byAttackCount<=0
-					fightOver = true
-					break
-				}
-				counterBuffer = nil
-				battleSkillCount = 0
-				battleSkillBuffer = new StringBuffer()
-				for (local i = 0; i < attackObjects.length; i++) {
-					if(nil ~= attackObjects[i]){
-						attackObjects[i].canReAttack=true
-						attackObjects[i].clearTalentJudgeResultList()
-					}
-				}
-				for (local i = 0; i < byAttackObjects.length; i++) {
-					if(nil ~= byAttackObjects[i]){
-						byAttackObjects[i].canReAttack=true
-						byAttackObjects[i].clearTalentJudgeResultList()
-					}
-				}
-				BattleObject battleObject = fightOrderList.get(k)
-				battleObject.action=true
-				battleObject.effectDamage=0
-				battleObject.totalEffectDamage=0
-				if(battleObject.isDead){
-					if(battleObject.battleTag == 0){
-						attackObjects[battleObject.coordinate - 1] = nil
-					else
-						byAttackObjects[battleObject.coordinate - 1] = nil
-					}
-					fightOrderList.remove(k)
-					k--
-					sortBattleObject(attackerCombatForce >= byAttackerCombatForce, fightOrderList, battleObject)
-				else
-					if(battleObject.isDizzy()){
-						if (attackOver ~= 0){
-							table.insert(resultBuffer, "0")
-							table.insert(resultBuffer, IniUtil.compart)
-						}
-						table.insert(resultBuffer, battleObject.battleTag)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.coordinate)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, 0)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.commonSkillMould.id)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, 0)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, 0)
-						table.insert(resultBuffer, IniUtil.compart)
-						battleObject:processBuffEffect(userInfo, self, resultBuffer)
-						attackOver = 1
-						continue
-					}
-					List<BattleSkill> battleSkillList = nil
-					byte skillReleasePosion = 0
-					if(battleObject.skillPoint >= FightModule.MAX_SP and !battleObject.isDisSp()){
-						if (attackOver ~= 0){
-							table.insert(resultBuffer, "0")
-							table.insert(resultBuffer, IniUtil.compart)
-						}
-						table.insert(resultBuffer, battleObject.battleTag)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.coordinate)
-						table.insert(resultBuffer, IniUtil.compart)
-						battleSkillList = battleObject.oneselfBattleSkill
-						skillReleasePosion = battleObject.specialSkillMould.skillReleasePosition
-						if(battleObject.battleTag == 0){							
-							table.insert(resultBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, byAttackObjects))
-						else
-							table.insert(resultBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, attackObjects))
-						}
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.specialSkillMould.id)
-						table.insert(resultBuffer, IniUtil.compart)
-					else
-						if(battleObject.isParalysis()){
-							if (attackOver ~= 0){
-								table.insert(resultBuffer, "0")
-								table.insert(resultBuffer, IniUtil.compart)
-							}
-							table.insert(resultBuffer, battleObject.battleTag)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, battleObject.coordinate)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, 0)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, battleObject.commonSkillMould.id)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, 0)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, 0)
-							table.insert(resultBuffer, IniUtil.compart)
-							battleObject:processBuffEffect(userInfo, self, resultBuffer)
-							attackOver = 1
-							continue
-						}
-						if (attackOver ~= 0){
-							table.insert(resultBuffer, "0")
-							table.insert(resultBuffer, IniUtil.compart)
-						}
-						table.insert(resultBuffer, battleObject.battleTag)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.coordinate)
-						table.insert(resultBuffer, IniUtil.compart)
-						battleSkillList = battleObject.commonBattleSkill
-						skillReleasePosion = battleObject.commonSkillMould.skillReleasePosition
-						if(battleObject.battleTag == 0){							
-							table.insert(resultBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, byAttackObjects))
-						else
-							table.insert(resultBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, attackObjects))
-						}
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.commonSkillMould.id)
-						table.insert(resultBuffer, IniUtil.compart)
-					}
-					StringBuffer battleSkillBuffer = new StringBuffer()
-					List<Byte> byAttackCoordinates = new ArrayList<Byte>()
-					for (BattleSkill battleSkill : battleSkillList) {
-						if (battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_DAMAGEHP or battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_ADDHP){
-							byAttackCoordinates = {}
-						}
-						if (0 == battleObject.battleTag) {
-							if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE){
-								if (#byAttackCoordinates == 0){
-									byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, self.battleObject, self.byAttackObjects)
-								}
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, byAttackObjects, self, battleSkillBuffer)
-							}else if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE){
-								byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, attackObjects)
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, attackObjects, self, battleSkillBuffer)
-							}else if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT){
-								byAttackCoordinates = {}
-								table.insert(byAttackCoordinates, battleObject.coordinate)
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, attackObjects, self, battleSkillBuffer)
-							}
-						else
-							if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE){
-								if (#byAttackCoordinates == 0){									
-									byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, attackObjects)
-								}
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, attackObjects, self, battleSkillBuffer)
-							}else if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE){
-								byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, self.battleObject, self.byAttackObjects)
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, byAttackObjects, self, battleSkillBuffer)
-							}else if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT){
-								byAttackCoordinates = {}
-								table.insert(byAttackCoordinates, battleObject.coordinate)
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, byAttackObjects, self, battleSkillBuffer)
-							}
-						}
-					}
-					table.insert(resultBuffer, battleSkillCount)
-					table.insert(resultBuffer, IniUtil.compart)
-					table.insert(resultBuffer, battleSkillBuffer)
-					table.insert(resultBuffer, self.battleSkillBuffer)
-					if(nil ~= counterBuffer){
-						table.insert(resultBuffer, counterBuffer)
-						counterBuffer = nil
-					else
-						table.insert(resultBuffer, 0)
-						table.insert(resultBuffer, IniUtil.compart)
-					}
-					battleSkillCount = 0
-					battleObject:processBuffEffect(userInfo, self, resultBuffer)
-					attackOver = 1
-				}
-				if (attackCount <= 0 or byAttackCount<=0){
-					win = byAttackCount<=0
-					fightOver = true
-					break
-				}
-			}
-			table.insert(resultBuffer, "1")
-			long endAttackHeathPoint = self:getBattleObjectHeathPoint(attackObjects)
-			long endDefenceHeathPoint = self:getBattleObjectHeathPoint(byAttackObjects)
-			long attackHeathPoint = nowAttackHeathPoint - endAttackHeathPoint
-			long defenceHeathPoint = nowDefenceHeathPoint - endDefenceHeathPoint
-			----_crint("第"+roundCount+ "回合双方损血量分别是："+attackHeathPoint+" : "+ defenceHeathPoint)
-			attackDamages += "," +attackHeathPoint
-			defenceDamages += "," +defenceHeathPoint
-			attackDeadState += endAttackHeathPoint <= 0 ? ",1" : ",0"
-			defenceDeadState += endDefenceHeathPoint <= 0 ? ",1" : ",0"
-		}
-		if (IniUtil.isEmpty(attackDamages)) {
-			if(attackDamages.startsWith(IniUtil.comma)){				
-				attackDamages = string.sub(attackDamages, 1)
-			}
-		}
-		if (IniUtil.isEmpty(defenceDamages)) {
-			if(defenceDamages.startsWith(IniUtil.comma)){					
-				defenceDamages = string.sub(defenceDamages, 1)
-			}
-		}
-		if (IniUtil.isEmpty(attackDeadState)) {
-			if(attackDeadState.startsWith(IniUtil.comma)){					
-				attackDeadState = string.sub(attackDeadState, 1)
-			}
-		}
-		if (IniUtil.isEmpty(defenceDeadState)) {
-			if(defenceDeadState.startsWith(IniUtil.comma)){				
-				defenceDeadState = string.sub(defenceDeadState, 1)
-			}
-		}
-		self.checkFightResult()
-		self.checkDefenceResult()
-		fighters[member][0] = self.attackObjects
-		fighters[member][1] = self.byAttackObjects
-		if(win){
-			return FIGHT_RESULT_WIN
-		}
-		else{
-			return FIGHT_RESULT_LOST
-		}
-end
 
-function FightModule:battlegroundFight(userInfo, resultBuffer, member)
-		attackCount = 0
-		byAttackCount = 0
-		self.attackDamages = ""
-		self.defenceDamages = ""
-		self.attackDeadState = ""
-		self.defenceDeadState = ""
-		roundCount = 0
-		boolean fightOver = false
-		local attackerCombatForce = 0
-		local byAttackerCombatForce = 0
-		List<BattleObject> fightOrderList = new ArrayList<BattleObject>()
-		local attackIndex = 0
-		local byAttackIndex = 0
-		local arrLength = attackObjects.length
-		boolean win = false
-		BattleObject[] tempAttackObjects = attackerCombatForce >= byAttackerCombatForce ? attackObjects : byAttackObjects
-		BattleObject[] tempByAttackObjects = attackerCombatForce >= byAttackerCombatForce ? byAttackObjects : attackObjects
-		for (local i = 0; i < arrLength; i++) {
-			for (; attackIndex<tempAttackObjects.length; attackIndex++){
-				if(nil ~= tempAttackObjects[attackIndex]){
-					fightOrderList.add(tempAttackObjects[attackIndex])
-					if(tempAttackObjects[attackIndex].battleTag == 0){						
-						attackCount++
-					else
-						byAttackCount++
-					}
-					attackIndex++
-					break
-				}
-			}
-			for (; byAttackIndex<tempByAttackObjects.length; byAttackIndex++){
-				if(nil ~= tempByAttackObjects[byAttackIndex]){
-					fightOrderList.add(tempByAttackObjects[byAttackIndex])
-					if(tempByAttackObjects[byAttackIndex].battleTag == 0){						
-						attackCount++
-					else
-						byAttackCount++
-					}
-					byAttackIndex++
-					break
-				}
-			}
-		}
-		while(!fightOver){
-			if (attackCount <= 0 or byAttackCount<=0){
-				win = byAttackCount<=0
-				fightOver = true
-				break
-			}
-			if(roundCount == totalRound){
-				win = self.fightType == FIGHT_TYPE_PVE_MONEY_TREE
-				fightOver = true
-				break
-			}
-			roundCount++
-			long nowAttackHeathPoint = self:getBattleObjectHeathPoint(attackObjects)
-			long nowDefenceHeathPoint = self:getBattleObjectHeathPoint(byAttackObjects)
-			table.insert(resultBuffer, IniUtil.enter)
-			table.insert(resultBuffer, roundCount)
-			table.insert(resultBuffer, IniUtil.enter)
-			byte attackOver = 0
-			for (local k = 0; k < fightOrderList.size(); k++) {
-				if (attackCount <= 0 or byAttackCount<=0){
-					win = byAttackCount<=0
-					fightOver = true
-					break
-				}
-				counterBuffer = nil
-				battleSkillCount = 0
-				battleSkillBuffer = new StringBuffer()
-				for (local i = 0; i < attackObjects.length; i++) {
-					if(nil ~= attackObjects[i]){
-						attackObjects[i].canReAttack=true
-						attackObjects[i].clearTalentJudgeResultList()
-					}
-				}
-				for (local i = 0; i < byAttackObjects.length; i++) {
-					if(nil ~= byAttackObjects[i]){
-						byAttackObjects[i].canReAttack=true
-						byAttackObjects[i].clearTalentJudgeResultList()
-					}
-				}
-				BattleObject battleObject = fightOrderList.get(k)
-				battleObject.action=true
-				battleObject.effectDamage=0
-				battleObject.totalEffectDamage=0
-				if(battleObject.isDead){
-					if(battleObject.battleTag == 0){
-						attackObjects[battleObject.coordinate - 1] = nil
-					else
-						byAttackObjects[battleObject.coordinate - 1] = nil
-					}
-					fightOrderList.remove(k)
-					k--
-					sortBattleObject(attackerCombatForce >= byAttackerCombatForce, fightOrderList, battleObject)
-				else
-					if(battleObject.isDizzy()){
-						if (attackOver ~= 0){
-							table.insert(resultBuffer, "0")
-							table.insert(resultBuffer, IniUtil.compart)
-						}
-						table.insert(resultBuffer, battleObject.battleTag)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.coordinate)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, 0)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.commonSkillMould.id)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, 0)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, 0)
-						table.insert(resultBuffer, IniUtil.compart)
-						battleObject:processBuffEffect(userInfo, self, resultBuffer)
-						attackOver = 1
-						continue
-					}
-					List<BattleSkill> battleSkillList = nil
-					byte skillReleasePosion = 0
-					if(battleObject.skillPoint >= FightModule.MAX_SP and !battleObject.isDisSp()){
-						if (attackOver ~= 0){
-							table.insert(resultBuffer, "0")
-							table.insert(resultBuffer, IniUtil.compart)
-						}
-						table.insert(resultBuffer, battleObject.battleTag)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.coordinate)
-						table.insert(resultBuffer, IniUtil.compart)
-						battleSkillList = battleObject.oneselfBattleSkill
-						skillReleasePosion = battleObject.specialSkillMould.skillReleasePosition
-						if(battleObject.battleTag == 0){							
-							table.insert(resultBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, byAttackObjects))
-						else
-							table.insert(resultBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, attackObjects))
-						}
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.specialSkillMould.id)
-						table.insert(resultBuffer, IniUtil.compart)
-					else
-						if(battleObject.isParalysis()){
-							if (attackOver ~= 0){
-								table.insert(resultBuffer, "0")
-								table.insert(resultBuffer, IniUtil.compart)
-							}
-							table.insert(resultBuffer, battleObject.battleTag)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, battleObject.coordinate)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, 0)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, battleObject.commonSkillMould.id)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, 0)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, 0)
-							table.insert(resultBuffer, IniUtil.compart)
-							battleObject:processBuffEffect(userInfo, self, resultBuffer)
-							attackOver = 1
-							continue
-						}
-						if (attackOver ~= 0){
-							table.insert(resultBuffer, "0")
-							table.insert(resultBuffer, IniUtil.compart)
-						}
-						table.insert(resultBuffer, battleObject.battleTag)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.coordinate)
-						table.insert(resultBuffer, IniUtil.compart)
-						battleSkillList = battleObject.commonBattleSkill
-						skillReleasePosion = battleObject.commonSkillMould.skillReleasePosition
-						if(battleObject.battleTag == 0){							
-							table.insert(resultBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, byAttackObjects))
-						else
-							table.insert(resultBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, attackObjects))
-						}
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.commonSkillMould.id)
-						table.insert(resultBuffer, IniUtil.compart)
-					}
-					StringBuffer battleSkillBuffer = new StringBuffer()
-					List<Byte> byAttackCoordinates = new ArrayList<Byte>()
-					for (BattleSkill battleSkill : battleSkillList) {
-						if (battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_DAMAGEHP or battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_ADDHP){
-							byAttackCoordinates = {}
-						}
-						if (0 == battleObject.battleTag) {
-							if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE){
-								if (#byAttackCoordinates == 0){
-									byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, self.battleObject, self.byAttackObjects)
-								}
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, byAttackObjects, self, battleSkillBuffer)
-							}else if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE){
-								byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, attackObjects)
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, attackObjects, self, battleSkillBuffer)
-							}else if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT){
-								byAttackCoordinates = {}
-								table.insert(byAttackCoordinates, battleObject.coordinate)
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, attackObjects, self, battleSkillBuffer)
-							}
-						else
-							if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE){
-								if (#byAttackCoordinates == 0){									
-									byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, attackObjects)
-								}
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, attackObjects, self, battleSkillBuffer)
-							}else if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE){
-								byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, self.battleObject, self.byAttackObjects)
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, byAttackObjects, self, battleSkillBuffer)
-							}else if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT){
-								byAttackCoordinates = {}
-								table.insert(byAttackCoordinates, battleObject.coordinate)
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, byAttackObjects, self, battleSkillBuffer)
-							}
-						}
-					}
-					table.insert(resultBuffer, battleSkillCount)
-					table.insert(resultBuffer, IniUtil.compart)
-					table.insert(resultBuffer, battleSkillBuffer)
-					table.insert(resultBuffer, self.battleSkillBuffer)
-					if(nil ~= counterBuffer){
-						table.insert(resultBuffer, counterBuffer)
-						counterBuffer = nil
-					else
-						table.insert(resultBuffer, 0)
-						table.insert(resultBuffer, IniUtil.compart)
-					}
-					battleSkillCount = 0
-					battleObject:processBuffEffect(userInfo, self, resultBuffer)
-					attackOver = 1
-				}
-				if (attackCount <= 0 or byAttackCount<=0){
-					win = byAttackCount<=0
-					fightOver = true
-					break
-				}
-			}
-			table.insert(resultBuffer, "1")
-			----_crint("第"+roundCount+ "回合双方损血量分别是："+nowAttackHeathPoint+" : "+ nowDefenceHeathPoint)
-			long endAttackHeathPoint = self:getBattleObjectHeathPoint(attackObjects)
-			long endDefenceHeathPoint = self:getBattleObjectHeathPoint(byAttackObjects)
-			long attackHeathPoint = nowAttackHeathPoint - endAttackHeathPoint
-			long defenceHeathPoint = nowDefenceHeathPoint - endDefenceHeathPoint
-			----_crint("第"+roundCount+ "回合双方损血量分别是："+attackHeathPoint+" : "+ defenceHeathPoint)
-			attackDamages += "," +attackHeathPoint
-			defenceDamages += "," +defenceHeathPoint
-			attackDeadState += endAttackHeathPoint <= 0 ? ",1" : ",0"
-			defenceDeadState += endDefenceHeathPoint <= 0 ? ",1" : ",0"
-		}
-		if (IniUtil.isEmpty(attackDamages)) {
-			if(attackDamages.startsWith(IniUtil.comma)){				
-				attackDamages = string.sub(attackDamages, 1)
-			}
-		}
-		if (IniUtil.isEmpty(defenceDamages)) {
-			if(defenceDamages.startsWith(IniUtil.comma)){					
-				defenceDamages = string.sub(defenceDamages, 1)
-			}
-		}
-		if (IniUtil.isEmpty(attackDeadState)) {
-			if(attackDeadState.startsWith(IniUtil.comma)){					
-				attackDeadState = string.sub(attackDeadState, 1)
-			}
-		}
-		if (IniUtil.isEmpty(defenceDeadState)) {
-			if(defenceDeadState.startsWith(IniUtil.comma)){				
-				defenceDeadState = string.sub(defenceDeadState, 1)
-			}
-		}
-		if(win){
-			return FIGHT_RESULT_WIN
-		}
-		else{
-			return FIGHT_RESULT_LOST
-		}
-end
---]]
 function FightModule:initAttackerBattleInfo(battleCache)
 	print("FightModule日志 initAttackerBattleInfo")
 		local attackObjects = battleCache.attackerObjects
@@ -5914,451 +5021,7 @@ function FightModule:initAttackerBattleInfo(attackUser)
 	print("FightModule日志 initAttackerBattleInfo")
 	FightModule:initAttackerBattleInfo(attackUser.battleCache)
 end
---[[
-function FightModule:initAttackerBattleInfo(attackUser, fighter)
-		totalHealth = 0
-		local damage = fighter.damage
-		local defence = fighter.defence
-		FightObject[] attackObjects = new FightObject[6]
-		Integer seatArray[] = nil
-		Formation formation = UserDB.findByUserAndIndex(attackUser.id,  1)
-		seatArray = new Integer[]{formation.seatOne, formation.seatTwo, formation.seatThree, formation.seatFour, formation.seatFive, formation.seatSix}
-		for (local i = 0; i < seatArray.length; i++) {
-			if(nil ~= seatArray[i] and 0 ~= seatArray[i]){
-				FightObject fightObject = new FightObject((byte) (i + 1), seatArray[i],  0)
-				attackObjects[i] = fightObject
-			}
-		}
-		for (local i = 0; i < attackObjects.length; i++) {
-			self.attackObjects[i] = nil
-			if(nil ~= attackObjects[i]){				
-				BattleObject battleObject = new BattleObject(attackObjects[i])
-				damage = battleObject.finalDamagePercent
-				defence = battleObject.finalLessenDamagePercent
-				battleObject.finalDamagePercent=damage
-				battleObject.finalLessenDamagePercent=defence
-				self.attackObjects[i] = battleObject
-				shipCount++
-				totalHealth+=battleObject.healthMaxPoint
-			}
-		}
-end
 
-function FightModule:initByAttackerBattleInfo(attackUser, fighter)
-		FightObject[] attackObjects = new FightObject[6]
-		Integer seatArray[] = nil
-		local damage = fighter.damage
-		local defence = fighter.defence
-		Formation formation = UserDB.findByUserAndIndex(attackUser.id,  1)
-		seatArray = new Integer[]{formation.seatOne, formation.seatTwo, formation.seatThree, formation.seatFour, formation.seatFive, formation.seatSix}
-		for (local i = 0; i < seatArray.length; i++) {
-			if(nil ~= seatArray[i] and 0 ~= seatArray[i]){
-				FightObject fightObject = new FightObject((byte) (i + 1), seatArray[i],  1)
-				attackObjects[i] = fightObject
-			}
-		}
-		for (local i = 0; i < attackObjects.length; i++) {
-			self.byAttackObjects[i] = nil
-			if(nil ~= attackObjects[i]){				
-				BattleObject battleObject = new BattleObject(attackObjects[i])
-				damage = battleObject.finalDamagePercent
-				defence = battleObject.finalLessenDamagePercent
-				battleObject.finalDamagePercent=damage
-				battleObject.finalLessenDamagePercent=defence
-				self.byAttackObjects[i] = battleObject
-			}
-		}
-end
-
-function FightModule:initByAttackerBattleInfo(battleCache)
-		npcMaxHealth = 0
-		FightObject byAttackObjects[]  = battleCache.byAttackerObjectsList.get(battleCache.currentBattleCount)
-		for (local i = 0; i < byAttackObjects.length; i++) {
-			if(nil ~= byAttackObjects[i]){				
-				BattleObject battleObject = new BattleObject(byAttackObjects[i])
-				self.byAttackObjects[i] = battleObject
-				npcMaxHealth += battleObject.healthMaxPoint
-			}
-		}
-end
-
-function FightModule:initByAttackerBattleInfo(npc)
-	self.npcMaxHealth = 0
-	local seatArray = nil
-	local byAttackerObjectsList = {}
-	for i = 1, npc.formationCount do
-		local byAttackObjects = {}
-		local formationId = npc:getEnvironmentFormation(i)
-
-		local seatIndex = {environment_formation.seat_one, environment_formation.seat_two, environment_formation.seat_three,
-			environment_formation.seat_four, environment_formation.seat_five, environment_formation.seat_six}
-		local seatArray = {}
-		for idx, val in pairs(seatIndex) do
-			seatArray[#seatArray + 1] = dms.local(dms["environment_formation"], formationId, val)
-		end
-			
-		local amplifyPercentString = dms.string(dms["environment_formation"], formationId, environment_formation.amplify_percentage)
-		local amplifyPercentArray = zstring.split(amplifyPercentString, IniUtil.comma)
-			
-		for j, val in pairs(seatArray) do
-			if(nil ~= seatArray[j] and 0 ~= seatArray[j]){
-				local fightObject = FightObject:new(npc, 1,  (j + 1), seatArray[j], fakeLevel, isFake)
-				fightObject.amplifyPercent=amplifyPercentArray[j]
-				fightObject.name=environmentFormation.formationName
-				if(fightType == FIGHT_TYPE_PVE_WORLD_BOSS) then
-					fightObject.healthPoint=ConfigDB.worldBossPower
-				end
-				byAttackObjects[j] = fightObject
-			end
-		end
-		byAttackerObjectsList.add(byAttackObjects)
-	end
-	local byAttackObjects  = byAttackerObjectsList.get(0)
-	for i = 1, 6 do
-		self.byAttackObjects[i] = nil
-		if(nil ~= byAttackObjects[i]) then			
-			BattleObject battleObject = BattleObject:new(byAttackObjects[i])
-			self.byAttackObjects[i] = battleObject
-			npcMaxHealth = npcMaxHealth + battleObject.healthMaxPoint
-		end
-	end
-end
---]]
---[[
-function FightModule:writeFashionEquipmentInit(attacker, byAttacker, resultBuffer)
-		if(Constant.CURRENT_PROJECT_NAME.equals("koa")){
-		}
-end
-
-function FightModule:dragonTigerfight(userInfo, resultBuffer)
-		attackCount = 0
-		byAttackCount = 0
-		BattleCache tempBattleCache = (BattleCache)userInfo.battleCache
-		initBattleInfo(tempBattleCache)
-		roundCount = 0
-		boolean fightOver = false
-		local attackerCombatForce = tempBattleCache.attackCombatForce
-		local byAttackerCombatForce = tempBattleCache.byAttackComobatForce
-		List<BattleObject> fightOrderList = new ArrayList<BattleObject>()
-		local attackIndex = 0
-		local byAttackIndex = 0
-		local arrLength = attackObjects.length
-		boolean win = false
-		BattleObject[] tempAttackObjects = attackerCombatForce >= byAttackerCombatForce ? attackObjects : byAttackObjects
-		BattleObject[] tempByAttackObjects = attackerCombatForce >= byAttackerCombatForce ? byAttackObjects : attackObjects
-		for (local i = 0; i < arrLength; i++) {
-			for (; attackIndex<tempAttackObjects.length; attackIndex++){
-				if(nil ~= tempAttackObjects[attackIndex]){
-					fightOrderList.add(tempAttackObjects[attackIndex])
-					if(tempAttackObjects[attackIndex].battleTag == 0){						
-						attackCount++
-					else
-						byAttackCount++
-					}
-					attackIndex++
-					break
-				}
-			}
-			for (; byAttackIndex<tempByAttackObjects.length; byAttackIndex++){
-				if(nil ~= tempByAttackObjects[byAttackIndex]){
-					fightOrderList.add(tempByAttackObjects[byAttackIndex])
-					if(tempByAttackObjects[byAttackIndex].battleTag == 0){						
-						attackCount++
-					else
-						byAttackCount++
-					}
-					byAttackIndex++
-					break
-				}
-			}
-		}
-		while(!fightOver){
-			if (attackCount <= 0 or byAttackCount<=0){
-				win = byAttackCount<=0
-				fightOver = true
-				break
-			}
-			if(roundCount == totalRound){
-				win = self.fightType == FIGHT_TYPE_PVE_MONEY_TREE
-				fightOver = true
-				break
-			}
-			roundCount++
-			long nowAttackHeathPoint = self:getBattleObjectHeathPoint(attackObjects)
-			long nowDefenceHeathPoint = self:getBattleObjectHeathPoint(byAttackObjects)
-			table.insert(resultBuffer, IniUtil.enter)
-			table.insert(resultBuffer, roundCount)
-			table.insert(resultBuffer, IniUtil.enter)
-			byte attackOver = 0
-			for (local k = 0; k < fightOrderList.size(); k++) {
-				if (attackCount <= 0 or byAttackCount<=0){
-					win = byAttackCount<=0
-					fightOver = true
-					break
-				}
-				counterBuffer = nil
-				battleSkillCount = 0
-				battleSkillBuffer = new StringBuffer()
-				for (local i = 0; i < attackObjects.length; i++) {
-					if(nil ~= attackObjects[i]){
-						attackObjects[i].canReAttack=true
-						attackObjects[i].clearTalentJudgeResultList()
-					}
-				}
-				for (local i = 0; i < byAttackObjects.length; i++) {
-					if(nil ~= byAttackObjects[i]){
-						byAttackObjects[i].canReAttack=true
-						byAttackObjects[i].clearTalentJudgeResultList()
-					}
-				}
-				BattleObject battleObject = fightOrderList.get(k)
-				battleObject.action=true
-				battleObject.effectDamage=0
-				battleObject.totalEffectDamage=0
-				if(battleObject.isDead){
-					if(battleObject.battleTag == 0){
-						attackObjects[battleObject.coordinate - 1] = nil
-					else
-						byAttackObjects[battleObject.coordinate - 1] = nil
-					}
-					fightOrderList.remove(k)
-					k--
-				else
-					if(battleObject.isDizzy()){
-						if (attackOver ~= 0){
-							table.insert(resultBuffer, "0")
-							table.insert(resultBuffer, IniUtil.compart)
-						}
-						table.insert(resultBuffer, battleObject.battleTag)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.coordinate)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, 0)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.commonSkillMould.id)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, 0)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, 0)
-						table.insert(resultBuffer, IniUtil.compart)
-						battleObject:processBuffEffect(userInfo, self, resultBuffer)
-						attackOver = 1
-						continue
-					}
-					List<BattleSkill> battleSkillList = nil
-					byte skillReleasePosion = 0
-					if(battleObject.skillPoint >= FightModule.MAX_SP and !battleObject.isDisSp()){
-						if (attackOver ~= 0){
-							table.insert(resultBuffer, "0")
-							table.insert(resultBuffer, IniUtil.compart)
-						}
-						table.insert(resultBuffer, battleObject.battleTag)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.coordinate)
-						table.insert(resultBuffer, IniUtil.compart)
-						battleSkillList = battleObject.oneselfBattleSkill
-						skillReleasePosion = battleObject.specialSkillMould.skillReleasePosition
-						if(battleObject.battleTag == 0){							
-							table.insert(resultBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, byAttackObjects))
-						else
-							table.insert(resultBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, attackObjects))
-						}
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.specialSkillMould.id)
-						table.insert(resultBuffer, IniUtil.compart)
-					else
-						if(battleObject.isParalysis()){
-							if (attackOver ~= 0){
-								table.insert(resultBuffer, "0")
-								table.insert(resultBuffer, IniUtil.compart)
-							}
-							table.insert(resultBuffer, battleObject.battleTag)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, battleObject.coordinate)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, 0)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, battleObject.commonSkillMould.id)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, 0)
-							table.insert(resultBuffer, IniUtil.compart)
-							table.insert(resultBuffer, 0)
-							table.insert(resultBuffer, IniUtil.compart)
-							battleObject:processBuffEffect(userInfo, self, resultBuffer)
-							attackOver = 1
-							continue
-						}
-						if (attackOver ~= 0){
-							table.insert(resultBuffer, "0")
-							table.insert(resultBuffer, IniUtil.compart)
-						}
-						table.insert(resultBuffer, battleObject.battleTag)
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.coordinate)
-						table.insert(resultBuffer, IniUtil.compart)
-						battleSkillList = battleObject.commonBattleSkill
-						skillReleasePosion = battleObject.commonSkillMould.skillReleasePosition
-						if(battleObject.battleTag == 0){							
-							table.insert(resultBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, byAttackObjects))
-						else
-							table.insert(resultBuffer, FightUtil.computeMoveCoordinate(battleObject.coordinate, skillReleasePosion, attackObjects))
-						}
-						table.insert(resultBuffer, IniUtil.compart)
-						table.insert(resultBuffer, battleObject.commonSkillMould.id)
-						table.insert(resultBuffer, IniUtil.compart)
-					}
-					StringBuffer battleSkillBuffer = new StringBuffer()
-					List<Byte> byAttackCoordinates = new ArrayList<Byte>()
-					for (BattleSkill battleSkill : battleSkillList) {
-						if (battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_DAMAGEHP or battleSkill.skillInfluence.skillCategory == BattleSkill.SKILL_INFLUENCE_ADDHP){
-							byAttackCoordinates = {}
-						}
-						if (0 == battleObject.battleTag) {
-							if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE){
-								if (#byAttackCoordinates == 0){
-									byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, self.battleObject, self.byAttackObjects)
-								}
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, byAttackObjects, self, battleSkillBuffer)
-							}else if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE){
-								byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, attackObjects)
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, attackObjects, self, battleSkillBuffer)
-							}else if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT){
-								byAttackCoordinates = {}
-								table.insert(byAttackCoordinates, battleObject.coordinate)
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, attackObjects, self, battleSkillBuffer)
-							}
-						else
-							if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OPPOSITE){
-								if (#byAttackCoordinates == 0){									
-									byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, battleObject, attackObjects)
-								}
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, attackObjects, self, battleSkillBuffer)
-							}else if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_OURSITE){
-								byAttackCoordinates = FightUtil.computeEffectCoordinate(battleObject.coordinate, battleSkill.skillInfluence, self.battleObject, self.byAttackObjects)
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, byAttackObjects, self, battleSkillBuffer)
-							}else if(battleSkill.skillInfluence.influenceGroup == SkillInfluence.EFFECT_GROUP_CURRENT){
-								byAttackCoordinates = {}
-								table.insert(byAttackCoordinates, battleObject.coordinate)
-								battleSkill:processAttack(userInfo, byAttackCoordinates, battleObject, byAttackObjects, self, battleSkillBuffer)
-							}
-						}
-					}
-					table.insert(resultBuffer, battleSkillCount)
-					table.insert(resultBuffer, IniUtil.compart)
-					table.insert(resultBuffer, battleSkillBuffer)
-					table.insert(resultBuffer, self.battleSkillBuffer)
-					if(nil ~= counterBuffer){
-						table.insert(resultBuffer, counterBuffer)
-						counterBuffer = nil
-					else
-						table.insert(resultBuffer, 0)
-						table.insert(resultBuffer, IniUtil.compart)
-					}
-					battleSkillCount = 0
-					battleObject:processBuffEffect(userInfo, self, resultBuffer)
-					attackOver = 1
-				}
-				if (attackCount <= 0 or byAttackCount<=0){
-					win = byAttackCount<=0
-					fightOver = true
-					break
-				}
-			}
-			table.insert(resultBuffer, "1")
-			long endAttackHeathPoint = self:getBattleObjectHeathPoint(attackObjects)
-			long endDefenceHeathPoint = self:getBattleObjectHeathPoint(byAttackObjects)
-			long attackHeathPoint = nowAttackHeathPoint - endAttackHeathPoint
-			long defenceHeathPoint = nowDefenceHeathPoint - endDefenceHeathPoint
-			----_crint("第"+roundCount+ "回合双方损血量分别是："+attackHeathPoint+" : "+ defenceHeathPoint)
-			attackDamages += "," +attackHeathPoint
-			defenceDamages += "," +defenceHeathPoint
-			attackDeadState += endAttackHeathPoint <= 0 ? ",1" : ",0"
-			defenceDeadState += endDefenceHeathPoint <= 0 ? ",1" : ",0"
-		}
-		attackDamages = string.sub(attackDamages, 1)
-		defenceDamages = string.sub(defenceDamages, 1)
-		attackDeadState = string.sub(attackDeadState, 1)
-		defenceDeadState = string.sub(defenceDeadState, 1)
-		self.checkFightResult()
-		self.checkDefenceResult()
-		if(win){
-			return FIGHT_RESULT_WIN
-		}
-		else{
-			return FIGHT_RESULT_LOST
-		}
-end
---]]
---[[
-function FightModule:initRebelArmy()
-		if(userRebelArmy ~= nil){
-			if(byAttackObjects[0] ~= nil){
-				if(userRebelArmy.setOne < 1){
-					byAttackObjects[0] = nil
-				else
-					byAttackObjects[0].healthPoint=userRebelArmy.setOne
-				}	
-			}
-			if(byAttackObjects[1] ~= nil){
-				if(userRebelArmy.setTwo < 1){
-					byAttackObjects[1] = nil
-				else
-					byAttackObjects[1].healthPoint=userRebelArmy.setTwo
-				}
-			}
-			if(byAttackObjects[2] ~= nil){
-				if(userRebelArmy.setThree < 1){
-					byAttackObjects[2] = nil
-				else
-					byAttackObjects[2].healthPoint=userRebelArmy.setThree
-				}
-			}
-			if(byAttackObjects[3] ~= nil){
-				if(userRebelArmy.setFour < 1){
-					byAttackObjects[3] = nil
-				else
-					byAttackObjects[3].healthPoint=userRebelArmy.setFour
-				}
-			}
-			if(byAttackObjects[4] ~= nil){
-				if(userRebelArmy.setFive < 1){
-					byAttackObjects[4] = nil
-				else
-					byAttackObjects[4].healthPoint=userRebelArmy.setFive
-				}
-			}
-			if(byAttackObjects[5] ~= nil){
-				if(userRebelArmy.setSex < 1){
-					byAttackObjects[5] = nil
-				else
-					byAttackObjects[5].healthPoint=userRebelArmy.setSex
-				}
-			}
-			float doubleAttack = 1
-			if(isDouble){
-				doubleAttack = 250/100
-			}
-			if(attackObjects[0] ~= nil){
-				attackObjects[0].attack=(local) (attackObjects[0].attack * (attackObjects[0].advance+1) * doubleAttack)
-			}
-			if(attackObjects[1] ~= nil){
-				attackObjects[1].attack=(local) (attackObjects[1].attack * (attackObjects[1].advance+1) * doubleAttack)
-			}
-			if(attackObjects[2] ~= nil){
-				attackObjects[2].attack=(local) (attackObjects[2].attack * (attackObjects[2].advance+1) * doubleAttack)
-			}
-			if(attackObjects[3] ~= nil){
-				attackObjects[3].attack=(local) (attackObjects[3].attack * (attackObjects[3].advance+1) * doubleAttack)
-			}
-			if(attackObjects[4] ~= nil){
-				attackObjects[4].attack=(local) (attackObjects[4].attack * (attackObjects[4].advance+1) * doubleAttack)
-			}
-			if(attackObjects[5] ~= nil){
-				attackObjects[5].attack=(local) (attackObjects[5].attack * (attackObjects[5].advance+1) * doubleAttack)
-			}
-		}
-end
---]]
 
 function FightModule:initFight(npcId, difficulty, fightType,resultBuffer,eveNpc)
 	print("FightModule日志 initFight")

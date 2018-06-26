@@ -416,16 +416,16 @@ function sp.initArmature(skeletonNode, loop)
 	end
 
 	skeletonNode.playWithIndex = function(_self, actionIndex)
-		print("等等对对对等等 3-1")
-		print(_self.animationNameList[actionIndex + 1])
+		-- print("等等对对对等等 3-1")
+		-- print(_self.animationNameList[actionIndex + 1])
 
 		if nil ~= _self._lockActionIndex and _self._lockActionIndex > 0 then
 			return
 		end
 
-		print("等等对对对等等 3")
-		print(_self.animationNameList[actionIndex + 1])
-		print(debug.traceback())
+		-- print("等等对对对等等 3")
+		-- print(_self.animationNameList[actionIndex + 1])
+		-- print(debug.traceback())
 
 		_self:setToSetupPose()
 		_self:setAnimation(0, _self.animationNameList[actionIndex + 1], true)
